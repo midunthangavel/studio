@@ -61,7 +61,7 @@ export function Footer() {
                 isActive ? 'text-primary' : 'text-muted-foreground hover:text-primary'
               )}
             >
-              <item.icon className="h-6 w-6" />
+              <item.icon className={cn("h-6 w-6", isActive && "fill-current")} />
               <span>{item.name}</span>
             </Link>
           );
