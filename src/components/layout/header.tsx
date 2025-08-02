@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -8,7 +9,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
         <div className="mr-4 hidden md:flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
+          <Link href="/home" className="mr-6 flex items-center space-x-2">
             <Mountain className="h-6 w-6" />
             <span className="hidden font-bold sm:inline-block font-headline">
               VenueVoyager
@@ -51,7 +52,7 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="left" className="w-[300px] sm:w-[400px]">
               <nav className="flex flex-col gap-4">
-                <Link href="/" className="flex items-center space-x-2 mb-4">
+                <Link href="/home" className="flex items-center space-x-2 mb-4">
                     <Mountain className="h-6 w-6" />
                     <span className="font-bold font-headline">VenueVoyager</span>
                 </Link>

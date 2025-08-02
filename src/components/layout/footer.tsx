@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Mountain, Twitter, Facebook, Instagram } from "lucide-react";
 import { Button } from "../ui/button";
@@ -9,7 +10,7 @@ export function Footer() {
       <div className="container max-w-screen-2xl py-12">
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-12">
           <div className="lg:col-span-3 space-y-4">
-            <Link href="/" className="flex items-center space-x-2">
+            <Link href="/home" className="flex items-center space-x-2">
               <Mountain className="h-6 w-6" />
               <span className="font-bold text-xl font-headline">
                 VenueVoyager

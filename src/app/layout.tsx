@@ -1,13 +1,13 @@
+
+'use client';
+
 import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
-
-export const metadata: Metadata = {
-  title: "VenueVoyager",
-  description: "Find and book venues and services for your events.",
-};
+import { usePathname } from "next/navigation";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function RootLayout({
   children,
@@ -17,6 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <title>VenueVoyager</title>
+        <meta name="description" content="Find and book venues and services for your events." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -29,13 +31,28 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
+        <ConditionalLayout>
+            {children}
+        </ConditionalLayout>
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+
+function ConditionalLayout({ children }: {children: React.ReactNode}) {
+    const pathname = usePathname();
+    const noLayoutRoutes = ['/'];
+
+    if (noLayoutRoutes.includes(pathname)) {
+        return <>{children}</>;
+    }
+
+    return (
         <div className="relative flex min-h-screen flex-col bg-background">
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
         </div>
-        <Toaster />
-      </body>
-    </html>
-  );
+    )
 }
