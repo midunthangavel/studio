@@ -527,6 +527,7 @@ export default function SearchPage() {
                              <VenueCard 
                                 key={item.name} 
                                 {...item}
+                                isCard
                                 imageClassName="h-64"
                                 actionButton={
                                     <div className="absolute top-2 right-2 bg-background/80 p-2 rounded-full">
