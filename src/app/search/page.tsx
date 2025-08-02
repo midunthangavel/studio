@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { ListFilter, Search, Star } from "lucide-react";
 import { VenueCard, VenueCardProps } from '@/components/venue-card';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageClassName' | 'className' | 'actionButton'> & { category: string })[] = [
     // Catering Services
@@ -445,70 +446,83 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
 export default function SearchPage() {
     const [priceRange, setPriceRange] = useState([500, 15000]);
 
+    const Filters = () => (
+        <form className="space-y-6">
+            <div>
+                <Label htmlFor="keyword">Keyword or Name</Label>
+                <Input id="keyword" placeholder="e.g., Lakeside, Royal" />
+            </div>
+            <div>
+                <Label htmlFor="location">Location</Label>
+                <Input id="location" placeholder="e.g., New York, NY" />
+            </div>
+            <div>
+                <Label htmlFor="category">Service Type</Label>
+                <Select>
+                    <SelectTrigger id="category">
+                        <SelectValue placeholder="All Services" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="venues">Venues</SelectItem>
+                        <SelectItem value="decorations">Decorations</SelectItem>
+                        <SelectItem value="catering">Catering</SelectItem>
+                        <SelectItem value="photography">Photography</SelectItem>
+                        <SelectItem value="transport">Transport</SelectItem>
+                        <SelectItem value="staff">Event Staff</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+            <div>
+                <Label>Price Range</Label>
+                <Slider
+                    min={0}
+                    max={30000}
+                    step={100}
+                    value={priceRange}
+                    onValueChange={setPriceRange}
+                />
+                <div className="flex justify-between text-sm text-muted-foreground mt-2">
+                    <span>${priceRange[0]}</span>
+                    <span>${priceRange[1]}</span>
+                </div>
+            </div>
+            <Button type="submit" className="w-full">
+                <Search className="mr-2 h-4 w-4" />
+                Apply Filters
+            </Button>
+        </form>
+    );
+
     return (
         <div className="container mx-auto px-4 py-12">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                {/* Filters Sidebar */}
-                <aside className="lg:col-span-1">
-                    <Card>
-                        <CardContent className="p-6">
-                           <h3 className="flex items-center text-lg font-semibold mb-6">
-                               <ListFilter className="w-5 h-5 mr-2" />
-                               Filters
-                           </h3>
-                           <form className="space-y-6">
-                               <div>
-                                   <Label htmlFor="keyword">Keyword or Name</Label>
-                                   <Input id="keyword" placeholder="e.g., Lakeside, Royal" />
-                               </div>
-                               <div>
-                                   <Label htmlFor="location">Location</Label>
-                                   <Input id="location" placeholder="e.g., New York, NY" />
-                               </div>
-                               <div>
-                                   <Label htmlFor="category">Service Type</Label>
-                                   <Select>
-                                        <SelectTrigger id="category">
-                                            <SelectValue placeholder="All Services" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="venues">Venues</SelectItem>
-                                            <SelectItem value="decorations">Decorations</SelectItem>
-                                            <SelectItem value="catering">Catering</SelectItem>
-                                            <SelectItem value="photography">Photography</SelectItem>
-                                            <SelectItem value="transport">Transport</SelectItem>
-                                            <SelectItem value="staff">Event Staff</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                               </div>
-                                <div>
-                                    <Label>Price Range</Label>
-                                    <Slider
-                                        min={0}
-                                        max={30000}
-                                        step={100}
-                                        value={priceRange}
-                                        onValueChange={setPriceRange}
-                                    />
-                                    <div className="flex justify-between text-sm text-muted-foreground mt-2">
-                                        <span>${priceRange[0]}</span>
-                                        <span>${priceRange[1]}</span>
-                                    </div>
-                                </div>
-                                <Button type="submit" className="w-full">
-                                    <Search className="mr-2 h-4 w-4" />
-                                    Apply Filters
-                                </Button>
-                           </form>
-                        </CardContent>
-                    </Card>
-                </aside>
-
+             <div className="flex flex-col">
                 {/* Search Results */}
-                <main className="lg:col-span-3">
-                    <h1 className="text-3xl font-bold mb-1 font-headline">Search Results</h1>
-                    <p className="text-muted-foreground mb-6">Showing {searchResults.length} results for your special day.</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <main>
+                    <div className='flex justify-between items-center mb-6'>
+                        <div>
+                            <h1 className="text-3xl font-bold font-headline">Search Results</h1>
+                            <p className="text-muted-foreground">Showing {searchResults.length} results for your special day.</p>
+                        </div>
+                        <div className="hidden md:block">
+                            <Sheet>
+                                <SheetTrigger asChild>
+                                    <Button variant="outline">
+                                        <ListFilter className="mr-2 h-4 w-4" />
+                                        Filters
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent>
+                                    <SheetHeader>
+                                        <SheetTitle>Filters</SheetTitle>
+                                    </SheetHeader>
+                                    <div className="py-4">
+                                        <Filters />
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {searchResults.map((item) => (
                              <VenueCard 
                                 key={item.name} 
@@ -525,9 +539,25 @@ export default function SearchPage() {
                         ))}
                     </div>
                 </main>
+                 {/* Mobile Filters */}
+                <div className="md:hidden fixed bottom-20 right-4 z-50">
+                     <Sheet>
+                        <SheetTrigger asChild>
+                            <Button size="icon" className="rounded-full shadow-lg h-14 w-14">
+                                <ListFilter className="h-6 w-6" />
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="bottom" className="h-[80vh] flex flex-col">
+                             <SheetHeader>
+                                <SheetTitle>Filters</SheetTitle>
+                            </SheetHeader>
+                             <div className="py-4 overflow-y-auto">
+                                <Filters />
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                </div>
             </div>
         </div>
     );
 }
-
-    
