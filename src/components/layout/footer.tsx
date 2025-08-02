@@ -40,9 +40,9 @@ export function Footer() {
     icon: MessageSquare,
   },
   {
-    name: user ? 'Profile' : 'Log in',
-    href: user ? '/profile' : '/login',
-    icon: user ? User : LogIn,
+    name: user ? 'Profile' : 'Account',
+    href: '/profile',
+    icon: user ? User : User,
   },
 ];
 
