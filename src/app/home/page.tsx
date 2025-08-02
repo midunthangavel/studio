@@ -1,18 +1,13 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import {
   ArrowRight,
   Heart,
-  MapPin,
-  Search,
-  Star,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { VenueCard, VenueCardProps } from "@/components/venue-card";
 
-const popularVenues = [
+const popularVenues: VenueCardProps[] = [
   {
     name: "Apartment in Center City",
     location: "New York, NY",
@@ -42,7 +37,7 @@ const popularVenues = [
   },
 ];
 
-const availableNextMonth = [
+const availableNextMonth: VenueCardProps[] = [
     {
         name: "Apartment in Miami",
         location: "Miami, FL",
@@ -63,109 +58,46 @@ const availableNextMonth = [
     }
 ]
 
+const VenueSection = ({ title, venues, moreLink }: { title: string, venues: VenueCardProps[], moreLink?: string }) => (
+    <section className="py-6">
+        <div className="container mx-auto px-4">
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold font-headline">
+                    {title}
+                </h2>
+                {moreLink && (
+                    <Button variant="link" asChild className="text-primary">
+                        <Link href={moreLink}>
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                    </Button>
+                )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {venues.map((venue) => (
+                     <VenueCard
+                        key={venue.name}
+                        {...venue}
+                        isCard
+                        imageClassName="h-64"
+                        actionButton={
+                             <Button variant="ghost" size="icon" className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full">
+                                <Heart className="w-5 h-5" />
+                            </Button>
+                        }
+                     />
+                ))}
+            </div>
+        </div>
+    </section>
+);
+
+
 export default function HomePage() {
   return (
     <div className="flex flex-col pb-24">
-      {/* Popular Venues Section */}
-      <section id="popular" className="py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold font-headline">
-              Popular venues in New York
-            </h2>
-            <Button variant="link" asChild className="text-primary">
-              <Link href="/search">
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularVenues.map((venue) => (
-              <Card key={venue.name} className="overflow-hidden group border-none shadow-none">
-                <div className="relative">
-                  <Image
-                    src={venue.image}
-                    alt={venue.name}
-                    width={600}
-                    height={300}
-                    className="w-full h-64 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
-                    data-ai-hint={venue.hint}
-                  />
-                  {venue.guestFavorite && (
-                    <div className="absolute top-2 left-2 bg-background/90 text-foreground text-xs font-bold py-1 px-3 rounded-full">
-                      Guest favorite
-                    </div>
-                  )}
-                  <Button variant="ghost" size="icon" className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full">
-                     <Heart className="w-5 h-5" />
-                  </Button>
-                </div>
-                <CardContent className="p-2">
-                  <h3 className="font-semibold text-base mt-1">{venue.name}</h3>
-                  <div className="flex items-center justify-between text-sm mt-1">
-                    <p className="text-muted-foreground">{venue.price}</p>
-                    <div className="flex items-center text-foreground font-medium">
-                      <Star className="w-4 h-4 mr-1 fill-primary text-primary" />
-                      {venue.rating}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-        {/* Available Next Month Section */}
-      <section id="available" className="py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold font-headline">
-              Available next month in Miami
-            </h2>
-            <Button variant="link" asChild className="text-primary">
-              <Link href="/search?location=Miami">
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {availableNextMonth.map((venue) => (
-              <Card key={venue.name} className="overflow-hidden group border-none shadow-none">
-                <div className="relative">
-                  <Image
-                    src={venue.image}
-                    alt={venue.name}
-                    width={600}
-                    height={300}
-                    className="w-full h-64 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
-                    data-ai-hint={venue.hint}
-                  />
-                   {venue.guestFavorite && (
-                    <div className="absolute top-2 left-2 bg-background/90 text-foreground text-xs font-bold py-1 px-3 rounded-full">
-                      Guest favorite
-                    </div>
-                  )}
-                  <Button variant="ghost" size="icon" className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full">
-                     <Heart className="w-5 h-5" />
-                  </Button>
-                </div>
-                <CardContent className="p-2">
-                  <h3 className="font-semibold text-base mt-1">{venue.name}</h3>
-                   <div className="flex items-center justify-between text-sm mt-1">
-                    <p className="text-muted-foreground">{venue.price}</p>
-                    <div className="flex items-center text-foreground font-medium">
-                      <Star className="w-4 h-4 mr-1 fill-primary text-primary" />
-                      {venue.rating}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
+      <VenueSection title="Popular venues in New York" venues={popularVenues} moreLink="/search" />
+      <VenueSection title="Available next month in Miami" venues={availableNextMonth} moreLink="/search?location=Miami" />
     </div>
   );
 }

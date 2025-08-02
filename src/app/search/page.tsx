@@ -8,11 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { ArrowRight, ListFilter, MapPin, Search, Star } from "lucide-react";
-import Image from "next/image";
-import Link from 'next/link';
+import { ListFilter, Search, Star } from "lucide-react";
+import { VenueCard, VenueCardProps } from '@/components/venue-card';
 
-const searchResults = [
+const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageClassName' | 'className' | 'actionButton'> & { category: string })[] = [
     {
         name: "Urban Chic Loft",
         location: "New York, NY",
@@ -141,43 +140,19 @@ export default function SearchPage() {
                 <main className="lg:col-span-3">
                     <h1 className="text-3xl font-bold mb-1 font-headline">Search Results</h1>
                     <p className="text-muted-foreground mb-6">Showing {searchResults.length} results for your special day.</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {searchResults.map((item) => (
-                             <Card key={item.name} className="overflow-hidden group">
-                                <div className="relative">
-                                <Image
-                                    src={item.image}
-                                    alt={item.name}
-                                    width={600}
-                                    height={300}
-                                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                                    data-ai-hint={item.hint}
-                                />
-                                <div className="absolute top-2 right-2 bg-background/80 p-2 rounded-full">
-                                    <Star className="w-5 h-5 text-accent fill-accent" />
-                                </div>
-                                </div>
-                                <CardContent className="p-4">
-                                <h3 className="font-bold text-lg">{item.name}</h3>
-                                <p className='text-sm text-primary font-semibold my-1'>{item.category}</p>
-                                <div className="flex items-center text-muted-foreground text-sm mt-1">
-                                    <MapPin className="w-4 h-4 mr-1" />
-                                    {item.location}
-                                </div>
-                                <div className="flex items-center text-sm mt-2">
-                                    <div className="flex items-center text-primary font-semibold">
-                                    <Star className="w-4 h-4 mr-1 fill-primary" />
-                                    {item.rating}
+                             <VenueCard 
+                                key={item.name} 
+                                {...item}
+                                actionButton={
+                                    <div className="absolute top-2 right-2 bg-background/80 p-2 rounded-full">
+                                        <Star className="w-5 h-5 text-accent fill-accent" />
                                     </div>
-                                    <span className="text-muted-foreground ml-2">
-                                    ({item.reviewCount} reviews)
-                                    </span>
-                                </div>
-                                <p className="text-foreground font-semibold mt-4">
-                                    {item.price}
-                                </p>
-                                </CardContent>
-                            </Card>
+                                }
+                                >
+                                     <p className='text-sm text-primary font-semibold my-1'>{item.category}</p>
+                             </VenueCard>
                         ))}
                     </div>
                 </main>
