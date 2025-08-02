@@ -82,7 +82,12 @@ export function Header() {
                 }`}
               >
                 {category.icon}
-                <span className="text-xs font-medium">{category.name}</span>
+                <span className="text-xs font-medium flex items-center gap-1">
+                    {category.name}
+                    {category.isNew && (
+                        <span className="bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full">NEW</span>
+                    )}
+                </span>
                 {isActive && (
                   <div className="absolute -bottom-2 h-[2px] w-6 bg-foreground rounded-full" />
                 )}
