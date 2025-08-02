@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,7 @@ import Link from "next/link";
 import { AppLogo } from "@/components/layout/app-logo";
 import { useToast } from '@/hooks/use-toast';
 import { Loader } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -44,6 +45,23 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    const provider = new GoogleAuthProvider();
+    try {
+        await signInWithPopup(auth, provider);
+        router.push('/home');
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: 'Google Sign-in Failed',
+            description: error.message,
+        });
+    } finally {
+        setLoading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-15rem)] px-4">
       <Card className="w-full max-w-sm">
@@ -57,6 +75,16 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <Button onClick={handleGoogleSignIn} variant="outline" className="w-full">
+            Sign in with Google
+          </Button>
+
+          <div className="flex items-center space-x-2">
+            <Separator className="flex-grow" />
+            <span className="text-xs text-muted-foreground">OR CONTINUE WITH</span>
+            <Separator className="flex-grow" />
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />

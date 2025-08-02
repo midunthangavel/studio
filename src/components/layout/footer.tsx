@@ -9,6 +9,7 @@ import {
   Search,
   User,
   Wallet,
+  LogIn,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
@@ -21,11 +22,11 @@ export function Footer() {
   const navItems = [
     {
       name: 'Explore',
-      href: '/home',
+      href: '/search',
       icon: Search,
     },
     {
-      name: 'Wishlists',
+      name: 'Favorites',
       href: '/favorites',
       icon: Heart,
     },
@@ -44,10 +45,10 @@ export function Footer() {
       href: '/budget',
       icon: Wallet,
     },
-    {
-      name: 'Profile',
+     {
+      name: user ? 'Account' : 'Log in',
       href: '/profile',
-      icon: User,
+      icon: user ? User : LogIn,
     },
   ];
 

@@ -4,14 +4,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Bell, LogOut, Search, User } from "lucide-react";
+import { Bell, LogOut, Search, User, Moon, Sun } from "lucide-react";
 import { WelcomeMessage } from "./welcome-message";
 import { HeaderNavigation } from "./header-navigation";
 import { usePathname, useRouter } from "next/navigation";
 import { AppLogo } from "./app-logo";
 import { useAuth } from "@/context/auth-context";
 import { auth } from "@/lib/firebase";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { ThemeToggle } from "./theme-toggle";
 
 
 export function Header() {
@@ -55,11 +56,13 @@ export function Header() {
              <Button variant="ghost" asChild>
                 <Link href="/planner">Become a host</Link>
             </Button>
+            <ThemeToggle />
             {user ? (
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
                      <Avatar className="h-8 w-8">
+                       <AvatarImage src={user.photoURL ?? undefined} />
                        <AvatarFallback>{user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}</AvatarFallback>
                      </Avatar>
                   </Button>
