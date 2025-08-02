@@ -87,7 +87,7 @@ export default function PlannerPage() {
   return (
     <PageWrapper
         icon={Lightbulb}
-        title="AI Function Planner"
+        title="AI Planner"
         description="Describe your function, and let our AI assistant spark your imagination!"
     >
       <div className="mx-auto max-w-4xl">

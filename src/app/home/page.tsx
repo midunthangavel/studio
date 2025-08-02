@@ -109,7 +109,7 @@ const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Venu
                     {venues.map((venue) => {
                         const favorited = isFavorited(venue.slug);
                         return (
-                        <Link href={`/venues/${venue.slug}`} key={venue.name}>
+                        <Link href={`/venues/${venue.slug}`} key={venue.name} passHref>
                             <VenueCard
                                 {...venue}
                                 isCard

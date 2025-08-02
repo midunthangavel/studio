@@ -7,7 +7,7 @@ import {
   Search,
   User,
   LogIn,
-  Calendar,
+  Bell,
   MessageSquare,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -31,7 +31,7 @@ export function Footer() {
     {
       name: 'Bookings',
       href: '/bookings',
-      icon: Calendar,
+      icon: Bell,
     },
     {
       name: 'Messages',

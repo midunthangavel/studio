@@ -106,7 +106,7 @@ export default function BudgetPage() {
         <ProtectedRoute>
             <PageWrapper
                 icon={Wallet}
-                title="Budget Tracker"
+                title="Budget"
                 description="Manage your event expenses and stay on top of your budget."
             >
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-5xl mx-auto">
