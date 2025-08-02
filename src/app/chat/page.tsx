@@ -11,14 +11,14 @@ import { MessageSquare, Send, User, Bot } from 'lucide-react';
 const initialConversations = [
   {
     name: 'Gourmet Delights Catering',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=100&h=100&fit=crop',
     messages: [
       { from: 'them', text: 'Hello! Thanks for reaching out. How can we help with your catering needs?' },
     ],
   },
   {
     name: 'The Grand Palace',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: 'https://images.unsplash.com/photo-1562790351-d273a961e0e9?q=80&w=100&h=100&fit=crop',
     messages: [
       { from: 'them', text: 'Hi there! We have received your booking inquiry. What date are you interested in?' },
       { from: 'me', text: 'We are looking at October 26th, 2024.' },
@@ -26,7 +26,7 @@ const initialConversations = [
   },
   {
     name: 'AI Assistant',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: 'https://images.unsplash.com/photo-1579566346927-c68383817a25?q=80&w=100&h=100&fit=crop',
     messages: [
       { from: 'them', text: 'Hello! I am your AI assistant. How can I help you plan today?' },
     ],

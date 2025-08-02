@@ -8,7 +8,7 @@ export default function WelcomePage() {
   return (
     <div className="relative flex flex-col items-center justify-center h-screen bg-background">
        <Image
-          src="https://placehold.co/1920x1080.png"
+          src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=1920&h=1080&fit=crop"
           alt="Elegant event venue"
           fill
           className="z-0 object-cover"

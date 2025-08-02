@@ -13,7 +13,7 @@ const upcomingBookings = [
         date: "October 26, 2024",
         location: "New York, NY",
         status: "Confirmed",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=600&h=400&fit=crop",
         hint: "wedding reception"
     },
     {
@@ -22,7 +22,7 @@ const upcomingBookings = [
         date: "October 26, 2024",
         location: "New York, NY",
         status: "Confirmed",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&h=400&fit=crop",
         hint: "catering food"
     }
 ];
@@ -34,7 +34,7 @@ const pastBookings = [
         date: "July 15, 2023",
         location: "Chicago, IL",
         status: "Completed",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1519225421980-715cb02cf58c?q=80&w=600&h=400&fit=crop",
         hint: "outdoor wedding"
     }
 ];

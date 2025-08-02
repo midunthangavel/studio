@@ -18,7 +18,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
         rating: 4.9,
         reviewCount: 150,
         price: "$6,000",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1542882583-4c4f494429f2?q=80&w=600&h=400&fit=crop",
         category: "Venues",
         hint: "urban loft"
     },
@@ -28,7 +28,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
         rating: 4.8,
         reviewCount: 90,
         price: "$100/person",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "catering food"
     },
@@ -38,7 +38,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
         rating: 4.7,
         reviewCount: 210,
         price: "$8,500",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&h=400&fit=crop",
         category: "Venues",
         hint: "beach resort"
     },
@@ -48,7 +48,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
         rating: 5.0,
         reviewCount: 300,
         price: "$2,500",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "wedding photography"
     },
@@ -58,7 +58,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
         rating: 4.9,
         reviewCount: 180,
         price: "$12,000",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1542665952-14513db15293?q=80&w=600&h=400&fit=crop",
         category: "Venues",
         hint: "luxury ballroom"
     },
@@ -68,7 +68,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
         rating: 4.9,
         reviewCount: 75,
         price: "Varies",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1594488518063-8e54fb664d42?q=80&w=600&h=400&fit=crop",
         category: "Event Staff",
         hint: "event staff serving"
     },
