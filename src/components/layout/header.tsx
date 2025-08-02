@@ -34,6 +34,9 @@ export function Header() {
                 />
             </div>
           </div>
+          <div className="flex md:hidden">
+             <ThemeToggle />
+          </div>
           <div className="hidden md:flex items-center gap-2">
              <Button variant="ghost" asChild>
                 <Link href="/planner">Become a host</Link>
