@@ -62,18 +62,18 @@ const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Venu
     <section className="py-6">
         <div className="container mx-auto px-4">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold font-headline">
+                <h2 className="text-2xl md:text-3xl font-bold font-headline">
                     {title}
                 </h2>
                 {moreLink && (
                     <Button variant="link" asChild className="text-primary">
                         <Link href={moreLink}>
-                            <ArrowRight className="ml-2 h-4 w-4" />
+                            See all <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
                     </Button>
                 )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {venues.map((venue) => (
                      <VenueCard
                         key={venue.name}
@@ -95,9 +95,9 @@ const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Venu
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col pb-24">
-      <VenueSection title="Popular venues in New York" venues={popularVenues} moreLink="/search" />
-      <VenueSection title="Available next month in Miami" venues={availableNextMonth} moreLink="/search?location=Miami" />
+    <div className="flex flex-col pb-24 md:pb-0">
+      <VenueSection title="Popular venues" venues={popularVenues} moreLink="/search" />
+      <VenueSection title="Available next month" venues={availableNextMonth} moreLink="/search?location=Miami" />
     </div>
   );
 }

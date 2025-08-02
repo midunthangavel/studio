@@ -17,7 +17,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="container flex h-auto flex-col justify-center gap-4 py-4 max-w-screen-2xl">
+      <div className="container flex h-auto flex-col justify-center gap-4 py-3">
         {/* Top: Search Bar & Actions */}
         <div className="flex items-center gap-4">
            <Link href="/home" className="hidden md:block">
@@ -25,7 +25,7 @@ export function Header() {
           </Link>
           <div className="flex-grow">
              {pathname === '/home' && <WelcomeMessage />}
-            <div className="relative">
+            <div className="relative md:w-auto md:flex-grow">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                 type="search"
@@ -39,9 +39,11 @@ export function Header() {
                 <Link href="/planner">Become a host</Link>
             </Button>
             <ThemeToggle />
-            <Button size="icon" variant="ghost">
-                <Bell className="h-5 w-5" />
-                <span className="sr-only">Notifications</span>
+            <Button size="icon" variant="ghost" asChild>
+                <Link href="/notifications">
+                    <Bell className="h-5 w-5" />
+                    <span className="sr-only">Notifications</span>
+                </Link>
             </Button>
           </div>
         </div>
