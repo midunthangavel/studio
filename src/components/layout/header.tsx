@@ -13,6 +13,7 @@ import {
   ConciergeBell,
 } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
+import { useEffect, useState } from "react";
 
 const categories = [
   {
@@ -41,6 +42,11 @@ const categories = [
 
 export function Header() {
   const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -72,7 +78,7 @@ export function Header() {
         {/* Bottom: Navigation */}
         <nav className="flex justify-center items-center gap-10 text-sm">
           {categories.map((category) => {
-            const isActive = pathname === category.href;
+            const isActive = isClient && pathname === category.href;
             return (
                 <Link
                 href={category.href}
@@ -84,7 +90,7 @@ export function Header() {
                 {category.icon}
                 <span className="text-xs font-medium flex items-center gap-1">
                     {category.name}
-                    {category.isNew && (
+                    {isClient && category.isNew && (
                         <span className="bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full">NEW</span>
                     )}
                 </span>
