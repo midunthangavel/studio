@@ -2,7 +2,7 @@
 'use client';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Star, MapPin, Wifi, ParkingSquare, Utensils, Wind, Calendar as CalendarIcon } from 'lucide-react';
+import { Star, MapPin, Wifi, ParkingSquare, Utensils, Wind, Calendar as CalendarIcon, Heart } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useFavorites } from '@/context/favorites-context';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const allVenues = searchResults; // Using the same data source
 
@@ -39,26 +42,49 @@ const reviews = [
 
 export default function VenueDetailPage({ params }: { params: { slug: string } }) {
   const venue = allVenues.find(v => v.slug === params.slug);
+  const { isFavorited, toggleFavorite } = useFavorites();
+  const { toast } = useToast();
 
   if (!venue) {
     notFound();
   }
 
+  const favorited = isFavorited(venue.slug);
+
+  const handleRequestBooking = () => {
+    toast({
+        title: "Booking Request Sent!",
+        description: `Your request to book ${venue.name} has been sent.`,
+    });
+  }
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold font-headline">{venue.name}</h1>
-        <div className="flex items-center gap-4 text-muted-foreground mt-2">
-            <div className="flex items-center gap-1">
-                <Star className="w-5 h-5 text-primary" />
-                <span className="font-semibold text-foreground">{venue.rating}</span>
-                <span>({venue.reviewCount} reviews)</span>
+        <div className="flex justify-between items-start">
+            <div>
+                <h1 className="text-4xl font-bold font-headline">{venue.name}</h1>
+                <div className="flex items-center gap-4 text-muted-foreground mt-2">
+                    <div className="flex items-center gap-1">
+                        <Star className="w-5 h-5 text-primary" />
+                        <span className="font-semibold text-foreground">{venue.rating}</span>
+                        <span>({venue.reviewCount} reviews)</span>
+                    </div>
+                    <span className="text-muted-foreground/50">|</span>
+                    <div className="flex items-center gap-1">
+                        <MapPin className="w-5 h-5 text-primary" />
+                        <span>{venue.location}</span>
+                    </div>
+                </div>
             </div>
-            <span className="text-muted-foreground/50">|</span>
-            <div className="flex items-center gap-1">
-                <MapPin className="w-5 h-5 text-primary" />
-                <span>{venue.location}</span>
-            </div>
+            <Button 
+                variant="outline" 
+                size="icon"
+                onClick={() => toggleFavorite(venue)}
+            >
+                <Heart className={cn("w-5 h-5", favorited && "fill-primary text-primary" )} />
+                <span className='sr-only'>Favorite</span>
+            </Button>
         </div>
       </div>
 
@@ -146,7 +172,7 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
                             <Input id="guests" type="number" placeholder="50" />
                         </div>
                     </div>
-                    <Button size="lg" className="w-full mt-4">Request to Book</Button>
+                    <Button size="lg" className="w-full mt-4" onClick={handleRequestBooking}>Request to Book</Button>
                     <p className="text-center text-sm text-muted-foreground">You won&apos;t be charged yet</p>
                 </CardContent>
             </Card>

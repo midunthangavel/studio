@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/context/auth-context";
+import { FavoritesProvider } from "@/context/favorites-context";
 
 export default function RootLayout({
   children,
@@ -33,10 +34,12 @@ export default function RootLayout({
             disableTransitionOnChange
         >
           <AuthProvider>
+            <FavoritesProvider>
               <ConditionalLayout>
                   {children}
               </ConditionalLayout>
               <Toaster />
+            </FavoritesProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

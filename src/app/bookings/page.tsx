@@ -9,68 +9,17 @@ import { Calendar, CheckCircle, Clock, MapPin } from "lucide-react";
 import Image from "next/image";
 import { PageWrapper } from "@/components/page-wrapper";
 import { ProtectedRoute } from "@/components/protected-route";
+import { useState } from "react";
 
-const upcomingBookings = [
-    {
-        id: "BK12345",
-        name: "The Grand Palace - Wedding Reception",
-        date: "October 26, 2024",
-        location: "New York, NY",
-        status: "Confirmed",
-        image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=600&h=400&fit=crop",
-        hint: "wedding reception"
-    },
-    {
-        id: "BK67890",
-        name: "Gourmet Delights - Catering Service",
-        date: "October 26, 2024",
-        location: "New York, NY",
-        status: "Confirmed",
-        image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&h=400&fit=crop",
-        hint: "catering food"
-    },
-    {
-        id: "BK11223",
-        name: "Timeless Moments - Photography",
-        date: "October 26, 2024",
-        location: "New York, NY",
-        status: "Confirmed",
-        image: "https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=600&h=400&fit=crop",
-        hint: "wedding photography"
-    },
-     {
-        id: "BK44556",
-        name: "Prestige Bridal Cars - Transport",
-        date: "November 12, 2024",
-        location: "New York, NY",
-        status: "Pending",
-        image: "https://images.unsplash.com/photo-1618951012351-38a6a79b21e8?q=80&w=600&h=400&fit=crop",
-        hint: "luxury car"
-    }
-];
+// NOTE: In a real app, this data would be fetched from a database
+const initialUpcomingBookings: any[] = [];
+const initialPastBookings: any[] = [];
 
-const pastBookings = [
-    {
-        id: "BK54321",
-        name: "Lakeside Manor - Birthday Party",
-        date: "July 15, 2023",
-        location: "Chicago, IL",
-        status: "Completed",
-        image: "https://images.unsplash.com/photo-1519225421980-715cb02cf58c?q=80&w=600&h=400&fit=crop",
-        hint: "outdoor wedding"
-    },
-    {
-        id: "BK98765",
-        name: "Enchanted Events Decor - Anniversary",
-        date: "May 20, 2023",
-        location: "Los Angeles, CA",
-        status: "Completed",
-        image: "https://images.unsplash.com/photo-1520854221256-17452cc6da82?q=80&w=600&h=400&fit=crop",
-        hint: "wedding table"
-    }
-];
 
 function BookingsPage() {
+  const [upcomingBookings, setUpcomingBookings] = useState(initialUpcomingBookings);
+  const [pastBookings, setPastBookings] = useState(initialPastBookings);
+
   return (
     <ProtectedRoute>
     <PageWrapper
@@ -121,7 +70,17 @@ function BookingsPage() {
                     </Card>
                 ))
             ) : (
-                <p className="text-muted-foreground text-center py-8">No upcoming bookings.</p>
+                <div className="border-dashed border rounded-lg">
+                    <div className="p-10 text-center">
+                        <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
+                        <Calendar className="w-8 h-8 text-muted-foreground" />
+                        </div>
+                        <h3 className="text-xl font-semibold mb-2">No Upcoming Bookings</h3>
+                        <p className="text-muted-foreground">
+                        You have no upcoming bookings. Why not explore some venues?
+                        </p>
+                    </div>
+                </div>
             )}
             </div>
         </TabsContent>
@@ -163,7 +122,17 @@ function BookingsPage() {
                     </Card>
                 ))
             ) : (
-                 <p className="text-muted-foreground text-center py-8">No past bookings.</p>
+                <div className="border-dashed border rounded-lg">
+                    <div className="p-10 text-center">
+                        <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
+                        <CheckCircle className="w-8 h-8 text-muted-foreground" />
+                        </div>
+                        <h3 className="text-xl font-semibold mb-2">No Past Bookings</h3>
+                        <p className="text-muted-foreground">
+                        You have no past bookings.
+                        </p>
+                    </div>
+                </div>
             )}
             </div>
         </TabsContent>

@@ -8,7 +8,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { VenueCard, VenueCardProps } from "@/components/venue-card";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { useFavorites } from "@/context/favorites-context";
+import { cn } from "@/lib/utils";
 
 const popularVenues: VenueCardProps[] = [
   {
@@ -86,40 +87,55 @@ const availableNextMonth: VenueCardProps[] = [
     }
 ]
 
-const VenueSection = ({ title, venues, moreLink }: { title: string, venues: VenueCardProps[], moreLink?: string }) => (
-    <section className="py-6">
-        <div className="container mx-auto px-4">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl md:text-3xl font-bold font-headline">
-                    {title}
-                </h2>
-                {moreLink && (
-                    <Button variant="link" asChild className="text-primary">
-                        <Link href={moreLink}>
-                            See all <ArrowRight className="ml-2 h-4 w-4" />
+const VenueSection = ({ title, venues, moreLink }: { title: string, venues: VenueCardProps[], moreLink?: string }) => {
+    const { isFavorited, toggleFavorite } = useFavorites();
+
+    return (
+        <section className="py-6">
+            <div className="container mx-auto px-4">
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold font-headline">
+                        {title}
+                    </h2>
+                    {moreLink && (
+                        <Button variant="link" asChild className="text-primary">
+                            <Link href={moreLink}>
+                                See all <ArrowRight className="ml-2 h-4 w-4" />
+                            </Link>
+                        </Button>
+                    )}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {venues.map((venue) => {
+                        const favorited = isFavorited(venue.slug);
+                        return (
+                        <Link href={`/venues/${venue.slug}`} key={venue.name}>
+                            <VenueCard
+                                {...venue}
+                                isCard
+                                imageClassName="h-64"
+                                actionButton={
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon" 
+                                        className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            toggleFavorite(venue)
+                                        }}
+                                    >
+                                        <Heart className={cn("w-5 h-5", favorited && "fill-primary text-primary")} />
+                                    </Button>
+                                }
+                            />
                         </Link>
-                    </Button>
-                )}
+                    )})}
+                </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {venues.map((venue) => (
-                    <Link href={`/venues/${venue.slug}`} key={venue.name}>
-                        <VenueCard
-                            {...venue}
-                            isCard
-                            imageClassName="h-64"
-                            actionButton={
-                                <Button variant="ghost" size="icon" className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full">
-                                    <Heart className="w-5 h-5" />
-                                </Button>
-                            }
-                        />
-                    </Link>
-                ))}
-            </div>
-        </div>
-    </section>
-);
+        </section>
+    );
+}
 
 
 export default function HomePage() {

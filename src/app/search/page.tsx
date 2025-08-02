@@ -9,9 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { ListFilter, Search, Star } from "lucide-react";
+import { ListFilter, Search, Star, Heart } from "lucide-react";
 import { VenueCard, VenueCardProps } from '@/components/venue-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { useFavorites } from '@/context/favorites-context';
+import { cn } from '@/lib/utils';
 
 const searchResults: (VenueCardProps & { category: string })[] = [
     // Catering Services
@@ -488,6 +490,7 @@ const searchResults: (VenueCardProps & { category: string })[] = [
 
 export default function SearchPage() {
     const [priceRange, setPriceRange] = useState([500, 15000]);
+    const { isFavorited, toggleFavorite } = useFavorites();
 
     const Filters = () => (
         <form className="space-y-6">
@@ -566,22 +569,33 @@ export default function SearchPage() {
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {searchResults.map((item) => (
+                        {searchResults.map((item) => {
+                            const favorited = isFavorited(item.slug);
+                            return (
                              <Link href={`/venues/${item.slug}`} key={item.name}>
                                 <VenueCard 
                                     isCard
                                     {...item}
                                     imageClassName="h-64"
                                     actionButton={
-                                        <div className="absolute top-2 right-2 bg-background/80 p-2 rounded-full">
-                                            <Star className="w-5 h-5 text-accent" />
-                                        </div>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                toggleFavorite(item)
+                                            }}
+                                        >
+                                            <Heart className={cn("w-5 h-5", favorited && "fill-primary text-primary")} />
+                                        </Button>
                                     }
                                     >
                                         <p className='text-sm text-primary font-semibold my-1'>{item.category}</p>
                                 </VenueCard>
                             </Link>
-                        ))}
+                        )})}
                     </div>
                 </main>
                  {/* Mobile Filters */}
