@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const categories = [
   {
@@ -92,11 +93,16 @@ export function Header() {
             VenueVoyager
           </Link>
           <div className="flex-grow">
-            <div className="bg-card border rounded-lg p-3 text-sm mb-3 shadow-sm">
-                <h2 className="font-semibold text-base">Welcome back!</h2>
-                <div className="flex items-center text-muted-foreground mt-1">
-                    <MapPin className="w-4 h-4 mr-2 text-primary" />
-                    <span>{location || locationError || 'Attempting to get your location...'}</span>
+            <div className="bg-card border rounded-lg p-3 text-sm mb-3 shadow-sm flex items-center gap-3">
+                <Avatar>
+                    <AvatarFallback>U</AvatarFallback>
+                </Avatar>
+                <div>
+                    <h2 className="font-semibold text-base">Welcome back!</h2>
+                    <div className="flex items-center text-muted-foreground mt-1">
+                        <MapPin className="w-4 h-4 mr-2 text-primary" />
+                        <span>{location || locationError || 'Attempting to get your location...'}</span>
+                    </div>
                 </div>
             </div>
             <div className="relative">
