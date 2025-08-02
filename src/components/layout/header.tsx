@@ -9,6 +9,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { WelcomeMessage } from "./welcome-message";
 import { HeaderNavigation } from "./header-navigation";
 import { usePathname } from "next/navigation";
+import { AppLogo } from "./app-logo";
 
 
 export function Header() {
@@ -19,8 +20,8 @@ export function Header() {
       <div className="container flex h-auto flex-col justify-center gap-4 py-4 max-w-screen-2xl">
         {/* Top: Search Bar & Actions */}
         <div className="flex items-center gap-4">
-           <Link href="/home" className="font-bold text-lg text-primary font-headline hidden md:block">
-            VenueVoyager
+           <Link href="/home" className="hidden md:block">
+                <AppLogo className="text-2xl" />
           </Link>
           <div className="flex-grow">
              {pathname === '/home' && <WelcomeMessage />}

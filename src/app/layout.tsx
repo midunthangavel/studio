@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>VenueVoyager</title>
+        <title>FixmyEvent</title>
         <meta name="description" content="Find and book venues and services for your events." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -60,7 +60,7 @@ function ConditionalLayout({ children }: {children: React.ReactNode}) {
     return (
         <div className="relative flex min-h-screen flex-col bg-background">
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 p-4 sm:p-6 md:p-8">{children}</main>
           <Footer />
         </div>
     )

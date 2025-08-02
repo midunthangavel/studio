@@ -1,8 +1,8 @@
 
 import { Button } from "@/components/ui/button";
-import { Mountain } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { AppLogo } from "@/components/layout/app-logo";
 
 export default function WelcomePage() {
   return (
@@ -16,9 +16,9 @@ export default function WelcomePage() {
         />
         <div className="absolute inset-0 bg-black/60 z-10" />
       <div className="relative z-20 flex flex-col items-center justify-center text-center text-white px-4">
-        <Mountain className="h-24 w-24 mb-6 text-primary" />
+        <AppLogo className="text-8xl mb-6" />
         <h1 className="text-5xl md:text-7xl font-bold font-headline mb-4">
-          VenueVoyager
+          FixmyEvent
         </h1>
         <p className="mt-2 max-w-2xl text-lg md:text-xl text-primary-foreground/80 mb-10">
           Your perfect event, simplified.

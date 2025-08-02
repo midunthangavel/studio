@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mountain } from "lucide-react";
 import Link from "next/link";
+import { AppLogo } from "@/components/layout/app-logo";
 
 export default function SignupPage() {
   return (
@@ -19,7 +19,7 @@ export default function SignupPage() {
       <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
             <div className="mb-4 flex justify-center">
-                <Mountain className="h-8 w-8" />
+                <AppLogo className="text-3xl" />
             </div>
           <CardTitle className="text-2xl font-bold font-headline">Create an Account</CardTitle>
           <CardDescription>
