@@ -8,10 +8,17 @@ import {
   MessageSquare,
   Search,
   User,
+  LogIn,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/auth-context';
 
-const navItems = [
+export function Footer() {
+  const pathname = usePathname();
+  const { user } = useAuth();
+  const noLayoutRoutes = ['/'];
+
+  const navItems = [
   {
     name: 'Explore',
     href: '/home',
@@ -33,15 +40,12 @@ const navItems = [
     icon: MessageSquare,
   },
   {
-    name: 'Profile',
-    href: '/login',
-    icon: User,
+    name: user ? 'Profile' : 'Log in',
+    href: user ? '/profile' : '/login',
+    icon: user ? User : LogIn,
   },
 ];
 
-export function Footer() {
-  const pathname = usePathname();
-  const noLayoutRoutes = ['/'];
 
   if (noLayoutRoutes.includes(pathname)) {
       return null;

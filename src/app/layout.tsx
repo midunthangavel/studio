@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import "./globals.css";
@@ -8,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
+import { AuthProvider } from "@/context/auth-context";
 
 export default function RootLayout({
   children,
@@ -30,10 +32,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-            <ConditionalLayout>
-                {children}
-            </ConditionalLayout>
-            <Toaster />
+          <AuthProvider>
+              <ConditionalLayout>
+                  {children}
+              </ConditionalLayout>
+              <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

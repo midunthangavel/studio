@@ -1,9 +1,12 @@
 
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { VenueCard, VenueCardProps } from "@/components/venue-card";
 import { PageWrapper } from "@/components/page-wrapper";
 import Link from "next/link";
+import { ProtectedRoute } from "@/components/protected-route";
 
 const favoriteItems: VenueCardProps[] = [
   {
@@ -68,8 +71,9 @@ const favoriteItems: VenueCardProps[] = [
   },
 ];
 
-export default function FavoritesPage() {
+function FavoritesPage() {
   return (
+    <ProtectedRoute>
     <PageWrapper
         icon={Heart}
         title="My Favorites"
@@ -107,5 +111,8 @@ export default function FavoritesPage() {
         </div>
       )}
     </PageWrapper>
+    </ProtectedRoute>
   );
 }
+
+export default FavoritesPage;

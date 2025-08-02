@@ -4,15 +4,33 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Bell, Search } from "lucide-react";
+import { Bell, LogOut, Search, User } from "lucide-react";
 import { WelcomeMessage } from "./welcome-message";
 import { HeaderNavigation } from "./header-navigation";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AppLogo } from "./app-logo";
+import { useAuth } from "@/context/auth-context";
+import { auth } from "@/lib/firebase";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 
 export function Header() {
   const pathname = usePathname();
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push('/login');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
@@ -37,6 +55,38 @@ export function Header() {
              <Button variant="ghost" asChild>
                 <Link href="/planner">Become a host</Link>
             </Button>
+            {user ? (
+               <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                     <Avatar className="h-8 w-8">
+                       <AvatarFallback>{user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}</AvatarFallback>
+                     </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => router.push('/profile')}>
+                    <User className="mr-2" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/bookings')}>
+                    <Bell className="mr-2" />
+                    Bookings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2" />
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+                <Button asChild>
+                  <Link href="/login">Login</Link>
+                </Button>
+            )}
             <Button size="icon" variant="ghost" asChild>
                 <Link href="/notifications">
                     <Bell className="h-5 w-5" />

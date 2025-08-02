@@ -1,4 +1,6 @@
 
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle, Clock, MapPin } from "lucide-react";
 import Image from "next/image";
 import { PageWrapper } from "@/components/page-wrapper";
+import { ProtectedRoute } from "@/components/protected-route";
 
 const upcomingBookings = [
     {
@@ -67,8 +70,9 @@ const pastBookings = [
     }
 ];
 
-export default function BookingsPage() {
+function BookingsPage() {
   return (
+    <ProtectedRoute>
     <PageWrapper
         icon={Calendar}
         title="My Bookings"
@@ -165,5 +169,8 @@ export default function BookingsPage() {
         </TabsContent>
       </Tabs>
     </PageWrapper>
+    </ProtectedRoute>
   );
 }
+
+export default BookingsPage;
