@@ -79,19 +79,18 @@ export default function SearchPage() {
                             <h1 className="text-3xl font-bold font-headline">Search Results</h1>
                             <p className="text-muted-foreground">Showing {searchResults.length} results for your special day.</p>
                         </div>
-                        <div className="hidden md:block">
+                        <div className="md:hidden">
                             <Sheet>
                                 <SheetTrigger asChild>
-                                    <Button variant="outline">
-                                        <ListFilter className="mr-2 h-4 w-4" />
-                                        Filters
+                                    <Button variant="outline" size="icon">
+                                        <ListFilter className="h-4 w-4" />
                                     </Button>
                                 </SheetTrigger>
-                                <SheetContent>
-                                    <SheetHeader>
+                                <SheetContent side="bottom" className="h-[80vh] flex flex-col">
+                                     <SheetHeader>
                                         <SheetTitle>Filters</SheetTitle>
                                     </SheetHeader>
-                                    <div className="py-4">
+                                     <div className="py-4 overflow-y-auto">
                                         <Filters />
                                     </div>
                                 </SheetContent>
@@ -128,24 +127,15 @@ export default function SearchPage() {
                         )})}
                     </div>
                 </main>
-                 {/* Mobile Filters */}
-                <div className="md:hidden fixed bottom-20 right-4 z-50">
-                     <Sheet>
-                        <SheetTrigger asChild>
-                            <Button size="icon" className="rounded-full shadow-lg h-14 w-14">
-                                <ListFilter className="h-6 w-6" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="bottom" className="h-[80vh] flex flex-col">
-                             <SheetHeader>
-                                <SheetTitle>Filters</SheetTitle>
-                            </SheetHeader>
-                             <div className="py-4 overflow-y-auto">
-                                <Filters />
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
+                 {/* Desktop Filters */}
+                <aside className="hidden md:block col-span-1 lg:col-span-1">
+                    <Card className="sticky top-24">
+                        <CardContent className="p-6">
+                            <h3 className="text-lg font-semibold mb-4">Filters</h3>
+                             <Filters />
+                        </CardContent>
+                    </Card>
+                </aside>
             </div>
         </div>
     );

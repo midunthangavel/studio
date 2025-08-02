@@ -33,6 +33,8 @@ export function Header() {
     router.push('/login');
   };
 
+  const showFullHeader = pathname === '/home' || pathname === '/search';
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-auto flex-col justify-center gap-4 py-3">
@@ -45,14 +47,16 @@ export function Header() {
              <div className="hidden md:block">
               {pathname === '/home' && <WelcomeMessage />}
              </div>
-            <div className="relative md:w-auto md:flex-grow">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                type="search"
-                placeholder="Start your search"
-                className="w-full rounded-full bg-muted pl-10 h-12 shadow-md focus-visible:ring-primary"
-                />
-            </div>
+             {showFullHeader && (
+                <div className="relative w-full">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                    type="search"
+                    placeholder="Start your search"
+                    className="w-full rounded-full bg-muted pl-10 h-12 shadow-inner focus-visible:ring-primary"
+                    />
+                </div>
+             )}
           </div>
           <div className="hidden md:flex items-center gap-2">
              <Button variant="ghost" asChild>

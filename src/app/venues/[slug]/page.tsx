@@ -19,6 +19,7 @@ import { useFavorites } from '@/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const amenities = [
     { icon: Wifi, text: 'Free Wi-Fi' },
@@ -41,6 +42,13 @@ const reviews = [
         comment: 'Great location and beautiful decor. The catering was delicious, although the music system could be a bit better. Overall, a fantastic experience.',
     },
 ];
+
+const galleryImages = [
+    "https://images.unsplash.com/photo-1519688034509-3f5f3ab4349e?q=80&w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1520854221256-17452cc6da82?q=80&w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1579683348053-14b1c5a942ce?q=80&w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=400&h=300&fit=crop",
+]
 
 export default function VenueDetailPage({ params }: { params: { slug: string } }) {
   const venue = allVenues.find(v => v.slug === params.slug);
@@ -172,31 +180,56 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
                     </div>
                 </div>
             </div>
-            <div className="flex items-center gap-2">
-                <Button 
+            <div className="flex items-center gap-2 md:hidden">
+                 <Button 
                     variant="outline" 
-                    size="icon"
+                    size="sm"
                     onClick={() => toggleFavorite(venue)}
                     aria-label='Favorite'
                 >
-                    <Heart className={cn("w-5 h-5", favorited && "fill-primary text-primary" )} />
+                    <Heart className={cn("w-4 h-4 mr-2", favorited && "fill-primary text-primary" )} />
+                    {favorited ? "Favorited" : "Favorite"}
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleContactProvider} disabled={contactLoading}>
+                    {contactLoading ? <Loader className="animate-spin mr-2" /> : <MessageSquare className="mr-2 h-4 w-4" />}
+                    Contact
                 </Button>
             </div>
         </div>
       </div>
 
       {/* Image Gallery */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-12">
-        <div className="col-span-1">
-          <Image src={venue.image} alt={venue.name} width={800} height={600} className="rounded-lg object-cover w-full h-full" data-ai-hint={venue.hint} />
+      <div className="mb-12">
+        {/* Desktop Grid */}
+        <div className="hidden md:grid grid-cols-2 gap-2">
+            <div className="col-span-1">
+                <Image src={venue.image} alt={venue.name} width={800} height={600} className="rounded-lg object-cover w-full h-full" data-ai-hint={venue.hint} />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+                {galleryImages.map((src, index) => (
+                     <Image key={index} src={src} alt={`Venue detail ${index + 1}`} width={400} height={300} className="rounded-lg object-cover w-full h-full" data-ai-hint="banquet hall" />
+                ))}
+            </div>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-            <Image src="https://images.unsplash.com/photo-1519688034509-3f5f3ab4349e?q=80&w=400&h=300&fit=crop" alt="Venue detail 1" width={400} height={300} className="rounded-lg object-cover w-full h-full" data-ai-hint="banquet hall" />
-            <Image src="https://images.unsplash.com/photo-1520854221256-17452cc6da82?q=80&w=400&h=300&fit=crop" alt="Venue detail 2" width={400} height={300} className="rounded-lg object-cover w-full h-full" data-ai-hint="wedding table" />
-            <Image src="https://images.unsplash.com/photo-1579683348053-14b1c5a942ce?q=80&w=400&h=300&fit=crop" alt="Venue detail 3" width={400} height={300} className="rounded-lg object-cover w-full h-full" data-ai-hint="flower arch" />
-            <Image src="https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=400&h=300&fit=crop" alt="Venue detail 4" width={400} height={300} className="rounded-lg object-cover w-full h-full" data-ai-hint="wedding photography" />
+        {/* Mobile Carousel */}
+        <div className="md:hidden -mx-4">
+            <Carousel>
+                <CarouselContent>
+                    <CarouselItem>
+                        <Image src={venue.image} alt={venue.name} width={800} height={600} className="object-cover w-full h-64" data-ai-hint={venue.hint} />
+                    </CarouselItem>
+                     {galleryImages.map((src, index) => (
+                        <CarouselItem key={index}>
+                           <Image src={src} alt={`Venue detail ${index + 1}`} width={800} height={600} className="object-cover w-full h-64" data-ai-hint="banquet hall" />
+                        </CarouselItem>
+                     ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
+            </Carousel>
         </div>
       </div>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Main Content */}
@@ -245,11 +278,21 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
                     </div>
                 ))}
             </div>
-             <Separator className="my-8" />
-             <Button variant="outline" onClick={handleContactProvider} disabled={contactLoading}>
-                {contactLoading ? <Loader className="animate-spin mr-2" /> : <MessageSquare className="mr-2" />}
-                Contact Provider
-            </Button>
+             <Separator className="my-8 hidden md:block" />
+             <div className='hidden md:flex items-center gap-2'>
+                <Button variant="outline" onClick={handleContactProvider} disabled={contactLoading}>
+                    {contactLoading ? <Loader className="animate-spin mr-2" /> : <MessageSquare className="mr-2" />}
+                    Contact Provider
+                </Button>
+                 <Button 
+                    variant="outline" 
+                    onClick={() => toggleFavorite(venue)}
+                    aria-label='Favorite'
+                >
+                    <Heart className={cn("w-5 h-5 mr-2", favorited && "fill-primary text-primary" )} />
+                    {favorited ? 'Favorited' : 'Favorite'}
+                </Button>
+            </div>
         </div>
 
         {/* Booking Card */}
@@ -263,12 +306,16 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
                     <div className="grid grid-cols-1 gap-4">
                         <div>
                             <Label htmlFor="date">Date</Label>
-                            <Calendar
+                             <Calendar
                                 id="date"
                                 mode="single"
                                 selected={date}
                                 onSelect={setDate}
-                                className="rounded-md border p-0"
+                                className="rounded-md border p-0 [&_button]:w-full"
+                                styles={{
+                                    day: { width: '100%' }
+                                }}
+
                             />
                         </div>
                          <div>
