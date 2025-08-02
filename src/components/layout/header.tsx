@@ -8,9 +8,11 @@ import { Bell, Search } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { WelcomeMessage } from "./welcome-message";
 import { HeaderNavigation } from "./header-navigation";
+import { usePathname } from "next/navigation";
 
 
 export function Header() {
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
@@ -21,7 +23,7 @@ export function Header() {
             VenueVoyager
           </Link>
           <div className="flex-grow">
-             <WelcomeMessage />
+             {pathname === '/home' && <WelcomeMessage />}
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
