@@ -59,6 +59,18 @@ export function Header() {
             <ThemeToggle />
             {user ? (
               <>
+               <Button size="icon" variant="ghost" asChild>
+                  <Link href="/chat">
+                      <MessageSquare className="h-5 w-5" />
+                      <span className="sr-only">Messages</span>
+                  </Link>
+              </Button>
+              <Button size="icon" variant="ghost" asChild>
+                  <Link href="/notifications">
+                      <Bell className="h-5 w-5" />
+                      <span className="sr-only">Notifications</span>
+                  </Link>
+              </Button>
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
@@ -86,18 +98,6 @@ export function Header() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-               <Button size="icon" variant="ghost" asChild>
-                  <Link href="/chat">
-                      <MessageSquare className="h-5 w-5" />
-                      <span className="sr-only">Messages</span>
-                  </Link>
-              </Button>
-              <Button size="icon" variant="ghost" asChild>
-                  <Link href="/notifications">
-                      <Bell className="h-5 w-5" />
-                      <span className="sr-only">Notifications</span>
-                  </Link>
-              </Button>
               </>
             ) : (
                 <Button asChild>
