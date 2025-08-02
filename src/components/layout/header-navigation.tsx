@@ -9,6 +9,7 @@ import {
   ConciergeBell,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 
 const categories = [
@@ -55,9 +56,10 @@ export function HeaderNavigation() {
                     <Link
                     href={category.href}
                     key={category.name}
-                    className={`relative flex flex-col items-center gap-1 transition-colors hover:text-foreground/80 ${
-                    isActive ? "text-foreground" : "text-muted-foreground"
-                    }`}
+                    className={cn(
+                      "relative flex flex-col items-center gap-1 transition-colors hover:text-foreground/80",
+                       isActive ? "text-foreground" : "text-muted-foreground"
+                    )}
                 >
                     {category.icon}
                     <span className="text-xs font-medium flex items-center gap-1">

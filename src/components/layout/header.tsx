@@ -9,7 +9,6 @@ import { WelcomeMessage } from "./welcome-message";
 import { HeaderNavigation } from "./header-navigation";
 import { usePathname } from "next/navigation";
 import { AppLogo } from "./app-logo";
-import { ThemeToggle } from "./theme-toggle";
 
 
 export function Header() {
