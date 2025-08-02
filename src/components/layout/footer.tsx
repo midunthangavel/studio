@@ -47,8 +47,8 @@ export function Footer() {
   }
 
   // Hide on certain pages
-  const hideFooterRoutes = ['/login', '/signup', '/budget'];
-  if (hideFooterRoutes.includes(pathname)) {
+  const hideFooterRoutes = ['/login', '/signup', /^\/venues\/.*/, '/budget'];
+  if (hideFooterRoutes.some(route => typeof route === 'string' ? route === pathname : route.test(pathname))) {
       return null;
   }
 
