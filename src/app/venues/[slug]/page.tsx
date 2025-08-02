@@ -156,30 +156,32 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-8">
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start flex-wrap gap-4">
             <div>
-                <h1 className="text-4xl font-bold font-headline">{venue.name}</h1>
-                <div className="flex items-center gap-4 text-muted-foreground mt-2">
+                <h1 className="text-3xl md:text-4xl font-bold font-headline">{venue.name}</h1>
+                <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-muted-foreground mt-2">
                     <div className="flex items-center gap-1">
                         <Star className="w-5 h-5 text-primary" />
                         <span className="font-semibold text-foreground">{venue.rating}</span>
                         <span>({venue.reviewCount} reviews)</span>
                     </div>
-                    <span className="text-muted-foreground/50">|</span>
+                    <span className="hidden md:block text-muted-foreground/50">|</span>
                     <div className="flex items-center gap-1">
                         <MapPin className="w-5 h-5 text-primary" />
                         <span>{venue.location}</span>
                     </div>
                 </div>
             </div>
-            <Button 
-                variant="outline" 
-                size="icon"
-                onClick={() => toggleFavorite(venue)}
-            >
-                <Heart className={cn("w-5 h-5", favorited && "fill-primary text-primary" )} />
-                <span className='sr-only'>Favorite</span>
-            </Button>
+            <div className="flex items-center gap-2">
+                <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => toggleFavorite(venue)}
+                    aria-label='Favorite'
+                >
+                    <Heart className={cn("w-5 h-5", favorited && "fill-primary text-primary" )} />
+                </Button>
+            </div>
         </div>
       </div>
 
@@ -209,7 +211,7 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
             <Separator className="my-8" />
 
             <h2 className="text-2xl font-bold mb-4">What this place offers</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {amenities.map(amenity => (
                     <div key={amenity.text} className="flex items-center gap-3">
                         <amenity.icon className="w-6 h-6 text-primary" />
@@ -245,7 +247,7 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
             </div>
              <Separator className="my-8" />
              <Button variant="outline" onClick={handleContactProvider} disabled={contactLoading}>
-                {contactLoading ? <Loader className="animate-spin" /> : <MessageSquare className="mr-2" />}
+                {contactLoading ? <Loader className="animate-spin mr-2" /> : <MessageSquare className="mr-2" />}
                 Contact Provider
             </Button>
         </div>
@@ -275,7 +277,8 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
                         </div>
                     </div>
                     <Button size="lg" className="w-full mt-4" onClick={handleRequestBooking} disabled={loading}>
-                        {loading ? <Loader className="animate-spin" /> : 'Request to Book'}
+                        {loading ? <Loader className="animate-spin mr-2" /> : null}
+                        Request to Book
                     </Button>
                     <p className="text-center text-sm text-muted-foreground">You won&apos;t be charged yet</p>
                 </CardContent>

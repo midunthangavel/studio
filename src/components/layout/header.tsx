@@ -42,7 +42,9 @@ export function Header() {
                 <AppLogo className="text-2xl" />
           </Link>
           <div className="flex-grow">
-             {pathname === '/home' && <WelcomeMessage />}
+             <div className="hidden md:block">
+              {pathname === '/home' && <WelcomeMessage />}
+             </div>
             <div className="relative md:w-auto md:flex-grow">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
@@ -91,6 +93,10 @@ export function Header() {
                     <Bell className="mr-2" />
                     Bookings
                   </DropdownMenuItem>
+                   <DropdownMenuItem onClick={() => router.push('/chat')}>
+                    <MessageSquare className="mr-2" />
+                    Messages
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2" />
@@ -107,7 +113,9 @@ export function Header() {
           </div>
         </div>
         {/* Bottom: Navigation */}
-        <HeaderNavigation />
+        <div className="hidden md:flex md:justify-center">
+            <HeaderNavigation />
+        </div>
       </div>
     </header>
   );

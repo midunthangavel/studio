@@ -22,6 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 const expenseSchema = z.object({
+    id: z.string().optional(),
     name: z.string().min(1, 'Item name is required'),
     category: z.string().min(1, 'Category is required'),
     amount: z.coerce.number().positive('Amount must be positive'),
@@ -152,48 +153,89 @@ export default function BudgetPage() {
                             <CardDescription>Add and manage your expense items.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Item</TableHead>
-                                        <TableHead>Category</TableHead>
-                                        <TableHead className="text-right">Amount ($)</TableHead>
-                                        <TableHead className="w-[50px]"></TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {fields.map((field, index) => (
-                                        <TableRow key={field.id}>
-                                            <TableCell>
-                                                <Input {...form.register(`expenses.${index}.name`)} />
-                                            </TableCell>
-                                            <TableCell>
-                                                <Select
-                                                    onValueChange={(value) => update(index, { ...field, category: value })}
-                                                    defaultValue={field.category}
-                                                >
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Category" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {expenseCategories.map(cat => (
-                                                            <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Input type="number" {...form.register(`expenses.${index}.amount`)} className="text-right" />
-                                            </TableCell>
-                                            <TableCell>
-                                                <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
-                                                    <Trash2 className="h-4 w-4 text-destructive" />
-                                                </Button>
-                                            </TableCell>
+                            {/* Desktop Table View */}
+                            <div className="hidden md:block">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Item</TableHead>
+                                            <TableHead>Category</TableHead>
+                                            <TableHead className="text-right">Amount ($)</TableHead>
+                                            <TableHead className="w-[50px]"></TableHead>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {fields.map((field, index) => (
+                                            <TableRow key={field.id}>
+                                                <TableCell>
+                                                    <Input {...form.register(`expenses.${index}.name`)} />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Select
+                                                        onValueChange={(value) => update(index, { ...field, category: value })}
+                                                        defaultValue={field.category}
+                                                    >
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Category" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {expenseCategories.map(cat => (
+                                                                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Input type="number" {...form.register(`expenses.${index}.amount`)} className="text-right" />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                                                        <Trash2 className="h-4 w-4 text-destructive" />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+
+                            {/* Mobile Card View */}
+                            <div className="md:hidden space-y-4">
+                                {fields.map((field, index) => (
+                                    <Card key={field.id} className="p-4">
+                                        <div className="flex justify-between items-start mb-4">
+                                            <Input 
+                                                placeholder="Expense Name"
+                                                className="text-lg font-semibold border-none shadow-none p-0 focus-visible:ring-0"
+                                                {...form.register(`expenses.${index}.name`)} 
+                                            />
+                                            <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                                                <Trash2 className="h-4 w-4 text-destructive" />
+                                            </Button>
+                                        </div>
+                                        <div className="space-y-4">
+                                             <Select
+                                                onValueChange={(value) => update(index, { ...field, category: value })}
+                                                defaultValue={field.category}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Category" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {expenseCategories.map(cat => (
+                                                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-muted-foreground">$</span>
+                                                <Input type="number" placeholder='0.00' {...form.register(`expenses.${index}.amount`)} />
+                                            </div>
+                                        </div>
+                                    </Card>
+                                ))}
+                            </div>
+
                              <Button
                                 type="button"
                                 variant="outline"
@@ -206,7 +248,10 @@ export default function BudgetPage() {
                     </Card>
 
                     <div className="flex justify-end">
-                        <Button type="submit">Save Budget</Button>
+                        <Button type="submit" disabled={form.formState.isSubmitting}>
+                           {form.formState.isSubmitting ? <Loader className="animate-spin mr-2" /> : null}
+                           Save Budget
+                        </Button>
                     </div>
                 </form>
             </PageWrapper>
