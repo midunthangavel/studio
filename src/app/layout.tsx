@@ -7,7 +7,6 @@ import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 
 export default function RootLayout({
@@ -43,7 +42,6 @@ export default function RootLayout({
             </ConditionalLayout>
             <Toaster />
         </ThemeProvider>
-        <SpeedInsights/>
       </body>
     </html>
   );
