@@ -25,7 +25,6 @@ export function WelcomeMessage() {
             setLocationError("Could not determine your location.");
           }
         } catch (error) {
-          console.error("Error fetching location data:", error);
           setLocationError("Could not fetch location details.");
         }
       }

@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { MessageSquare, Send, User, Bot, Loader } from 'lucide-react';
 import { PageWrapper } from '@/components/page-wrapper';
 import { suggestEventIdeas } from '@/ai/flows/suggest-event-ideas';
+import { useToast } from '@/hooks/use-toast';
 
 const initialConversations = [
   {
@@ -43,6 +44,7 @@ export default function ChatPage() {
   const [activeConversation, setActiveConversation] = useState(conversations[2]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === '') return;
