@@ -12,66 +12,413 @@ import { ListFilter, Search, Star } from "lucide-react";
 import { VenueCard, VenueCardProps } from '@/components/venue-card';
 
 const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageClassName' | 'className' | 'actionButton'> & { category: string })[] = [
+    // Catering Services
     {
-        name: "Urban Chic Loft",
+        name: "Gourmet Delights Catering",
         location: "New York, NY",
         rating: 4.9,
         reviewCount: 150,
-        price: "$6,000",
-        image: "https://images.unsplash.com/photo-1542882583-4c4f494429f2?q=80&w=600&h=400&fit=crop",
-        category: "Venues",
-        hint: "urban loft"
-    },
-    {
-        name: "Gourmet Delights Catering",
-        location: "Chicago, IL",
-        rating: 4.8,
-        reviewCount: 90,
-        price: "$100/person",
+        price: "$120/person",
         image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "catering food"
     },
     {
-        name: "Sunset Beach Resort",
-        location: "Miami, FL",
-        rating: 4.7,
-        reviewCount: 210,
-        price: "$8,500",
-        image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&h=400&fit=crop",
-        category: "Venues",
-        hint: "beach resort"
+        name: "Exquisite Eats",
+        location: "Los Angeles, CA",
+        rating: 4.8,
+        reviewCount: 110,
+        price: "$150/person",
+        image: "https://images.unsplash.com/photo-1621996346565-e326e22e3920?q=80&w=600&h=400&fit=crop",
+        category: "Catering",
+        hint: "fine dining"
     },
     {
-        name: "Timeless Moments Photography",
+        name: "The Wedding Feast",
+        location: "Chicago, IL",
+        rating: 5.0,
+        reviewCount: 200,
+        price: "$135/person",
+        image: "https://images.unsplash.com/photo-1565299543923-37dd37887f2b?q=80&w=600&h=400&fit=crop",
+        category: "Catering",
+        hint: "wedding buffet"
+    },
+    {
+        name: "Saffron & Spice",
+        location: "Houston, TX",
+        rating: 4.7,
+        reviewCount: 95,
+        price: "$110/person",
+        image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=600&h=400&fit=crop",
+        category: "Catering",
+        hint: "gourmet salad"
+    },
+    {
+        name: "Farm to Table Creations",
+        location: "San Francisco, CA",
+        rating: 4.9,
+        reviewCount: 130,
+        price: "$180/person",
+        image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=600&h=400&fit=crop",
+        category: "Catering",
+        hint: "restaurant table"
+    },
+    {
+        name: "Coastal Cuisine",
+        location: "Miami, FL",
+        rating: 4.8,
+        reviewCount: 125,
+        price: "$160/person",
+        image: "https://images.unsplash.com/photo-1517042078839-86a640141639?q=80&w=600&h=400&fit=crop",
+        category: "Catering",
+        hint: "seafood platter"
+    },
+    {
+        name: "The Rustic Platter",
+        location: "Austin, TX",
+        rating: 4.6,
+        reviewCount: 80,
+        price: "$100/person",
+        image: "https://images.unsplash.com/photo-1506354666786-959d6d497f1a?q=80&w=600&h=400&fit=crop",
+        category: "Catering",
+        hint: "pizza sharing"
+    },
+    {
+        name: "Vegan Vogue Events",
+        location: "Portland, OR",
+        rating: 5.0,
+        reviewCount: 180,
+        price: "$140/person",
+        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&h=400&fit=crop",
+        category: "Catering",
+        hint: "vegan salad"
+    },
+    {
+        name: "Decadent Desserts Bar",
+        location: "Las Vegas, NV",
+        rating: 4.9,
+        reviewCount: 220,
+        price: "$50/person",
+        image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=600&h=400&fit=crop",
+        category: "Catering",
+        hint: "dessert table"
+    },
+    {
+        name: "International Flavors Co.",
+        location: "Washington, D.C.",
+        rating: 4.7,
+        reviewCount: 140,
+        price: "$130/person",
+        image: "https://images.unsplash.com/photo-1559847844-5315695d0464?q=80&w=600&h=400&fit=crop",
+        category: "Catering",
+        hint: "sushi platter"
+    },
+
+    // Transport Services
+    {
+        name: "Prestige Bridal Cars",
+        location: "New York, NY",
+        rating: 5.0,
+        reviewCount: 180,
+        price: "Starts from $500",
+        image: "https://images.unsplash.com/photo-1618951012351-38a6a79b21e8?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "luxury car"
+    },
+    {
+        name: "Royal Rolls Royce",
         location: "Los Angeles, CA",
         rating: 5.0,
-        reviewCount: 300,
-        price: "$2,500",
+        reviewCount: 210,
+        price: "Starts from $800",
+        image: "https://images.unsplash.com/photo-1553552575-b4b73b6441d6?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "vintage car"
+    },
+    {
+        name: "Classic Limo Service",
+        location: "Chicago, IL",
+        rating: 4.8,
+        reviewCount: 150,
+        price: "Starts from $350",
+        image: "https://images.unsplash.com/photo-1527018601622-c43a0a1d4012?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "limousine"
+    },
+    {
+        name: "Wedding Wheels Vintage",
+        location: "San Francisco, CA",
+        rating: 4.9,
+        reviewCount: 130,
+        price: "Starts from $600",
+        image: "https://images.unsplash.com/photo-1541443131-27635c6fb584?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "classic car"
+    },
+    {
+        name: "Citywide Party Bus",
+        location: "Las Vegas, NV",
+        rating: 4.7,
+        reviewCount: 90,
+        price: "Starts from $450",
+        image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "party bus"
+    },
+     {
+        name: "Elegant Excursions",
+        location: "Miami, FL",
+        rating: 4.8,
+        reviewCount: 115,
+        price: "Starts from $550",
+        image: "https://images.unsplash.com/photo-1599198664923-8636186a8779?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "white car"
+    },
+    {
+        name: "Getaway Car Rentals",
+        location: "Austin, TX",
+        rating: 4.6,
+        reviewCount: 75,
+        price: "Starts from $400",
+        image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "sports car"
+    },
+    {
+        name: "Enchanted Carriages",
+        location: "Orlando, FL",
+        rating: 5.0,
+        reviewCount: 190,
+        price: "Starts from $700",
+        image: "https://images.unsplash.com/photo-1532517834468-523e3a478363?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "horse carriage"
+    },
+    {
+        name: "Metro Lux Shuttles",
+        location: "Washington, D.C.",
+        rating: 4.7,
+        reviewCount: 100,
+        price: "Starts from $300",
+        image: "https://images.unsplash.com/photo-1570125909232-eb263c186923?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "shuttle bus"
+    },
+    {
+        name: "Regal Auto Group",
+        location: "Houston, TX",
+        rating: 4.8,
+        reviewCount: 140,
+        price: "Starts from $650",
+        image: "https://images.unsplash.com/photo-1629822434086-291705b79373?q=80&w=600&h=400&fit=crop",
+        category: "Transport",
+        hint: "black car"
+    },
+
+    // Decoration Vendors
+    {
+        name: "Bloom & Blossom Florals",
+        location: "New York, NY",
+        rating: 4.9,
+        reviewCount: 220,
+        price: "Packages from $2,000",
+        image: "https://images.unsplash.com/photo-1579683348053-14b1c5a942ce?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "flower arch"
+    },
+    {
+        name: "Enchanted Events Decor",
+        location: "Los Angeles, CA",
+        rating: 5.0,
+        reviewCount: 250,
+        price: "Packages from $3,500",
+        image: "https://images.unsplash.com/photo-1520854221256-17452cc6da82?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "wedding table"
+    },
+    {
+        name: "Luxe Lighting & Draping",
+        location: "Miami, FL",
+        rating: 4.8,
+        reviewCount: 180,
+        price: "Packages from $1,800",
+        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "event lighting"
+    },
+    {
+        name: "The Perfect Arrangement",
+        location: "Chicago, IL",
+        rating: 4.9,
+        reviewCount: 190,
+        price: "Packages from $2,200",
+        image: "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "table setting"
+    },
+    {
+        name: "Rustic Charm Rentals",
+        location: "Austin, TX",
+        rating: 4.7,
+        reviewCount: 140,
+        price: "Packages from $1,500",
+        image: "https://images.unsplash.com/photo-1550081693-490354b6f585?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "rustic decor"
+    },
+    {
+        name: "Elegant Petals",
+        location: "San Francisco, CA",
+        rating: 5.0,
+        reviewCount: 280,
+        price: "Packages from $3,000",
+        image: "https://images.unsplash.com/photo-1554224324-4b51a7e4d583?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "flower arrangement"
+    },
+    {
+        name: "Dreamy Designs Co.",
+        location: "Houston, TX",
+        rating: 4.8,
+        reviewCount: 160,
+        price: "Packages from $2,800",
+        image: "https://images.unsplash.com/photo-1523438885278-83b9e5f935b7?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "wedding decorations"
+    },
+    {
+        name: "Fantasy Floral Creations",
+        location: "Las Vegas, NV",
+        rating: 4.9,
+        reviewCount: 210,
+        price: "Packages from $4,000",
+        image: "https://images.unsplash.com/photo-1567475854498-7a58f4a15a8e?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "wedding centerpiece"
+    },
+    {
+        name: "Modern Mandaps",
+        location: "Washington, D.C.",
+        rating: 5.0,
+        reviewCount: 170,
+        price: "Packages from $3,200",
+        image: "https://images.unsplash.com/photo-1628198942363-a20a4b4a1f5d?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "wedding mandap"
+    },
+    {
+        name: "Ivy & Gold Events",
+        location: "Atlanta, GA",
+        rating: 4.9,
+        reviewCount: 195,
+        price: "Packages from $2,500",
+        image: "https://images.unsplash.com/photo-1519688034509-3f5f3ab4349e?q=80&w=600&h=400&fit=crop",
+        category: "Decorations",
+        hint: "banquet hall"
+    },
+
+    // Photography Agencies
+    {
+        name: "Timeless Moments Photo",
+        location: "New York, NY",
+        rating: 5.0,
+        reviewCount: 350,
+        price: "$4,500",
         image: "https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "wedding photography"
     },
     {
-        name: "The Royal Ballroom",
-        location: "New York, NY",
+        name: "Captured by Light",
+        location: "Los Angeles, CA",
         rating: 4.9,
-        reviewCount: 180,
-        price: "$12,000",
-        image: "https://images.unsplash.com/photo-1542665952-14513db15293?q=80&w=600&h=400&fit=crop",
-        category: "Venues",
-        hint: "luxury ballroom"
+        reviewCount: 280,
+        price: "$5,000",
+        image: "https://images.unsplash.com/photo-1519415943484-2fa1873496d7?q=80&w=600&h=400&fit=crop",
+        category: "Photography",
+        hint: "couple portrait"
     },
-     {
-        name: "Elite Event Staffing",
-        location: "Las Vegas, NV",
+    {
+        name: "Golden Hour Films",
+        location: "San Francisco, CA",
+        rating: 5.0,
+        reviewCount: 310,
+        price: "$6,000",
+        image: "https://images.unsplash.com/photo-1515942352-7164a2c35583?q=80&w=600&h=400&fit=crop",
+        category: "Photography",
+        hint: "beach wedding"
+    },
+    {
+        name: "Windy City Weddings",
+        location: "Chicago, IL",
+        rating: 4.8,
+        reviewCount: 240,
+        price: "$4,200",
+        image: "https://images.unsplash.com/photo-1545939227-6df15743c498?q=80&w=600&h=400&fit=crop",
+        category: "Photography",
+        hint: "city couple"
+    },
+    {
+        name: "Love Story Studios",
+        location: "Miami, FL",
         rating: 4.9,
-        reviewCount: 75,
-        price: "Varies",
-        image: "https://images.unsplash.com/photo-1594488518063-8e54fb664d42?q=80&w=600&h=400&fit=crop",
-        category: "Event Staff",
-        hint: "event staff serving"
+        reviewCount: 290,
+        price: "$4,800",
+        image: "https://images.unsplash.com/photo-1523438885278-83b9e5f935b7?q=80&w=600&h=400&fit=crop",
+        category: "Photography",
+        hint: "wedding couple"
     },
+    {
+        name: "Candid Captures",
+        location: "Austin, TX",
+        rating: 4.7,
+        reviewCount: 200,
+        price: "$3,800",
+        image: "https://images.unsplash.com/photo-1455853659723-3b0d5ee08c16?q=80&w=600&h=400&fit=crop",
+        category: "Photography",
+        hint: "wedding kiss"
+    },
+    {
+        name: "Forever & Always Photo",
+        location: "Houston, TX",
+        rating: 4.9,
+        reviewCount: 260,
+        price: "$4,400",
+        image: "https://images.unsplash.com/photo-1510629763133-13431b5c9247?q=80&w=600&h=400&fit=crop",
+        category: "Photography",
+        hint: "wedding rings"
+    },
+    {
+        name: "Mountainscape Media",
+        location: "Denver, CO",
+        rating: 5.0,
+        reviewCount: 220,
+        price: "$5,500",
+        image: "https://images.unsplash.com/photo-1500051638674-ff996a0ec29e?q=80&w=600&h=400&fit=crop",
+        category: "Photography",
+        hint: "mountain wedding"
+    },
+    {
+        name: "Coastal Clicks",
+        location: "San Diego, CA",
+        rating: 4.8,
+        reviewCount: 230,
+        price: "$4,600",
+        image: "https://images.unsplash.com/photo-1541258692634-f655e0324823?q=80&w=600&h=400&fit=crop",
+        category: "Photography",
+        hint: "beach couple"
+    },
+    {
+        name: "Artistic Angles",
+        location: "Washington, D.C.",
+        rating: 4.9,
+        reviewCount: 270,
+        price: "$5,200",
+        image: "https://images.unsplash.com/photo-1511285560921-5ae97c6abc59?q=80&w=600&h=400&fit=crop",
+        category: "Photography",
+        hint: "wedding details"
+    }
 ];
 
 export default function SearchPage() {
@@ -105,11 +452,11 @@ export default function SearchPage() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="venues">Venues</SelectItem>
-                                            <SelectItem value="decorators">Decorators</SelectItem>
+                                            <SelectItem value="decorations">Decorations</SelectItem>
                                             <SelectItem value="catering">Catering</SelectItem>
                                             <SelectItem value="photography">Photography</SelectItem>
+                                            <SelectItem value="transport">Transport</SelectItem>
                                             <SelectItem value="staff">Event Staff</SelectItem>
-                                            <SelectItem value="transport">Transportation</SelectItem>
                                         </SelectContent>
                                     </Select>
                                </div>
