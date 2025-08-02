@@ -8,7 +8,7 @@ import {
   MessageSquare,
   Search,
   User,
-  LogIn,
+  Wallet,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
@@ -19,41 +19,51 @@ export function Footer() {
   const noLayoutRoutes = ['/'];
 
   const navItems = [
-  {
-    name: 'Explore',
-    href: '/home',
-    icon: Search,
-  },
-  {
-    name: 'Wishlists',
-    href: '/favorites',
-    icon: Heart,
-  },
-  {
-    name: 'Trips',
-    href: '/bookings',
-    icon: Home,
-  },
-  {
-    name: 'Messages',
-    href: '/chat',
-    icon: MessageSquare,
-  },
-  {
-    name: user ? 'Profile' : 'Account',
-    href: '/profile',
-    icon: user ? User : User,
-  },
-];
-
+    {
+      name: 'Explore',
+      href: '/home',
+      icon: Search,
+    },
+    {
+      name: 'Wishlists',
+      href: '/favorites',
+      icon: Heart,
+    },
+    {
+      name: 'Bookings',
+      href: '/bookings',
+      icon: Home,
+    },
+    {
+      name: 'Messages',
+      href: '/chat',
+      icon: MessageSquare,
+    },
+    {
+      name: 'Budget',
+      href: '/budget',
+      icon: Wallet,
+    },
+    {
+      name: 'Profile',
+      href: '/profile',
+      icon: User,
+    },
+  ];
 
   if (noLayoutRoutes.includes(pathname)) {
+    return null;
+  }
+
+  // Hide on certain pages
+  const hideFooterRoutes = ['/login', '/signup'];
+  if (hideFooterRoutes.includes(pathname)) {
       return null;
   }
 
   return (
     <footer className="fixed bottom-0 left-0 z-50 w-full h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden">
-      <div className="container flex h-full max-w-lg items-center justify-around">
+      <div className="container grid h-full max-w-lg grid-cols-6 items-center justify-around">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           return (
@@ -65,8 +75,8 @@ export function Footer() {
                 isActive ? 'text-primary' : 'text-muted-foreground hover:text-primary'
               )}
             >
-              <item.icon className={cn("h-6 w-6")} />
-              <span>{item.name}</span>
+              <item.icon className={cn("h-5 w-5")} />
+              <span className="truncate">{item.name}</span>
             </Link>
           );
         })}

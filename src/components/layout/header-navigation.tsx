@@ -7,6 +7,7 @@ import {
   Search,
   Sparkles,
   ConciergeBell,
+  Wallet,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -14,7 +15,7 @@ import { cn } from "@/lib/utils";
 
 const categories = [
   {
-    name: "Homes",
+    name: "Home",
     icon: <Home className="w-6 h-6" />,
     href: "/home",
   },
@@ -24,16 +25,14 @@ const categories = [
     href: "/search",
   },
   {
-    name: "Experiences",
+    name: "AI Planner",
     icon: <Sparkles className="w-6 h-6" />,
     href: "/planner",
-    isNew: true,
   },
   {
-    name: "Services",
-    icon: <ConciergeBell className="w-6 h-6" />,
-    href: "/search?category=services",
-    isNew: true
+    name: "Budget",
+    icon: <Wallet className="w-6 h-6" />,
+    href: "/budget",
   },
 ];
 
@@ -64,9 +63,6 @@ export function HeaderNavigation() {
                     {category.icon}
                     <span className="text-xs font-medium flex items-center gap-1">
                         {category.name}
-                        {category.isNew && (
-                            <span className="bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full">NEW</span>
-                        )}
                     </span>
                     {isActive && (
                     <div className="absolute -bottom-2 h-[2px] w-6 bg-foreground rounded-full" />
