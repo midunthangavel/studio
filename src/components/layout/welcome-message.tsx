@@ -14,7 +14,7 @@ export function WelcomeMessage() {
         try {
           const response = await fetch('https://ip-api.com/json/?fields=city,country');
           if (!response.ok) {
-            // Instead of throwing an error, we'll set the locationError state
+            // Instead of throwing an error, we'll set the locationError state.
             setLocationError('Could not fetch location details.');
             console.error('Failed to fetch location:', response.statusText);
             return;
