@@ -16,13 +16,13 @@ const categories = [
     name: "Homes",
     icon: <Home className="w-6 h-6" />,
     href: "/search?category=venues",
-    active: true
+    active: false,
   },
   {
     name: "Experiences",
     icon: <Sparkles className="w-6 h-6" />,
     href: "/planner",
-    active: false,
+    active: true,
     isNew: true,
   },
   {
