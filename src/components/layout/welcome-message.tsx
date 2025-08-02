@@ -10,37 +10,25 @@ export function WelcomeMessage() {
     const [locationError, setLocationError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-            try {
-                const { latitude, longitude } = position.coords;
-                const response = await fetch(
-                `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-                );
-                const data = await response.json();
-                if (data.city && data.countryName) {
-                setLocation(`${data.city}, ${data.countryName}`);
-                } else {
-                setLocationError("Could not determine your location.");
-                }
-            } catch (error) {
-                console.error("Error fetching location data:", error);
-                setLocationError("Could not fetch location details.");
-            }
-            },
-            (error) => {
-            console.error("Geolocation error:", error);
-            if (error.code === error.PERMISSION_DENIED) {
-                setLocationError("Location access was denied.");
-            } else {
-                setLocationError("Could not access your location.");
-            }
-            }
-        );
-        } else {
-        setLocationError("Geolocation is not supported by this browser.");
+      async function fetchLocation() {
+        try {
+          const response = await fetch('http://ip-api.com/json/?fields=city,country');
+          if (!response.ok) {
+            throw new Error('Failed to fetch location');
+          }
+          const data = await response.json();
+          if (data.city && data.country) {
+            setLocation(`${data.city}, ${data.country}`);
+          } else {
+            setLocationError("Could not determine your location.");
+          }
+        } catch (error) {
+          console.error("Error fetching location data:", error);
+          setLocationError("Could not fetch location details.");
         }
+      }
+
+      fetchLocation();
     }, []);
     
     return (
@@ -52,7 +40,7 @@ export function WelcomeMessage() {
                 <h2 className="font-semibold text-base">Welcome back!</h2>
                 <div className="flex items-center text-muted-foreground mt-1">
                     <MapPin className="w-4 h-4 mr-2 text-primary" />
-                    <span>{location || locationError || 'Attempting to get your location...'}</span>
+                    <span>{location || locationError || 'Finding your location...'}</span>
                 </div>
             </div>
         </div>
