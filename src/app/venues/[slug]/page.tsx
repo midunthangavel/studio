@@ -10,7 +10,7 @@ import { useAuth } from '@/context/auth-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { searchResults } from '@/app/search/page'; 
+import { allVenues } from '@/lib/venues';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
@@ -19,8 +19,6 @@ import { useFavorites } from '@/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
-
-const allVenues = searchResults; // Using the same data source
 
 const amenities = [
     { icon: Wifi, text: 'Free Wi-Fi' },
@@ -287,3 +285,5 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
     </div>
   );
 }
+
+    
