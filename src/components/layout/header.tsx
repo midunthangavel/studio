@@ -38,7 +38,6 @@ export function Header() {
              <Button variant="ghost" asChild>
                 <Link href="/planner">Become a host</Link>
             </Button>
-            <ThemeToggle />
             <Button size="icon" variant="ghost" asChild>
                 <Link href="/notifications">
                     <Bell className="h-5 w-5" />
