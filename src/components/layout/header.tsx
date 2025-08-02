@@ -44,6 +44,7 @@ export function Header() {
                     <span className="sr-only">Notifications</span>
                 </Link>
             </Button>
+            <ThemeToggle />
           </div>
         </div>
         {/* Bottom: Navigation */}

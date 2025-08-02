@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { VenueCard, VenueCardProps } from "@/components/venue-card";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 const popularVenues: VenueCardProps[] = [
   {
@@ -115,9 +114,6 @@ const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Venu
 export default function HomePage() {
   return (
     <div className="relative flex flex-col py-6">
-      <div className="absolute top-0 right-4 z-10">
-        <ThemeToggle />
-      </div>
       <VenueSection title="Popular venues" venues={popularVenues} moreLink="/search" />
       <VenueSection title="Available next month" venues={availableNextMonth} moreLink="/search?location=Miami" />
     </div>
