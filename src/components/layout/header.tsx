@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Bell, LogOut, Search, User, Moon, Sun } from "lucide-react";
+import { Bell, LogOut, Search, User, MessageSquare } from "lucide-react";
 import { WelcomeMessage } from "./welcome-message";
 import { HeaderNavigation } from "./header-navigation";
 import { usePathname, useRouter } from "next/navigation";
@@ -90,6 +90,12 @@ export function Header() {
                   <Link href="/login">Login</Link>
                 </Button>
             )}
+             <Button size="icon" variant="ghost" asChild>
+                <Link href="/chat">
+                    <MessageSquare className="h-5 w-5" />
+                    <span className="sr-only">Messages</span>
+                </Link>
+            </Button>
             <Button size="icon" variant="ghost" asChild>
                 <Link href="/notifications">
                     <Bell className="h-5 w-5" />
