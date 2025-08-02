@@ -1,13 +1,14 @@
 
 'use client';
 
-import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { usePathname } from "next/navigation";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { ThemeProvider } from "next-themes";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 
 export default function RootLayout({
   children,
@@ -31,10 +32,18 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <ConditionalLayout>
-            {children}
-        </ConditionalLayout>
-        <Toaster />
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+            <ConditionalLayout>
+                {children}
+            </ConditionalLayout>
+            <Toaster />
+        </ThemeProvider>
+        <SpeedInsights/>
       </body>
     </html>
   );

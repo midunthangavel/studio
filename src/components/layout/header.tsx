@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Mountain, Bell, MessageSquare } from "lucide-react";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Header() {
   return (
@@ -89,6 +90,7 @@ export function Header() {
                 <MessageSquare className="h-5 w-5" />
               </Link>
             </Button>
+            <ThemeToggle />
           <nav className="hidden md:flex items-center gap-2">
             <Button variant="ghost" asChild>
               <Link href="/login">Sign In</Link>
