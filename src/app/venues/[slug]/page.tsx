@@ -1,13 +1,16 @@
 
 'use client';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Star, MapPin, Wifi, ParkingSquare, Utensils, Wind, Calendar as CalendarIcon, Heart } from 'lucide-react';
+import { Star, MapPin, Wifi, ParkingSquare, Utensils, Wind, Calendar as CalendarIcon, Heart, Loader } from 'lucide-react';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { useAuth } from '@/context/auth-context';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { searchResults } from '@/app/search/page'; // We can reuse the search data for now
+import { searchResults } from '@/app/search/page'; 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
@@ -15,6 +18,7 @@ import { Label } from '@/components/ui/label';
 import { useFavorites } from '@/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 const allVenues = searchResults; // Using the same data source
 
@@ -44,6 +48,12 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
   const venue = allVenues.find(v => v.slug === params.slug);
   const { isFavorited, toggleFavorite } = useFavorites();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [guests, setGuests] = useState(50);
+  const [loading, setLoading] = useState(false);
 
   if (!venue) {
     notFound();
@@ -51,11 +61,45 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
 
   const favorited = isFavorited(venue.slug);
 
-  const handleRequestBooking = () => {
-    toast({
-        title: "Booking Request Sent!",
-        description: `Your request to book ${venue.name} has been sent.`,
-    });
+  const handleRequestBooking = async () => {
+    if (!user) {
+        toast({
+            variant: "destructive",
+            title: "Authentication Required",
+            description: "You must be logged in to book a venue.",
+        });
+        router.push('/login');
+        return;
+    }
+    setLoading(true);
+    try {
+        await addDoc(collection(db, "bookings"), {
+            userId: user.uid,
+            venueId: venue.slug,
+            venueName: venue.name,
+            venueImage: venue.image,
+            venueLocation: venue.location,
+            venueHint: venue.hint,
+            bookingDate: date,
+            guestCount: guests,
+            status: 'Confirmed', // Defaulting to confirmed for demo
+            createdAt: new Date(),
+        });
+        toast({
+            title: "Booking Request Sent!",
+            description: `Your request to book ${venue.name} has been sent.`,
+        });
+        router.push('/bookings');
+    } catch (error) {
+        console.error("Error creating booking: ", error);
+        toast({
+            variant: "destructive",
+            title: "Booking Failed",
+            description: "There was an error sending your booking request. Please try again.",
+        });
+    } finally {
+        setLoading(false);
+    }
   }
 
   return (
@@ -162,17 +206,21 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
                         <div>
                             <Label htmlFor="date">Date</Label>
                             <Calendar
+                                id="date"
                                 mode="single"
-                                selected={new Date()}
+                                selected={date}
+                                onSelect={setDate}
                                 className="rounded-md border p-0"
                             />
                         </div>
                          <div>
                             <Label htmlFor="guests">Number of Guests</Label>
-                            <Input id="guests" type="number" placeholder="50" />
+                            <Input id="guests" type="number" placeholder="50" value={guests} onChange={(e) => setGuests(Number(e.target.value))} />
                         </div>
                     </div>
-                    <Button size="lg" className="w-full mt-4" onClick={handleRequestBooking}>Request to Book</Button>
+                    <Button size="lg" className="w-full mt-4" onClick={handleRequestBooking} disabled={loading}>
+                        {loading ? <Loader className="animate-spin" /> : 'Request to Book'}
+                    </Button>
                     <p className="text-center text-sm text-muted-foreground">You won&apos;t be charged yet</p>
                 </CardContent>
             </Card>
