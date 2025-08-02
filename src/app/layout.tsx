@@ -3,11 +3,28 @@
 
 import "./globals.css";
 import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+import dynamic from 'next/dynamic';
 import { Toaster } from "@/components/ui/toaster";
 import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
+import { PT_Sans, Playfair_Display } from 'next/font/google';
+import { cn } from "@/lib/utils";
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-headline',
+  display: 'swap',
+});
+
+const ptSans = PT_Sans({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-body',
+  display: 'swap',
+});
+
+
+const Footer = dynamic(() => import('@/components/layout/footer').then(mod => mod.Footer), { ssr: false });
 
 export default function RootLayout({
   children,
@@ -19,20 +36,8 @@ export default function RootLayout({
       <head>
         <title>FixmyEvent</title>
         <meta name="description" content="Find and book venues and services for your events." />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-          rel="stylesheet"
-        />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
-
       </head>
-      <body className="font-body antialiased">
+      <body className={cn("font-body antialiased", ptSans.variable, playfair.variable)}>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
