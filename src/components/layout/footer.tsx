@@ -10,6 +10,7 @@ import {
   User,
   Wallet,
   LogIn,
+  Calendar,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
@@ -33,7 +34,7 @@ export function Footer() {
     {
       name: 'Bookings',
       href: '/bookings',
-      icon: Home,
+      icon: Calendar,
     },
      {
       name: 'Messages',
@@ -52,7 +53,7 @@ export function Footer() {
   }
 
   // Hide on certain pages
-  const hideFooterRoutes = ['/login', '/signup', /^\/venues\/.*/, '/budget'];
+  const hideFooterRoutes = ['/login', '/signup', /^\/venues\/.*/];
   if (hideFooterRoutes.some(route => typeof route === 'string' ? route === pathname : route.test(pathname))) {
       return null;
   }
