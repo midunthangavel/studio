@@ -64,7 +64,7 @@ export default function BookingsPage() {
                     <Card key={booking.id}>
                         <div className="grid grid-cols-1 md:grid-cols-3">
                             <div className="md:col-span-1">
-                                <Image src={booking.image} alt={booking.name} width={600} height={400} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.hint} />
+                                <Image src={booking.image} alt={booking.name} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.hint} />
                             </div>
                             <div className="md:col-span-2">
                                 <CardHeader>
@@ -106,7 +106,7 @@ export default function BookingsPage() {
                     <Card key={booking.id} className="opacity-70">
                         <div className="grid grid-cols-1 md:grid-cols-3">
                             <div className="md:col-span-1">
-                                <Image src={booking.image} alt={booking.name} width={600} height={400} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.hint} />
+                                <Image src={booking.image} alt={booking.name} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.hint} />
                             </div>
                             <div className="md:col-span-2">
                                 <CardHeader>

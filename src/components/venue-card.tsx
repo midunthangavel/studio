@@ -37,14 +37,14 @@ export function VenueCard({
 }: VenueCardProps) {
   const Wrapper = isCard ? Card : 'div';
   return (
-    <Wrapper className={cn("overflow-hidden group", isCard ? "border-none shadow-none" : "", className)}>
+    <Wrapper className={cn("overflow-hidden group", isCard ? "border-none shadow-none" : "border rounded-lg", className)}>
       <div className="relative">
         <Image
           src={image}
           alt={name}
           width={600}
           height={400}
-          className={cn("w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300", isCard ? "rounded-xl" : "", imageClassName)}
+          className={cn("w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300", isCard ? "rounded-xl" : "rounded-t-lg", imageClassName)}
           data-ai-hint={hint}
         />
         {guestFavorite && (
@@ -54,41 +54,38 @@ export function VenueCard({
         )}
         {actionButton}
       </div>
-      <CardContent className="p-2">
-        <h3 className={cn("font-semibold mt-1", isCard ? "text-base": "text-lg")}>{name}</h3>
-        {children}
-        <div className="flex items-center text-muted-foreground text-sm mt-1">
-            {isCard ? (
-                <>
-                    <p className="text-muted-foreground">{price}</p>
-                    <div className="flex items-center text-foreground font-medium ml-auto">
-                        <Star className="w-4 h-4 mr-1 fill-primary text-primary" />
-                        {rating}
-                    </div>
-                </>
-            ): (
-                <>
-                    <MapPin className="w-4 h-4 mr-1" />
-                    {location}
-                </>
+      <CardContent className={cn("p-4", isCard ? "pt-2" : "")}>
+        <div className="flex items-center justify-between">
+            <h3 className={cn("font-semibold truncate", isCard ? "text-base": "text-lg")}>{name}</h3>
+            {isCard && (
+                 <div className="flex items-center text-foreground font-medium shrink-0">
+                    <Star className="w-4 h-4 mr-1" />
+                    {rating}
+                </div>
             )}
         </div>
+
+        <div className="flex items-center text-muted-foreground text-sm mt-1">
+            <p>{location}</p>
+        </div>
+
          {!isCard && (
-            <>
-                <div className="flex items-center text-sm mt-2">
-                    <div className="flex items-center text-primary font-semibold">
-                    <Star className="w-4 h-4 mr-1 fill-primary" />
-                    {rating}
-                    </div>
-                    <span className="text-muted-foreground ml-2">
-                    ({reviewCount} reviews)
-                    </span>
+            <div className="flex items-center text-sm mt-2">
+                <div className="flex items-center text-primary font-semibold">
+                <Star className="w-4 h-4 mr-1" />
+                {rating}
                 </div>
-                <p className="text-foreground font-semibold mt-4">
-                    {price}
-                </p>
-            </>
+                <span className="text-muted-foreground ml-2">
+                ({reviewCount} reviews)
+                </span>
+            </div>
          )}
+        
+        {children}
+
+        <p className="text-foreground font-semibold mt-2">
+            {price}
+        </p>
       </CardContent>
     </Wrapper>
   );

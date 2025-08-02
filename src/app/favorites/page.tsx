@@ -53,6 +53,7 @@ export default function FavoritesPage() {
               key={item.name}
               {...item}
               isCard={false}
+              imageClassName="h-64"
               className="border rounded-lg"
               actionButton={
                 <Button size="icon" className="absolute top-2 right-2 bg-primary/80 hover:bg-primary text-primary-foreground rounded-full h-9 w-9">

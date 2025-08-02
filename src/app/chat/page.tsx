@@ -26,7 +26,7 @@ const initialConversations = [
   },
   {
     name: 'AI Assistant',
-    avatar: '',
+    avatar: 'https://placehold.co/100x100.png',
     messages: [
       { from: 'them', text: 'Hello! I am your AI assistant. How can I help you plan today?' },
     ],
@@ -82,7 +82,7 @@ export default function ChatPage() {
                   onClick={() => setActiveConversation(convo)}
                 >
                   <Avatar>
-                    <AvatarImage src={convo.avatar} alt={convo.name} />
+                    <AvatarImage src={convo.avatar} alt={convo.name} data-ai-hint="logo" />
                     <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="text-left">
@@ -99,7 +99,7 @@ export default function ChatPage() {
           <CardHeader className="flex-shrink-0">
             <CardTitle className="flex items-center gap-2">
               <Avatar>
-                <AvatarImage src={activeConversation.avatar} alt={activeConversation.name} />
+                <AvatarImage src={activeConversation.avatar} alt={activeConversation.name} data-ai-hint="logo" />
                 <AvatarFallback>{activeConversation.name.charAt(0)}</AvatarFallback>
               </Avatar>
               {activeConversation.name}
@@ -115,7 +115,7 @@ export default function ChatPage() {
               >
                 {message.from !== 'me' && (
                    <Avatar className="h-8 w-8">
-                    <AvatarImage src={activeConversation.avatar} />
+                    <AvatarImage src={activeConversation.avatar} data-ai-hint="logo" />
                     <AvatarFallback>{activeConversation.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                 )}

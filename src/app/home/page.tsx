@@ -82,7 +82,7 @@ const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Venu
                         imageClassName="h-64"
                         actionButton={
                              <Button variant="ghost" size="icon" className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full">
-                                <Heart className="w-5 h-5 fill-white" />
+                                <Heart className="w-5 h-5" />
                             </Button>
                         }
                      />

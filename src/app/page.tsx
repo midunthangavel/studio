@@ -10,9 +10,8 @@ export default function WelcomePage() {
        <Image
           src="https://placehold.co/1920x1080.png"
           alt="Elegant event venue"
-          layout="fill"
-          objectFit="cover"
-          className="z-0"
+          fill
+          className="z-0 object-cover"
           data-ai-hint="wedding ceremony"
         />
         <div className="absolute inset-0 bg-black/60 z-10" />

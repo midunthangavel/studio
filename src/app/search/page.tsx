@@ -145,9 +145,10 @@ export default function SearchPage() {
                              <VenueCard 
                                 key={item.name} 
                                 {...item}
+                                imageClassName="h-64"
                                 actionButton={
                                     <div className="absolute top-2 right-2 bg-background/80 p-2 rounded-full">
-                                        <Star className="w-5 h-5 text-accent fill-accent" />
+                                        <Star className="w-5 h-5 text-accent" />
                                     </div>
                                 }
                                 >
