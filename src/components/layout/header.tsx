@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Mountain } from "lucide-react";
+import { Menu, Mountain, Bell, MessageSquare } from "lucide-react";
 
 export function Header() {
   return (
@@ -67,11 +67,27 @@ export function Header() {
                 <Link href="/bookings" className="block px-2 py-1 text-lg text-muted-foreground">
                   Bookings
                 </Link>
+                 <Link href="/notifications" className="block px-2 py-1 text-lg text-muted-foreground">
+                  Notifications
+                </Link>
+                 <Link href="/chat" className="block px-2 py-1 text-lg text-muted-foreground">
+                  Chat
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
+           <Button variant="ghost" size="icon" asChild>
+              <Link href="/notifications">
+                <Bell className="h-5 w-5" />
+              </Link>
+            </Button>
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/chat">
+                <MessageSquare className="h-5 w-5" />
+              </Link>
+            </Button>
           <nav className="hidden md:flex items-center gap-2">
             <Button variant="ghost" asChild>
               <Link href="/login">Sign In</Link>
