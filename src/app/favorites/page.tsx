@@ -32,6 +32,33 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
     image: "https://images.unsplash.com/photo-1518987048-93e29699e798?q=80&w=600&h=400&fit=crop",
     hint: "garden party"
   },
+   {
+    name: "Gourmet Delights Catering",
+    location: "New York, NY",
+    rating: 4.9,
+    reviewCount: 150,
+    price: "$120/person",
+    image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&h=400&fit=crop",
+    hint: "catering food"
+  },
+  {
+    name: "Classic Limo Service",
+    location: "Chicago, IL",
+    rating: 4.8,
+    reviewCount: 150,
+    price: "Starts from $350",
+    image: "https://images.unsplash.com/photo-1527018601622-c43a0a1d4012?q=80&w=600&h=400&fit=crop",
+    hint: "limousine"
+  },
+  {
+    name: "Bloom & Blossom Florals",
+    location: "New York, NY",
+    rating: 4.9,
+    reviewCount: 220,
+    price: "Packages from $2,000",
+    image: "https://images.unsplash.com/photo-1579683348053-14b1c5a942ce?q=80&w=600&h=400&fit=crop",
+    hint: "flower arch"
+  },
 ];
 
 export default function FavoritesPage() {

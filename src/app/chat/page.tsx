@@ -13,6 +13,14 @@ import { useToast } from '@/hooks/use-toast';
 
 const initialConversations = [
   {
+    name: 'AI Assistant',
+    avatar: 'https://images.unsplash.com/photo-1579566346927-c68383817a25?q=80&w=100&h=100&fit=crop',
+    messages: [
+      { from: 'them', text: 'Hello! I am your AI assistant. How can I help you plan today? You can ask me for ideas for a birthday party for 50 guests with a $2000 budget.' },
+    ],
+    isAi: true,
+  },
+  {
     name: 'Gourmet Delights Catering',
     avatar: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=100&h=100&fit=crop',
     messages: [
@@ -30,18 +38,26 @@ const initialConversations = [
     isAi: false,
   },
   {
-    name: 'AI Assistant',
-    avatar: 'https://images.unsplash.com/photo-1579566346927-c68383817a25?q=80&w=100&h=100&fit=crop',
+    name: 'Timeless Moments Photo',
+    avatar: 'https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=100&h=100&fit=crop',
     messages: [
-      { from: 'them', text: 'Hello! I am your AI assistant. How can I help you plan today? You can ask me for ideas for a birthday party for 50 guests with a $2000 budget.' },
+      { from: 'them', text: 'Yes, we are available on that date. Would you like to see our packages?' },
     ],
-    isAi: true,
+    isAi: false,
+  },
+  {
+    name: 'Prestige Bridal Cars',
+    avatar: 'https://images.unsplash.com/photo-1618951012351-38a6a79b21e8?q=80&w=100&h=100&fit=crop',
+    messages: [
+      { from: 'them', text: 'Your car is booked! We look forward to being part of your special day.' },
+    ],
+    isAi: false,
   }
 ];
 
 export default function ChatPage() {
   const [conversations, setConversations] = useState(initialConversations);
-  const [activeConversation, setActiveConversation] = useState(conversations[2]);
+  const [activeConversation, setActiveConversation] = useState(conversations[0]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();

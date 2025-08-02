@@ -1,5 +1,5 @@
 
-import { Bell, CheckCircle, Clock } from "lucide-react";
+import { Bell, CheckCircle, Clock, MessageSquare, Gift } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PageWrapper } from "@/components/page-wrapper";
@@ -15,13 +15,25 @@ const notifications = [
     type: "New Message",
     message: "Gourmet Delights sent you a message regarding your catering query.",
     time: "1 day ago",
-    icon: <Clock className="w-6 h-6 text-blue-500" />,
+    icon: <MessageSquare className="w-6 h-6 text-blue-500" />,
   },
     {
     type: "Review Reminder",
     message: "Don't forget to leave a review for Lakeside Manor.",
     time: "3 days ago",
     icon: <Clock className="w-6 h-6 text-gray-500" />,
+  },
+   {
+    type: "Booking Update",
+    message: "Prestige Bridal Cars has updated your booking status to Pending.",
+    time: "4 days ago",
+    icon: <Clock className="w-6 h-6 text-yellow-500" />,
+  },
+  {
+    type: "New Idea!",
+    message: "Your AI Assistant has new ideas for your anniversary party.",
+    time: "5 days ago",
+    icon: <Gift className="w-6 h-6 text-pink-500" />,
   },
 ];
 

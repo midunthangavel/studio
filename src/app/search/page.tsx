@@ -418,6 +418,27 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
         image: "https://images.unsplash.com/photo-1511285560921-5ae97c6abc59?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "wedding details"
+    },
+    // Event Staff
+    {
+        name: "Top-Tier Event Staffing",
+        location: "New York, NY",
+        rating: 4.9,
+        reviewCount: 180,
+        price: "$35/hour per staff",
+        image: "https://images.unsplash.com/photo-1579782194332-f3a2d83a1f94?q=80&w=600&h=400&fit=crop",
+        category: "Event Staff",
+        hint: "event staff"
+    },
+    {
+        name: "LA Elite Bartenders",
+        location: "Los Angeles, CA",
+        rating: 5.0,
+        reviewCount: 250,
+        price: "$50/hour per bartender",
+        image: "https://images.unsplash.com/photo-1588899756938-a2ea46633ea8?q=80&w=600&h=400&fit=crop",
+        category: "Event Staff",
+        hint: "bartender"
     }
 ];
 

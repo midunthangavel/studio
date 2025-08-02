@@ -35,6 +35,15 @@ const popularVenues: VenueCardProps[] = [
     hint: "urban loft",
     guestFavorite: true,
   },
+  {
+    name: "The Garden Pavilion",
+    location: "San Francisco, CA",
+    rating: 4.85,
+    price: "$7,500 per event",
+    image: "https://images.unsplash.com/photo-1518987048-93e29699e798?q=80&w=600&h=400&fit=crop",
+    hint: "garden party",
+    guestFavorite: false,
+  },
 ];
 
 const availableNextMonth: VenueCardProps[] = [
@@ -55,6 +64,15 @@ const availableNextMonth: VenueCardProps[] = [
         image: "https://images.unsplash.com/photo-1531053326103-f04c63d014ac?q=80&w=600&h=400&fit=crop",
         hint: "forest wedding",
         guestFavorite: true,
+    },
+    {
+        name: "The Mountain Chalet",
+        location: "Denver, CO",
+        rating: 4.95,
+        price: "$10,500 per event",
+        image: "https://images.unsplash.com/photo-1566438480900-0e09ef7e1a06?q=80&w=600&h=400&fit=crop",
+        hint: "mountain view",
+        guestFavorite: false,
     }
 ]
 
@@ -73,7 +91,7 @@ const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Venu
                     </Button>
                 )}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {venues.map((venue) => (
                      <VenueCard
                         key={venue.name}

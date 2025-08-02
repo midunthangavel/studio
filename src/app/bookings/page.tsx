@@ -25,6 +25,24 @@ const upcomingBookings = [
         status: "Confirmed",
         image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&h=400&fit=crop",
         hint: "catering food"
+    },
+    {
+        id: "BK11223",
+        name: "Timeless Moments - Photography",
+        date: "October 26, 2024",
+        location: "New York, NY",
+        status: "Confirmed",
+        image: "https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=600&h=400&fit=crop",
+        hint: "wedding photography"
+    },
+     {
+        id: "BK44556",
+        name: "Prestige Bridal Cars - Transport",
+        date: "November 12, 2024",
+        location: "New York, NY",
+        status: "Pending",
+        image: "https://images.unsplash.com/photo-1618951012351-38a6a79b21e8?q=80&w=600&h=400&fit=crop",
+        hint: "luxury car"
     }
 ];
 
@@ -37,6 +55,15 @@ const pastBookings = [
         status: "Completed",
         image: "https://images.unsplash.com/photo-1519225421980-715cb02cf58c?q=80&w=600&h=400&fit=crop",
         hint: "outdoor wedding"
+    },
+    {
+        id: "BK98765",
+        name: "Enchanted Events Decor - Anniversary",
+        date: "May 20, 2023",
+        location: "Los Angeles, CA",
+        status: "Completed",
+        image: "https://images.unsplash.com/photo-1520854221256-17452cc6da82?q=80&w=600&h=400&fit=crop",
+        hint: "wedding table"
     }
 ];
 
