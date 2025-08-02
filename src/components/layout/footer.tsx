@@ -18,8 +18,7 @@ import { useAuth } from '@/context/auth-context';
 export function Footer() {
   const pathname = usePathname();
   const { user } = useAuth();
-  const noLayoutRoutes = ['/'];
-
+  
   const navItems = [
     {
       name: 'Explore',
@@ -48,13 +47,13 @@ export function Footer() {
     },
   ];
 
-  if (noLayoutRoutes.includes(pathname)) {
-    return null;
-  }
+  // Hide on specific pages
+  const hideFooterRoutes = ['/', '/login', '/signup', /^\/venues\/.*/];
+  const shouldHideFooter = hideFooterRoutes.some(route => 
+    typeof route === 'string' ? route === pathname : route.test(pathname)
+  );
 
-  // Hide on certain pages
-  const hideFooterRoutes = ['/login', '/signup', /^\/venues\/.*/];
-  if (hideFooterRoutes.some(route => typeof route === 'string' ? route === pathname : route.test(pathname))) {
+  if (shouldHideFooter) {
       return null;
   }
 
