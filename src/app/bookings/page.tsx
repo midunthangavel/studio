@@ -13,7 +13,7 @@ const upcomingBookings = [
         date: "October 26, 2024",
         location: "New York, NY",
         status: "Confirmed",
-        image: "https://placehold.co/600x300.png",
+        image: "https://placehold.co/600x200.png",
         hint: "wedding reception"
     },
     {
@@ -22,7 +22,7 @@ const upcomingBookings = [
         date: "October 26, 2024",
         location: "New York, NY",
         status: "Confirmed",
-        image: "https://placehold.co/600x300.png",
+        image: "https://placehold.co/600x200.png",
         hint: "catering food"
     }
 ];
@@ -34,7 +34,7 @@ const pastBookings = [
         date: "July 15, 2023",
         location: "Chicago, IL",
         status: "Completed",
-        image: "https://placehold.co/600x300.png",
+        image: "https://placehold.co/600x200.png",
         hint: "outdoor wedding"
     }
 ];
@@ -64,7 +64,7 @@ export default function BookingsPage() {
                     <Card key={booking.id}>
                         <div className="grid grid-cols-1 md:grid-cols-3">
                             <div className="md:col-span-1">
-                                <Image src={booking.image} alt={booking.name} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.hint} />
+                                <Image src={booking.image} alt={booking.name} width={600} height={200} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.hint} />
                             </div>
                             <div className="md:col-span-2">
                                 <CardHeader>
@@ -106,7 +106,7 @@ export default function BookingsPage() {
                     <Card key={booking.id} className="opacity-70">
                         <div className="grid grid-cols-1 md:grid-cols-3">
                             <div className="md:col-span-1">
-                                <Image src={booking.image} alt={booking.name} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.hint} />
+                                <Image src={booking.image} alt={booking.name} width={600} height={200} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.hint} />
                             </div>
                             <div className="md:col-span-2">
                                 <CardHeader>

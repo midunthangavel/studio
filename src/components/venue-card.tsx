@@ -43,7 +43,7 @@ export function VenueCard({
           src={image}
           alt={name}
           width={600}
-          height={300}
+          height={200}
           className={cn("w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300", isCard ? "rounded-xl" : "", imageClassName)}
           data-ai-hint={hint}
         />
