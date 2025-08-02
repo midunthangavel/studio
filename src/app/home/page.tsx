@@ -18,7 +18,7 @@ const popularVenues = [
     location: "New York, NY",
     rating: 4.97,
     price: "$228 for 2 nights",
-    image: "https://placehold.co/600x400.png",
+    image: "https://placehold.co/600x300.png",
     hint: "modern apartment",
     guestFavorite: true,
   },
@@ -27,7 +27,7 @@ const popularVenues = [
     location: "Chicago, IL",
     rating: 4.8,
     price: "$122 for 2 nights",
-    image: "https://placehold.co/600x400.png",
+    image: "https://placehold.co/600x300.png",
     hint: "mansion interior",
     guestFavorite: false,
   },
@@ -36,7 +36,7 @@ const popularVenues = [
     location: "Los Angeles, CA",
     rating: 4.9,
     price: "$350 for 2 nights",
-    image: "https://placehold.co/600x400.png",
+    image: "https://placehold.co/600x300.png",
     hint: "modern venue",
     guestFavorite: true,
   },
@@ -48,7 +48,7 @@ const availableNextMonth = [
         location: "Miami, FL",
         rating: 5.0,
         price: "$381 for 2 nights",
-        image: "https://placehold.co/600x400.png",
+        image: "https://placehold.co/600x300.png",
         hint: "miami apartment",
         guestFavorite: true,
     },
@@ -57,7 +57,7 @@ const availableNextMonth = [
         location: "Malibu, CA",
         rating: 4.99,
         price: "$412 for 2 nights",
-        image: "https://placehold.co/600x400.png",
+        image: "https://placehold.co/600x300.png",
         hint: "beach house",
         guestFavorite: true,
     }
@@ -87,7 +87,7 @@ export default function HomePage() {
                     src={venue.image}
                     alt={venue.name}
                     width={600}
-                    height={400}
+                    height={300}
                     className="w-full h-64 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
                     data-ai-hint={venue.hint}
                   />
@@ -137,7 +137,7 @@ export default function HomePage() {
                     src={venue.image}
                     alt={venue.name}
                     width={600}
-                    height={400}
+                    height={300}
                     className="w-full h-64 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
                     data-ai-hint={venue.hint}
                   />

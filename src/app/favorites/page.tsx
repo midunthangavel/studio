@@ -11,7 +11,7 @@ const favoriteItems = [
     rating: 4.9,
     reviewCount: 120,
     price: "Starts from $5,000",
-    image: "https://placehold.co/600x400.png",
+    image: "https://placehold.co/600x300.png",
     hint: "wedding reception"
   },
   {
@@ -20,7 +20,7 @@ const favoriteItems = [
     rating: 5.0,
     reviewCount: 300,
     price: "$2,500",
-    image: "https://placehold.co/600x400.png",
+    image: "https://placehold.co/600x300.png",
     hint: "wedding photography"
   },
   {
@@ -29,7 +29,7 @@ const favoriteItems = [
     rating: 4.7,
     reviewCount: 95,
     price: "Starts from $4,200",
-    image: "https://placehold.co/600x400.png",
+    image: "https://placehold.co/600x300.png",
     hint: "garden party"
   },
 ];
@@ -56,7 +56,7 @@ export default function FavoritesPage() {
                   src={item.image}
                   alt={item.name}
                   width={600}
-                  height={400}
+                  height={300}
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   data-ai-hint={item.hint}
                 />

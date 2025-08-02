@@ -19,7 +19,7 @@ const searchResults = [
         rating: 4.9,
         reviewCount: 150,
         price: "$6,000",
-        image: "https://placehold.co/600x400.png",
+        image: "https://placehold.co/600x300.png",
         category: "Venues",
         hint: "urban loft"
     },
@@ -29,7 +29,7 @@ const searchResults = [
         rating: 4.8,
         reviewCount: 90,
         price: "$100/person",
-        image: "https://placehold.co/600x400.png",
+        image: "https://placehold.co/600x300.png",
         category: "Catering",
         hint: "catering food"
     },
@@ -39,7 +39,7 @@ const searchResults = [
         rating: 4.7,
         reviewCount: 210,
         price: "$8,500",
-        image: "https://placehold.co/600x400.png",
+        image: "https://placehold.co/600x300.png",
         category: "Venues",
         hint: "beach resort"
     },
@@ -49,7 +49,7 @@ const searchResults = [
         rating: 5.0,
         reviewCount: 300,
         price: "$2,500",
-        image: "https://placehold.co/600x400.png",
+        image: "https://placehold.co/600x300.png",
         category: "Photography",
         hint: "wedding photography"
     },
@@ -59,7 +59,7 @@ const searchResults = [
         rating: 4.9,
         reviewCount: 180,
         price: "$12,000",
-        image: "https://placehold.co/600x400.png",
+        image: "https://placehold.co/600x300.png",
         category: "Venues",
         hint: "luxury ballroom"
     },
@@ -69,7 +69,7 @@ const searchResults = [
         rating: 4.9,
         reviewCount: 75,
         price: "Varies",
-        image: "https://placehold.co/600x400.png",
+        image: "https://placehold.co/600x300.png",
         category: "Event Staff",
         hint: "event staff serving"
     },
@@ -149,7 +149,7 @@ export default function SearchPage() {
                                     src={item.image}
                                     alt={item.name}
                                     width={600}
-                                    height={400}
+                                    height={300}
                                     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                                     data-ai-hint={item.hint}
                                 />
