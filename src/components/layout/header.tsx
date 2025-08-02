@@ -49,7 +49,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-28 flex-col justify-center gap-4 max-w-screen-2xl">
         {/* Top: Search Bar */}
         <div className="flex items-center gap-4">
