@@ -1,175 +1,148 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import {
+  ChevronRight,
+  User,
+  Star,
+  CreditCard,
+  MapPin,
+  Languages,
+  Bell,
+  Lock,
+  Edit,
+  HelpCircle,
+  FileText,
+  MessageSquare,
+  LogOut,
+  Store,
+  Wallet,
+} from 'lucide-react';
+import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
-import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { PageWrapper } from '@/components/page-wrapper';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
-import { Loader, User } from 'lucide-react';
 import { ProtectedRoute } from '@/components/protected-route';
 
-const profileSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  email: z.string().email(),
-});
+const accountSettings = [
+  { icon: Star, text: 'VenueVoyager Plus', href: '#' },
+  { icon: User, text: 'Edit Profile', href: '/profile/edit' },
+  { icon: CreditCard, text: 'Saved Cards & Wallet', href: '#' },
+  { icon: MapPin, text: 'Saved Addresses', href: '#' },
+  { icon: Languages, text: 'Select Language', href: '#' },
+  { icon: Bell, text: 'Notification Settings', href: '/notifications' },
+  { icon: Lock, text: 'Privacy Center', href: '#' },
+];
 
-const passwordSchema = z.object({
-  currentPassword: z.string().min(6, 'Password must be at least 6 characters'),
-  newPassword: z.string().min(6, 'Password must be at least 6 characters'),
-});
+const myActivity = [
+  { icon: Edit, text: 'Reviews', href: '#' },
+  { icon: MessageSquare, text: 'Questions & Answers', href: '#' },
+];
 
-type ProfileFormValues = z.infer<typeof profileSchema>;
-type PasswordFormValues = z.infer<typeof passwordSchema>;
+const earnWith = [{ icon: Store, text: 'Sell on VenueVoyager', href: '#' }];
 
-export default function ProfilePage() {
+const feedbackAndInfo = [
+  { icon: FileText, text: 'Terms, Policies and Licenses', href: '#' },
+  { icon: HelpCircle, text: 'Browse FAQs', href: '#' },
+];
+
+const LanguageSwitcher = () => (
+  <div className="p-4 bg-background">
+    <h3 className="text-sm font-semibold mb-3 text-muted-foreground">
+      Try VenueVoyager in your language
+    </h3>
+    <div className="flex gap-2 overflow-x-auto pb-2">
+      {['English', 'Español', 'Français', 'Deutsch', '+8 more'].map(
+        (lang, index) => (
+          <Button
+            key={lang}
+            variant={index === 0 ? 'default' : 'outline'}
+            className="rounded-full"
+          >
+            {lang}
+          </Button>
+        )
+      )}
+    </div>
+  </div>
+);
+
+const Section = ({
+  title,
+  items,
+}: {
+  title: string;
+  items: { icon: React.ElementType; text: string; href: string }[];
+}) => (
+  <div className="bg-background">
+    <div className="p-4">
+      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+      <div className="flex flex-col">
+        {items.map((item, index) => (
+          <Link href={item.href} key={item.text}>
+            <div className="flex items-center py-4">
+              <item.icon className="w-6 h-6 mr-4 text-primary" />
+              <span className="flex-grow">{item.text}</span>
+              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+            </div>
+            {index < items.length - 1 && <Separator />}
+          </Link>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+export default function AccountPage() {
   const { user } = useAuth();
-  const { toast } = useToast();
-  const [loadingProfile, setLoadingProfile] = useState(false);
-  const [loadingPassword, setLoadingPassword] = useState(false);
+  const router = useRouter();
 
-  const profileForm = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileSchema),
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-    },
-  });
-
-  const passwordForm = useForm<PasswordFormValues>({
-    resolver: zodResolver(passwordSchema),
-  });
-
-  useEffect(() => {
-    if (user) {
-      const [firstName, ...lastName] = user.displayName?.split(' ') || ['', ''];
-      profileForm.reset({
-        firstName,
-        lastName: lastName.join(' '),
-        email: user.email || '',
-      });
-    }
-  }, [user, profileForm]);
-
-  const handleProfileUpdate = async (data: ProfileFormValues) => {
-    if (!user) return;
-    setLoadingProfile(true);
-    try {
-      await updateProfile(user, {
-        displayName: `${data.firstName} ${data.lastName}`,
-      });
-      toast({
-        title: 'Profile Updated',
-        description: 'Your profile information has been successfully updated.',
-      });
-    } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Update Failed',
-        description: error.message,
-      });
-    } finally {
-      setLoadingProfile(false);
-    }
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push('/login');
   };
 
-  const handlePasswordUpdate = async (data: PasswordFormValues) => {
-    if (!user || !user.email) return;
-    setLoadingPassword(true);
-    try {
-      const credential = EmailAuthProvider.credential(user.email, data.currentPassword);
-      await reauthenticateWithCredential(user, credential);
-      await updatePassword(user, data.newPassword);
-      toast({
-        title: 'Password Updated',
-        description: 'Your password has been successfully updated.',
-      });
-      passwordForm.reset();
-    } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Update Failed',
-        description: 'Could not update password. Please verify your current password.',
-      });
-    } finally {
-      setLoadingPassword(false);
-    }
-  };
-  
   return (
     <ProtectedRoute>
-    <PageWrapper
-        icon={User}
-        title="My Profile"
-        description="View and manage your account details."
-    >
-      <div className="max-w-3xl mx-auto space-y-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
-            <CardDescription>Update your name and email address.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={profileForm.handleSubmit(handleProfileUpdate)} className="space-y-4">
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" {...profileForm.register('firstName')} />
-                  {profileForm.formState.errors.firstName && <p className="text-sm text-destructive">{profileForm.formState.errors.firstName.message}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" {...profileForm.register('lastName')} />
-                   {profileForm.formState.errors.lastName && <p className="text-sm text-destructive">{profileForm.formState.errors.lastName.message}</p>}
-                </div>
-              </div>
-               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" disabled {...profileForm.register('email')} />
-              </div>
-              <Button type="submit" disabled={loadingProfile}>
-                 {loadingProfile ? <Loader className="animate-spin" /> : 'Save Changes'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+      <div className="bg-muted/50 pb-20">
+        {user && (
+          <div className="p-4 bg-background flex items-center justify-between">
+            <div>
+              <p className="font-semibold">{user.displayName || 'User'}</p>
+              <p className="text-sm text-muted-foreground">{user.email}</p>
+            </div>
+          </div>
+        )}
+        <Separator />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Change Password</CardTitle>
-            <CardDescription>Update your account password.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={passwordForm.handleSubmit(handlePasswordUpdate)} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="currentPassword">Current Password</Label>
-                <Input id="currentPassword" type="password" {...passwordForm.register('currentPassword')} />
-                 {passwordForm.formState.errors.currentPassword && <p className="text-sm text-destructive">{passwordForm.formState.errors.currentPassword.message}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="newPassword">New Password</Label>
-                <Input id="newPassword" type="password" {...passwordForm.register('newPassword')} />
-                 {passwordForm.formState.errors.newPassword && <p className="text-sm text-destructive">{passwordForm.formState.errors.newPassword.message}</p>}
-              </div>
-              <Button type="submit" variant="secondary" disabled={loadingPassword}>
-                {loadingPassword ? <Loader className="animate-spin" /> : 'Update Password'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        <LanguageSwitcher />
+
+        <div className="my-2" />
+        <Section title="Account Settings" items={accountSettings} />
+
+        <div className="my-2" />
+        <Section title="My Activity" items={myActivity} />
+
+        <div className="my-2" />
+        <Section title="Earn with VenueVoyager" items={earnWith} />
+
+        <div className="my-2" />
+        <Section title="Feedback & Information" items={feedbackAndInfo} />
+
+        <div className="p-4">
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleLogout}
+          >
+            <LogOut className="mr-2" />
+            Log Out
+          </Button>
+        </div>
       </div>
-    </PageWrapper>
     </ProtectedRoute>
   );
 }
