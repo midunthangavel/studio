@@ -10,7 +10,7 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
     rating: 4.9,
     reviewCount: 120,
     price: "Starts from $5,000",
-    image: "https://placehold.co/600x200.png",
+    image: "https://placehold.co/600x400.png",
     hint: "wedding reception"
   },
   {
@@ -19,7 +19,7 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
     rating: 5.0,
     reviewCount: 300,
     price: "$2,500",
-    image: "https://placehold.co/600x200.png",
+    image: "https://placehold.co/600x400.png",
     hint: "wedding photography"
   },
   {
@@ -28,7 +28,7 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
     rating: 4.7,
     reviewCount: 95,
     price: "Starts from $4,200",
-    image: "https://placehold.co/600x200.png",
+    image: "https://placehold.co/600x400.png",
     hint: "garden party"
   },
 ];
