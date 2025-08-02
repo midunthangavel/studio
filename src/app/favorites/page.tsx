@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { VenueCard, VenueCardProps } from "@/components/venue-card";
 import { PageWrapper } from "@/components/page-wrapper";
+import Link from "next/link";
 
-const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageClassName' | 'className' | 'actionButton' | 'children' >[] = [
+const favoriteItems: VenueCardProps[] = [
   {
     name: "The Grand Palace",
+    slug: "the-grand-palace",
     location: "New York, NY",
     rating: 4.9,
     reviewCount: 120,
@@ -16,6 +18,7 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
   },
   {
     name: "Timeless Moments Photography",
+    slug: "timeless-moments-photography",
     location: "Los Angeles, CA",
     rating: 5.0,
     reviewCount: 300,
@@ -25,6 +28,7 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
   },
   {
     name: "Greenwood Gardens",
+    slug: "greenwood-gardens",
     location: "Miami, FL",
     rating: 4.7,
     reviewCount: 95,
@@ -34,6 +38,7 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
   },
    {
     name: "Gourmet Delights Catering",
+    slug: "gourmet-delights-catering",
     location: "New York, NY",
     rating: 4.9,
     reviewCount: 150,
@@ -43,6 +48,7 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
   },
   {
     name: "Classic Limo Service",
+    slug: "classic-limo-service",
     location: "Chicago, IL",
     rating: 4.8,
     reviewCount: 150,
@@ -52,6 +58,7 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
   },
   {
     name: "Bloom & Blossom Florals",
+    slug: "bloom-blossom-florals",
     location: "New York, NY",
     rating: 4.9,
     reviewCount: 220,
@@ -71,18 +78,19 @@ export default function FavoritesPage() {
       {favoriteItems.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {favoriteItems.map((item) => (
-            <VenueCard 
-              key={item.name}
-              {...item}
-              isCard={false}
-              imageClassName="h-64"
-              className="border rounded-lg"
-              actionButton={
-                <Button size="icon" className="absolute top-2 right-2 bg-primary/80 hover:bg-primary text-primary-foreground rounded-full h-9 w-9">
-                    <Heart className="w-5 h-5 fill-current" />
-                </Button>
-              }
-            />
+            <Link href={`/venues/${item.slug}`} key={item.name}>
+              <VenueCard 
+                {...item}
+                isCard={false}
+                imageClassName="h-64"
+                className="border rounded-lg"
+                actionButton={
+                  <Button size="icon" className="absolute top-2 right-2 bg-primary/80 hover:bg-primary text-primary-foreground rounded-full h-9 w-9">
+                      <Heart className="w-5 h-5 fill-current" />
+                  </Button>
+                }
+              />
+            </Link>
           ))}
         </div>
       ) : (

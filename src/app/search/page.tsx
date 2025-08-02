@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,10 +13,11 @@ import { ListFilter, Search, Star } from "lucide-react";
 import { VenueCard, VenueCardProps } from '@/components/venue-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
-const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageClassName' | 'className' | 'actionButton'> & { category: string })[] = [
+const searchResults: (VenueCardProps & { category: string })[] = [
     // Catering Services
     {
         name: "Gourmet Delights Catering",
+        slug: "gourmet-delights-catering",
         location: "New York, NY",
         rating: 4.9,
         reviewCount: 150,
@@ -26,6 +28,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Exquisite Eats",
+        slug: "exquisite-eats",
         location: "Los Angeles, CA",
         rating: 4.8,
         reviewCount: 110,
@@ -36,6 +39,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "The Wedding Feast",
+        slug: "the-wedding-feast",
         location: "Chicago, IL",
         rating: 5.0,
         reviewCount: 200,
@@ -46,6 +50,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Saffron & Spice",
+        slug: "saffron-spice",
         location: "Houston, TX",
         rating: 4.7,
         reviewCount: 95,
@@ -56,6 +61,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Farm to Table Creations",
+        slug: "farm-to-table-creations",
         location: "San Francisco, CA",
         rating: 4.9,
         reviewCount: 130,
@@ -66,6 +72,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Coastal Cuisine",
+        slug: "coastal-cuisine",
         location: "Miami, FL",
         rating: 4.8,
         reviewCount: 125,
@@ -76,6 +83,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "The Rustic Platter",
+        slug: "the-rustic-platter",
         location: "Austin, TX",
         rating: 4.6,
         reviewCount: 80,
@@ -86,6 +94,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Vegan Vogue Events",
+        slug: "vegan-vogue-events",
         location: "Portland, OR",
         rating: 5.0,
         reviewCount: 180,
@@ -96,6 +105,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Decadent Desserts Bar",
+        slug: "decadent-desserts-bar",
         location: "Las Vegas, NV",
         rating: 4.9,
         reviewCount: 220,
@@ -106,6 +116,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "International Flavors Co.",
+        slug: "international-flavors-co",
         location: "Washington, D.C.",
         rating: 4.7,
         reviewCount: 140,
@@ -118,6 +129,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     // Transport Services
     {
         name: "Prestige Bridal Cars",
+        slug: "prestige-bridal-cars",
         location: "New York, NY",
         rating: 5.0,
         reviewCount: 180,
@@ -128,6 +140,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Royal Rolls Royce",
+        slug: "royal-rolls-royce",
         location: "Los Angeles, CA",
         rating: 5.0,
         reviewCount: 210,
@@ -138,6 +151,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Classic Limo Service",
+        slug: "classic-limo-service",
         location: "Chicago, IL",
         rating: 4.8,
         reviewCount: 150,
@@ -148,6 +162,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Wedding Wheels Vintage",
+        slug: "wedding-wheels-vintage",
         location: "San Francisco, CA",
         rating: 4.9,
         reviewCount: 130,
@@ -158,6 +173,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Citywide Party Bus",
+        slug: "citywide-party-bus",
         location: "Las Vegas, NV",
         rating: 4.7,
         reviewCount: 90,
@@ -168,6 +184,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
      {
         name: "Elegant Excursions",
+        slug: "elegant-excursions",
         location: "Miami, FL",
         rating: 4.8,
         reviewCount: 115,
@@ -178,6 +195,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Getaway Car Rentals",
+        slug: "getaway-car-rentals",
         location: "Austin, TX",
         rating: 4.6,
         reviewCount: 75,
@@ -188,6 +206,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Enchanted Carriages",
+        slug: "enchanted-carriages",
         location: "Orlando, FL",
         rating: 5.0,
         reviewCount: 190,
@@ -198,6 +217,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Metro Lux Shuttles",
+        slug: "metro-lux-shuttles",
         location: "Washington, D.C.",
         rating: 4.7,
         reviewCount: 100,
@@ -208,6 +228,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Regal Auto Group",
+        slug: "regal-auto-group",
         location: "Houston, TX",
         rating: 4.8,
         reviewCount: 140,
@@ -220,6 +241,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     // Decoration Vendors
     {
         name: "Bloom & Blossom Florals",
+        slug: "bloom-blossom-florals",
         location: "New York, NY",
         rating: 4.9,
         reviewCount: 220,
@@ -230,6 +252,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Enchanted Events Decor",
+        slug: "enchanted-events-decor",
         location: "Los Angeles, CA",
         rating: 5.0,
         reviewCount: 250,
@@ -240,6 +263,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Luxe Lighting & Draping",
+        slug: "luxe-lighting-draping",
         location: "Miami, FL",
         rating: 4.8,
         reviewCount: 180,
@@ -250,6 +274,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "The Perfect Arrangement",
+        slug: "the-perfect-arrangement",
         location: "Chicago, IL",
         rating: 4.9,
         reviewCount: 190,
@@ -260,6 +285,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Rustic Charm Rentals",
+        slug: "rustic-charm-rentals",
         location: "Austin, TX",
         rating: 4.7,
         reviewCount: 140,
@@ -270,6 +296,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Elegant Petals",
+        slug: "elegant-petals",
         location: "San Francisco, CA",
         rating: 5.0,
         reviewCount: 280,
@@ -280,6 +307,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Dreamy Designs Co.",
+        slug: "dreamy-designs-co",
         location: "Houston, TX",
         rating: 4.8,
         reviewCount: 160,
@@ -290,6 +318,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Fantasy Floral Creations",
+        slug: "fantasy-floral-creations",
         location: "Las Vegas, NV",
         rating: 4.9,
         reviewCount: 210,
@@ -300,6 +329,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Modern Mandaps",
+        slug: "modern-mandaps",
         location: "Washington, D.C.",
         rating: 5.0,
         reviewCount: 170,
@@ -310,6 +340,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Ivy & Gold Events",
+        slug: "ivy-gold-events",
         location: "Atlanta, GA",
         rating: 4.9,
         reviewCount: 195,
@@ -322,6 +353,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     // Photography Agencies
     {
         name: "Timeless Moments Photo",
+        slug: "timeless-moments-photo",
         location: "New York, NY",
         rating: 5.0,
         reviewCount: 350,
@@ -332,6 +364,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Captured by Light",
+        slug: "captured-by-light",
         location: "Los Angeles, CA",
         rating: 4.9,
         reviewCount: 280,
@@ -342,6 +375,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Golden Hour Films",
+        slug: "golden-hour-films",
         location: "San Francisco, CA",
         rating: 5.0,
         reviewCount: 310,
@@ -352,6 +386,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Windy City Weddings",
+        slug: "windy-city-weddings",
         location: "Chicago, IL",
         rating: 4.8,
         reviewCount: 240,
@@ -362,6 +397,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Love Story Studios",
+        slug: "love-story-studios",
         location: "Miami, FL",
         rating: 4.9,
         reviewCount: 290,
@@ -372,6 +408,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Candid Captures",
+        slug: "candid-captures",
         location: "Austin, TX",
         rating: 4.7,
         reviewCount: 200,
@@ -382,6 +419,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Forever & Always Photo",
+        slug: "forever-always-photo",
         location: "Houston, TX",
         rating: 4.9,
         reviewCount: 260,
@@ -392,6 +430,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Mountainscape Media",
+        slug: "mountainscape-media",
         location: "Denver, CO",
         rating: 5.0,
         reviewCount: 220,
@@ -402,6 +441,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Coastal Clicks",
+        slug: "coastal-clicks",
         location: "San Diego, CA",
         rating: 4.8,
         reviewCount: 230,
@@ -412,6 +452,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "Artistic Angles",
+        slug: "artistic-angles",
         location: "Washington, D.C.",
         rating: 4.9,
         reviewCount: 270,
@@ -423,6 +464,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     // Event Staff
     {
         name: "Top-Tier Event Staffing",
+        slug: "top-tier-event-staffing",
         location: "New York, NY",
         rating: 4.9,
         reviewCount: 180,
@@ -433,6 +475,7 @@ const searchResults: (Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCl
     },
     {
         name: "LA Elite Bartenders",
+        slug: "la-elite-bartenders",
         location: "Los Angeles, CA",
         rating: 5.0,
         reviewCount: 250,
@@ -524,19 +567,20 @@ export default function SearchPage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {searchResults.map((item) => (
-                             <VenueCard 
-                                key={item.name} 
-                                {...item}
-                                isCard
-                                imageClassName="h-64"
-                                actionButton={
-                                    <div className="absolute top-2 right-2 bg-background/80 p-2 rounded-full">
-                                        <Star className="w-5 h-5 text-accent" />
-                                    </div>
-                                }
-                                >
-                                     <p className='text-sm text-primary font-semibold my-1'>{item.category}</p>
-                             </VenueCard>
+                             <Link href={`/venues/${item.slug}`} key={item.name}>
+                                <VenueCard 
+                                    isCard
+                                    {...item}
+                                    imageClassName="h-64"
+                                    actionButton={
+                                        <div className="absolute top-2 right-2 bg-background/80 p-2 rounded-full">
+                                            <Star className="w-5 h-5 text-accent" />
+                                        </div>
+                                    }
+                                    >
+                                        <p className='text-sm text-primary font-semibold my-1'>{item.category}</p>
+                                </VenueCard>
+                            </Link>
                         ))}
                     </div>
                 </main>

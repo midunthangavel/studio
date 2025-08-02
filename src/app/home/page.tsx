@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -6,6 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { VenueCard, VenueCardProps } from "@/components/venue-card";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 const popularVenues: VenueCardProps[] = [
   {
@@ -16,6 +19,7 @@ const popularVenues: VenueCardProps[] = [
     image: "https://images.unsplash.com/photo-1542665952-14513db15293?q=80&w=600&h=400&fit=crop",
     hint: "luxury ballroom",
     guestFavorite: true,
+    slug: "the-grand-ballroom",
   },
   {
     name: "Lakeside Manor",
@@ -25,6 +29,7 @@ const popularVenues: VenueCardProps[] = [
     image: "https://images.unsplash.com/photo-1519225421980-715cb02cf58c?q=80&w=600&h=400&fit=crop",
     hint: "outdoor wedding",
     guestFavorite: false,
+    slug: "lakeside-manor",
   },
   {
     name: "The Loft Downtown",
@@ -34,6 +39,7 @@ const popularVenues: VenueCardProps[] = [
     image: "https://images.unsplash.com/photo-1542882583-4c4f494429f2?q=80&w=600&h=400&fit=crop",
     hint: "urban loft",
     guestFavorite: true,
+    slug: "the-loft-downtown",
   },
   {
     name: "The Garden Pavilion",
@@ -43,6 +49,7 @@ const popularVenues: VenueCardProps[] = [
     image: "https://images.unsplash.com/photo-1518987048-93e29699e798?q=80&w=600&h=400&fit=crop",
     hint: "garden party",
     guestFavorite: false,
+    slug: "the-garden-pavilion",
   },
 ];
 
@@ -55,6 +62,7 @@ const availableNextMonth: VenueCardProps[] = [
         image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&h=400&fit=crop",
         hint: "beach resort",
         guestFavorite: true,
+        slug: "sunset-beach-resort",
     },
     {
         name: "Enchanted Forest Hall",
@@ -64,6 +72,7 @@ const availableNextMonth: VenueCardProps[] = [
         image: "https://images.unsplash.com/photo-1531053326103-f04c63d014ac?q=80&w=600&h=400&fit=crop",
         hint: "forest wedding",
         guestFavorite: true,
+        slug: "enchanted-forest-hall",
     },
     {
         name: "The Mountain Chalet",
@@ -73,6 +82,7 @@ const availableNextMonth: VenueCardProps[] = [
         image: "https://images.unsplash.com/photo-1566438480900-0e09ef7e1a06?q=80&w=600&h=400&fit=crop",
         hint: "mountain view",
         guestFavorite: false,
+        slug: "the-mountain-chalet",
     }
 ]
 
@@ -93,17 +103,18 @@ const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Venu
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {venues.map((venue) => (
-                     <VenueCard
-                        key={venue.name}
-                        {...venue}
-                        isCard
-                        imageClassName="h-64"
-                        actionButton={
-                             <Button variant="ghost" size="icon" className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full">
-                                <Heart className="w-5 h-5" />
-                            </Button>
-                        }
-                     />
+                    <Link href={`/venues/${venue.slug}`} key={venue.name}>
+                        <VenueCard
+                            {...venue}
+                            isCard
+                            imageClassName="h-64"
+                            actionButton={
+                                <Button variant="ghost" size="icon" className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full">
+                                    <Heart className="w-5 h-5" />
+                                </Button>
+                            }
+                        />
+                    </Link>
                 ))}
             </div>
         </div>

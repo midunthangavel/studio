@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 export interface VenueCardProps {
     name: string;
+    slug: string;
     location: string;
     rating: number;
     reviewCount?: number;
@@ -22,6 +23,7 @@ export interface VenueCardProps {
 
 export function VenueCard({
   name,
+  slug,
   location,
   rating,
   reviewCount,
