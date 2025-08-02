@@ -34,6 +34,7 @@ import {
 import { suggestEventIdeas, SuggestEventIdeasOutput } from '@/ai/flows/suggest-event-ideas';
 import { Separator } from '@/components/ui/separator';
 import { PageWrapper } from '@/components/page-wrapper';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   eventType: z.string().min(2, {
@@ -53,6 +54,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function PlannerPage() {
   const [loading, setLoading] = useState(false);
   const [ideas, setIdeas] = useState<SuggestEventIdeasOutput | null>(null);
+  const { toast } = useToast();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -72,7 +74,11 @@ export default function PlannerPage() {
       setIdeas(result);
     } catch (error) {
       console.error('Error generating event ideas:', error);
-      // You might want to show a toast notification here
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem generating your event ideas. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
