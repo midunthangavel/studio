@@ -29,6 +29,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
           rel="stylesheet"
         />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
+
       </head>
       <body className="font-body antialiased">
         <ThemeProvider
@@ -58,7 +60,7 @@ function ConditionalLayout({ children }: {children: React.ReactNode}) {
     return (
         <div className="relative flex min-h-screen flex-col bg-background">
           <Header />
-          <main className="flex-1 px-4">{children}</main>
+          <main className="flex-1">{children}</main>
           <Footer />
         </div>
     )
