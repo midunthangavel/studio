@@ -36,11 +36,11 @@ export function Footer() {
       icon: Home,
     },
     {
-      name: 'Budget',
-      href: '/budget',
-      icon: Wallet,
+      name: 'Messages',
+      href: '/chat',
+      icon: MessageSquare,
     },
-     {
+    {
       name: 'Account',
       href: '/profile',
       icon: user ? User : LogIn,
@@ -52,7 +52,7 @@ export function Footer() {
   }
 
   // Hide on certain pages
-  const hideFooterRoutes = ['/login', '/signup'];
+  const hideFooterRoutes = ['/login', '/signup', '/budget'];
   if (hideFooterRoutes.includes(pathname)) {
       return null;
   }
