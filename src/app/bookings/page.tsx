@@ -48,7 +48,7 @@ export default function BookingsPage() {
             My Bookings
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
-            Manage your upcoming and past event bookings.
+            Manage your upcoming and past bookings for your functions.
             </p>
         </div>
 
@@ -87,7 +87,7 @@ export default function BookingsPage() {
                                     </div>
                                     <div className="flex gap-2 pt-2">
                                         <Button size="sm">View Details</Button>
-                                        <Button size="sm" variant="outline">Contact Vendor</Button>
+                                        <Button size="sm" variant="outline">Contact Provider</Button>
                                     </div>
                                 </CardContent>
                             </div>

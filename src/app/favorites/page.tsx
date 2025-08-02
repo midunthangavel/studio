@@ -43,7 +43,7 @@ export default function FavoritesPage() {
           My Favorites
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Your saved venues and vendors all in one place.
+          Your saved venues and services all in one place.
         </p>
       </div>
 
@@ -94,7 +94,7 @@ export default function FavoritesPage() {
                 </div>
                 <h3 className="text-xl font-semibold mb-2">No Favorites Yet</h3>
                 <p className="text-muted-foreground">
-                Click the heart icon on any venue or vendor to save them here.
+                Click the heart icon on any venue or service to save them here.
                 </p>
             </CardContent>
         </Card>

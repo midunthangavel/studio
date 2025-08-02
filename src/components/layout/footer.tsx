@@ -16,8 +16,8 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-muted-foreground text-sm">
-              Your journey to the perfect event starts here. Discover and book
-              unique venues and vendors with ease.
+              Your journey to the perfect function starts here. Discover and book
+              unique venues and services with ease.
             </p>
             <div className="flex space-x-2">
               <Button variant="ghost" size="icon">
@@ -36,7 +36,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="#"
+                  href="/search?category=venues"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
                   Venues
@@ -44,23 +44,23 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/search?category=catering"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
-                  Vendors
+                  Caterers
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/search?category=decorators"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
-                  Deals
+                  Decorators
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/planner"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
                   Inspiration
@@ -100,7 +100,7 @@ export function Footer() {
                   href="#"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
-                  For Vendors
+                  For Service Providers
                 </Link>
               </li>
             </ul>

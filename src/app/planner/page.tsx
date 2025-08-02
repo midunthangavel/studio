@@ -37,7 +37,7 @@ import { Separator } from '@/components/ui/separator';
 
 const formSchema = z.object({
   eventType: z.string().min(2, {
-    message: 'Event type must be at least 2 characters.',
+    message: 'Function type must be at least 2 characters.',
   }),
   guestCount: z.coerce.number().int().positive({
     message: 'Please enter a valid number of guests.',
@@ -84,17 +84,17 @@ export default function PlannerPage() {
         <div className="text-center mb-12">
           <Lightbulb className="mx-auto h-12 w-12 text-primary mb-4" />
           <h1 className="text-4xl md:text-5xl font-bold font-headline">
-            AI Event Planner
+            AI Function Planner
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Describe your event, and let our AI assistant spark your imagination!
+            Describe your function, and let our AI assistant spark your imagination!
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           <Card className="sticky top-24">
             <CardHeader>
-              <CardTitle>Tell us about your event</CardTitle>
+              <CardTitle>Tell us about your function</CardTitle>
               <CardDescription>
                 The more details you provide, the better the suggestions will be.
               </CardDescription>
@@ -110,9 +110,9 @@ export default function PlannerPage() {
                     name="eventType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Event Type</FormLabel>
+                        <FormLabel>Function Type</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g., Birthday Party, Corporate Gala" {...field} />
+                          <Input placeholder="e.g., Wedding, Anniversary, Ceremony" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -237,7 +237,7 @@ export default function PlannerPage() {
                    <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
                      <Lightbulb className="w-8 h-8 text-muted-foreground" />
                    </div>
-                  <p className="text-muted-foreground">Your event ideas will appear here.</p>
+                  <p className="text-muted-foreground">Your function ideas will appear here.</p>
                 </CardContent>
               </Card>
             )}

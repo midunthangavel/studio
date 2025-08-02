@@ -3,16 +3,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   ArrowRight,
+  Briefcase,
   CalendarCheck,
   Camera,
   Car,
   Church,
   Lightbulb,
   MapPin,
-  Music,
   PartyPopper,
   Search,
   Star,
+  Users,
   UtensilsCrossed,
   Wallet,
 } from "lucide-react";
@@ -21,14 +22,14 @@ import Link from "next/link";
 
 const categories = [
   {
-    name: "Marriage Venues",
+    name: "Venues",
     icon: <Church className="w-8 h-8 text-primary" />,
     href: "/search?category=venues",
   },
   {
-    name: "Decorations",
+    name: "Decorators",
     icon: <PartyPopper className="w-8 h-8 text-primary" />,
-    href: "/search?category=decorations",
+    href: "/search?category=decorators",
   },
   {
     name: "Catering",
@@ -41,12 +42,12 @@ const categories = [
     href: "/search?category=photography",
   },
   {
-    name: "Music",
-    icon: <Music className="w-8 h-8 text-primary" />,
-    href: "/search?category=music",
+    name: "Event Staff",
+    icon: <Users className="w-8 h-8 text-primary" />,
+    href: "/search?category=staff",
   },
   {
-    name: "Transport",
+    name: "Transportation",
     icon: <Car className="w-8 h-8 text-primary" />,
     href: "/search?category=transport",
   },
@@ -101,23 +102,22 @@ export default function Home() {
           layout="fill"
           objectFit="cover"
           className="z-0"
-          data-ai-hint="event venue interior"
+          data-ai-hint="wedding ceremony"
         />
         <div className="absolute inset-0 bg-black/50 z-10" />
         <div className="relative z-20 flex flex-col items-center justify-center h-full text-center text-white px-4">
           <h1 className="text-4xl md:text-6xl font-bold font-headline">
-            Find Your Perfect Venue
+            Your Perfect Event, Simplified
           </h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl text-primary-foreground/80">
-            Discover and book unique venues and services for any event. Your
-            unforgettable celebration starts here.
+            Find and book venues, caterers, decorators and more for your wedding, ceremony, or special function.
           </p>
           <div className="mt-8 w-full max-w-3xl bg-background/90 p-4 rounded-lg shadow-lg backdrop-blur-sm">
             <form className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
               <div className="md:col-span-2">
                 <Input
                   type="text"
-                  placeholder="What are you looking for? (e.g., Venue, Caterer)"
+                  placeholder="Service (e.g., Hall, Catering, Travel Agency)"
                   className="w-full text-foreground"
                 />
               </div>
@@ -142,7 +142,7 @@ export default function Home() {
       <section id="categories" className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 font-headline">
-            Browse by Category
+            Browse Services
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
             {categories.map((category) => (
@@ -169,7 +169,7 @@ export default function Home() {
                 Need inspiration? Try our AI Planner
               </h2>
               <p className="text-muted-foreground mb-6">
-                Not sure where to start? Let our AI-powered event planner help you brainstorm ideas for your next event. Get suggestions for themes, decorations, activities, and more, all tailored to your needs.
+                Not sure where to start? Let our AI-powered event planner help you brainstorm ideas for your next function. Get suggestions for themes, decorations, activities, and more, all tailored to your needs.
               </p>
               <Button asChild size="lg" className="bg-accent hover:bg-accent/90">
                 <Link href="/planner">
@@ -196,7 +196,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-3xl font-bold font-headline">
-              Featured Venues
+              Featured Venues & Services
             </h2>
             <Button variant="ghost" asChild>
               <Link href="/search">
@@ -257,16 +257,16 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">1. Discover</h3>
               <p className="text-muted-foreground max-w-xs">
-                Search for venues and vendors that match your style and budget.
+                Search for venues, halls, caterers, and other services that fit your needs.
               </p>
             </div>
             <div className="flex flex-col items-center">
               <div className="bg-primary/10 p-6 rounded-full mb-4">
                 <CalendarCheck className="w-10 h-10 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">2. Book</h3>
+              <h3 className="text-xl font-semibold mb-2">2. Connect & Book</h3>
               <p className="text-muted-foreground max-w-xs">
-                Check availability and send booking requests directly to vendors.
+                Contact service providers and book directly through the platform.
               </p>
             </div>
             <div className="flex flex-col items-center">
@@ -275,7 +275,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">3. Celebrate</h3>
               <p className="text-muted-foreground max-w-xs">
-                Enjoy a seamless event experience with everything perfectly planned.
+                Enjoy a seamless event with all your bookings managed in one place.
               </p>
             </div>
           </div>

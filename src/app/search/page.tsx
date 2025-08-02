@@ -64,19 +64,19 @@ const searchResults = [
         hint: "luxury ballroom"
     },
      {
-        name: "DJ Spark",
+        name: "Elite Event Staffing",
         location: "Las Vegas, NV",
         rating: 4.9,
         reviewCount: 75,
-        price: "$800",
+        price: "Varies",
         image: "https://placehold.co/600x400.png",
-        category: "Music",
-        hint: "dj setup"
+        category: "Event Staff",
+        hint: "event staff serving"
     },
 ];
 
 export default function SearchPage() {
-    const [priceRange, setPriceRange] = useState([500, 10000]);
+    const [priceRange, setPriceRange] = useState([500, 15000]);
 
     return (
         <div className="container mx-auto px-4 py-12">
@@ -91,26 +91,26 @@ export default function SearchPage() {
                            </h3>
                            <form className="space-y-6">
                                <div>
-                                   <Label htmlFor="keyword">Keyword</Label>
-                                   <Input id="keyword" placeholder="e.g., Rustic Barn" />
+                                   <Label htmlFor="keyword">Keyword or Name</Label>
+                                   <Input id="keyword" placeholder="e.g., Lakeside, Royal" />
                                </div>
                                <div>
                                    <Label htmlFor="location">Location</Label>
                                    <Input id="location" placeholder="e.g., New York, NY" />
                                </div>
                                <div>
-                                   <Label htmlFor="category">Category</Label>
+                                   <Label htmlFor="category">Service Type</Label>
                                    <Select>
                                         <SelectTrigger id="category">
-                                            <SelectValue placeholder="All Categories" />
+                                            <SelectValue placeholder="All Services" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="venues">Venues</SelectItem>
+                                            <SelectItem value="decorators">Decorators</SelectItem>
                                             <SelectItem value="catering">Catering</SelectItem>
                                             <SelectItem value="photography">Photography</SelectItem>
-                                            <SelectItem value="music">Music</SelectItem>
-                                            <SelectItem value="decorations">Decorations</SelectItem>
-                                            <SelectItem value="transport">Transport</SelectItem>
+                                            <SelectItem value="staff">Event Staff</SelectItem>
+                                            <SelectItem value="transport">Transportation</SelectItem>
                                         </SelectContent>
                                     </Select>
                                </div>
@@ -118,7 +118,7 @@ export default function SearchPage() {
                                     <Label>Price Range</Label>
                                     <Slider
                                         min={0}
-                                        max={20000}
+                                        max={30000}
                                         step={100}
                                         value={priceRange}
                                         onValueChange={setPriceRange}
@@ -139,7 +139,8 @@ export default function SearchPage() {
 
                 {/* Search Results */}
                 <main className="lg:col-span-3">
-                    <h1 className="text-3xl font-bold mb-6 font-headline">Search Results</h1>
+                    <h1 className="text-3xl font-bold mb-1 font-headline">Search Results</h1>
+                    <p className="text-muted-foreground mb-6">Showing {searchResults.length} results for your special day.</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {searchResults.map((item) => (
                              <Card key={item.name} className="overflow-hidden group">
