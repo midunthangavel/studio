@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle, Clock, MapPin } from "lucide-react";
 import Image from "next/image";
+import { PageWrapper } from "@/components/page-wrapper";
 
 const upcomingBookings = [
     {
@@ -41,17 +42,11 @@ const pastBookings = [
 
 export default function BookingsPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-            <Calendar className="mx-auto h-12 w-12 text-primary mb-4" />
-            <h1 className="text-4xl md:text-5xl font-bold font-headline">
-            My Bookings
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-            Manage your upcoming and past bookings for your functions.
-            </p>
-        </div>
-
+    <PageWrapper
+        icon={Calendar}
+        title="My Bookings"
+        description="Manage your upcoming and past bookings for your functions."
+    >
       <Tabs defaultValue="upcoming" className="w-full max-w-4xl mx-auto">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
@@ -142,6 +137,6 @@ export default function BookingsPage() {
             </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </PageWrapper>
   );
 }

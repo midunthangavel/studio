@@ -95,7 +95,7 @@ const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Venu
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col pb-24 md:pb-0">
+    <div className="flex flex-col py-6">
       <VenueSection title="Popular venues" venues={popularVenues} moreLink="/search" />
       <VenueSection title="Available next month" venues={availableNextMonth} moreLink="/search?location=Miami" />
     </div>

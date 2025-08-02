@@ -2,6 +2,7 @@
 import { Bell, CheckCircle, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { PageWrapper } from "@/components/page-wrapper";
 
 const notifications = [
   {
@@ -26,17 +27,11 @@ const notifications = [
 
 export default function NotificationsPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-       <div className="text-center mb-12">
-        <Bell className="mx-auto h-12 w-12 text-primary mb-4" />
-        <h1 className="text-4xl md:text-5xl font-bold font-headline">
-          Notifications
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Stay updated with your event planning activities.
-        </p>
-      </div>
-
+    <PageWrapper
+        icon={Bell}
+        title="Notifications"
+        description="Stay updated with your event planning activities."
+    >
       <Card className="max-w-3xl mx-auto">
         <CardHeader>
             <CardTitle>Recent Notifications</CardTitle>
@@ -64,6 +59,6 @@ export default function NotificationsPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageWrapper>
   );
 }

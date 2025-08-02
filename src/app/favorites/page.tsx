@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { VenueCard, VenueCardProps } from "@/components/venue-card";
+import { PageWrapper } from "@/components/page-wrapper";
 
 const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageClassName' | 'className' | 'actionButton' | 'children' >[] = [
   {
@@ -35,17 +36,11 @@ const favoriteItems: Omit<VenueCardProps, 'guestFavorite' | 'isCard' | 'imageCla
 
 export default function FavoritesPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-12">
-        <Heart className="mx-auto h-12 w-12 text-primary mb-4" />
-        <h1 className="text-4xl md:text-5xl font-bold font-headline">
-          My Favorites
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Your saved venues and services all in one place.
-        </p>
-      </div>
-
+    <PageWrapper
+        icon={Heart}
+        title="My Favorites"
+        description="Your saved venues and services all in one place."
+    >
       {favoriteItems.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {favoriteItems.map((item) => (
@@ -76,6 +71,6 @@ export default function FavoritesPage() {
             </div>
         </div>
       )}
-    </div>
+    </PageWrapper>
   );
 }

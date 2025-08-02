@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { MessageSquare, Send, User, Bot } from 'lucide-react';
+import { PageWrapper } from '@/components/page-wrapper';
 
 const initialConversations = [
   {
@@ -56,17 +57,11 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-12">
-        <MessageSquare className="mx-auto h-12 w-12 text-primary mb-4" />
-        <h1 className="text-4xl md:text-5xl font-bold font-headline">
-          Messages
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Communicate with service providers and your AI assistant.
-        </p>
-      </div>
-
+    <PageWrapper
+        icon={MessageSquare}
+        title="Messages"
+        description="Communicate with service providers and your AI assistant."
+    >
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
         <Card className="lg:col-span-1 h-fit">
           <CardHeader>
@@ -152,6 +147,6 @@ export default function ChatPage() {
           </CardFooter>
         </Card>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

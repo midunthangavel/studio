@@ -15,7 +15,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -34,6 +33,7 @@ import {
 } from 'lucide-react';
 import { suggestEventIdeas, SuggestEventIdeasOutput } from '@/ai/flows/suggest-event-ideas';
 import { Separator } from '@/components/ui/separator';
+import { PageWrapper } from '@/components/page-wrapper';
 
 const formSchema = z.object({
   eventType: z.string().min(2, {
@@ -79,18 +79,12 @@ export default function PlannerPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <PageWrapper
+        icon={Lightbulb}
+        title="AI Function Planner"
+        description="Describe your function, and let our AI assistant spark your imagination!"
+    >
       <div className="mx-auto max-w-4xl">
-        <div className="text-center mb-12">
-          <Lightbulb className="mx-auto h-12 w-12 text-primary mb-4" />
-          <h1 className="text-4xl md:text-5xl font-bold font-headline">
-            AI Function Planner
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Describe your function, and let our AI assistant spark your imagination!
-          </p>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           <Card className="sticky top-24">
             <CardHeader>
@@ -244,6 +238,6 @@ export default function PlannerPage() {
           </div>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
