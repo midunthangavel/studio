@@ -2,8 +2,8 @@
 'use client';
 import { notFound, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Star, MapPin, Wifi, ParkingSquare, Utensils, Wind, Calendar as CalendarIcon, Heart, Loader } from 'lucide-react';
-import { addDoc, collection } from 'firebase/firestore';
+import { Star, MapPin, Wifi, ParkingSquare, Utensils, Wind, Calendar as CalendarIcon, Heart, Loader, MessageSquare } from 'lucide-react';
+import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/auth-context';
 
@@ -54,6 +54,7 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [guests, setGuests] = useState(50);
   const [loading, setLoading] = useState(false);
+  const [contactLoading, setContactLoading] = useState(false);
 
   if (!venue) {
     notFound();
@@ -83,7 +84,7 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
             bookingDate: date,
             guestCount: guests,
             status: 'Confirmed', // Defaulting to confirmed for demo
-            createdAt: new Date(),
+            createdAt: serverTimestamp(),
         });
         toast({
             title: "Booking Request Sent!",
@@ -99,6 +100,58 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
         });
     } finally {
         setLoading(false);
+    }
+  }
+
+  const handleContactProvider = async () => {
+    if (!user) {
+        toast({
+            variant: "destructive",
+            title: "Authentication Required",
+            description: "You must be logged in to contact a provider.",
+        });
+        router.push('/login');
+        return;
+    }
+    setContactLoading(true);
+    try {
+        // Mock provider ID - in a real app, this would be on the venue object
+        const providerId = `provider_${venue.slug}`; 
+        
+        // Create a unique conversation ID
+        const conversationId = [user.uid, providerId].sort().join('_');
+        const conversationRef = doc(db, 'conversations', conversationId);
+        
+        const conversationSnap = await getDoc(conversationRef);
+
+        if (!conversationSnap.exists()) {
+             await setDoc(conversationRef, {
+                participants: {
+                    [user.uid]: {
+                        name: user.displayName || user.email,
+                        avatar: user.photoURL || `https://avatar.vercel.sh/${user.uid}.png`,
+                    },
+                    [providerId]: {
+                        name: venue.name,
+                        avatar: venue.image,
+                    }
+                },
+                messages: [],
+                createdAt: serverTimestamp(),
+            });
+        }
+        
+        router.push('/chat');
+
+    } catch (error) {
+         console.error("Error starting conversation: ", error);
+        toast({
+            variant: "destructive",
+            title: "Failed to Start Chat",
+            description: "There was an error initiating the conversation. Please try again.",
+        });
+    } finally {
+        setContactLoading(false);
     }
   }
 
@@ -192,6 +245,11 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
                     </div>
                 ))}
             </div>
+             <Separator className="my-8" />
+             <Button variant="outline" onClick={handleContactProvider} disabled={contactLoading}>
+                {contactLoading ? <Loader className="animate-spin" /> : <MessageSquare className="mr-2" />}
+                Contact Provider
+            </Button>
         </div>
 
         {/* Booking Card */}

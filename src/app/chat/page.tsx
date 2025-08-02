@@ -1,7 +1,10 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useAuth } from '@/context/auth-context';
+import { db } from '@/lib/firebase';
+import { collection, query, where, onSnapshot, doc, addDoc, updateDoc, arrayUnion, getDoc, serverTimestamp, orderBy, Timestamp } from 'firebase/firestore';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,83 +12,122 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { MessageSquare, Send, User, Bot, Loader } from 'lucide-react';
 import { PageWrapper } from '@/components/page-wrapper';
 import { suggestEventIdeas } from '@/ai/flows/suggest-event-ideas';
-import { useToast } from '@/hooks/use-toast';
+import { ProtectedRoute } from '@/components/protected-route';
 
-const initialConversations = [
-  {
-    name: 'AI Assistant',
-    avatar: 'https://images.unsplash.com/photo-1579566346927-c68383817a25?q=80&w=100&h=100&fit=crop',
-    messages: [
-      { from: 'them', text: 'Hello! I am your AI assistant. How can I help you plan today? You can ask me for ideas for a birthday party for 50 guests with a $2000 budget.' },
-    ],
-    isAi: true,
-  },
-  {
-    name: 'Gourmet Delights Catering',
-    avatar: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=100&h=100&fit=crop',
-    messages: [
-      { from: 'them', text: 'Hello! Thanks for reaching out. How can we help with your catering needs?' },
-    ],
-    isAi: false,
-  },
-  {
-    name: 'The Grand Palace',
-    avatar: 'https://images.unsplash.com/photo-1562790351-d273a961e0e9?q=80&w=100&h=100&fit=crop',
-    messages: [
-      { from: 'them', text: 'Hi there! We have received your booking inquiry. What date are you interested in?' },
-      { from: 'me', text: 'We are looking at October 26th, 2024.' },
-    ],
-    isAi: false,
-  },
-  {
-    name: 'Timeless Moments Photo',
-    avatar: 'https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=100&h=100&fit=crop',
-    messages: [
-      { from: 'them', text: 'Yes, we are available on that date. Would you like to see our packages?' },
-    ],
-    isAi: false,
-  },
-  {
-    name: 'Prestige Bridal Cars',
-    avatar: 'https://images.unsplash.com/photo-1618951012351-38a6a79b21e8?q=80&w=100&h=100&fit=crop',
-    messages: [
-      { from: 'them', text: 'Your car is booked! We look forward to being part of your special day.' },
-    ],
-    isAi: false,
-  }
-];
+interface Message {
+  id: string;
+  text: string;
+  from: 'me' | 'them';
+  senderId: string;
+  timestamp: Timestamp;
+}
+
+interface Conversation {
+    id: string;
+    participants: {
+        [key: string]: {
+            name: string;
+            avatar: string;
+            isAi?: boolean;
+        }
+    };
+    messages: Message[];
+    lastMessage?: {
+        text: string;
+        timestamp: Timestamp;
+    }
+}
 
 export default function ChatPage() {
-  const [conversations, setConversations] = useState(initialConversations);
-  const [activeConversation, setActiveConversation] = useState(conversations[0]);
+  const { user } = useAuth();
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
+  const [conversationsLoading, setConversationsLoading] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [activeConversation?.messages]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const q = query(
+        collection(db, "conversations"), 
+        where(`participants.${user.uid}`, '!=', null)
+    );
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const convos: Conversation[] = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const lastMessage = data.messages?.[data.messages.length - 1];
+            convos.push({
+                 id: doc.id,
+                 ...data,
+                 lastMessage: {
+                     text: lastMessage?.text || "No messages yet",
+                     timestamp: lastMessage?.timestamp || data.createdAt
+                 }
+            } as Conversation);
+        });
+       
+        convos.sort((a, b) => (b.lastMessage?.timestamp?.toMillis() || 0) - (a.lastMessage?.timestamp?.toMillis() || 0));
+        setConversations(convos);
+        setConversationsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+   useEffect(() => {
+    if (activeConversation) {
+        const unsub = onSnapshot(doc(db, 'conversations', activeConversation.id), (doc) => {
+            if (doc.exists()) {
+                 const data = doc.data();
+                 const lastMessage = data.messages?.[data.messages.length - 1];
+                 setActiveConversation(prev => ({
+                     ...prev!,
+                     ...data,
+                      lastMessage: {
+                        text: lastMessage?.text || "No messages yet",
+                        timestamp: lastMessage?.timestamp || data.createdAt
+                     }
+                 }));
+            }
+        });
+        return () => unsub();
+    }
+   }, [activeConversation?.id]);
+
 
   const handleSendMessage = async () => {
-    if (newMessage.trim() === '') return;
+    if (newMessage.trim() === '' || !activeConversation || !user) return;
 
-    const userMessage = { from: 'me', text: newMessage };
+    const conversationRef = doc(db, 'conversations', activeConversation.id);
 
-    // Update UI immediately with user's message
-    const updatedConversationWithUserMessage = {
-      ...activeConversation,
-      messages: [...activeConversation.messages, userMessage],
+    const userMessage = {
+      senderId: user.uid,
+      text: newMessage,
+      timestamp: serverTimestamp(),
     };
-    
-    const updatedConversationsWithUserMessage = conversations.map(convo =>
-        convo.name === activeConversation.name ? updatedConversationWithUserMessage : convo
-    );
 
-    setConversations(updatedConversationsWithUserMessage);
-    setActiveConversation(updatedConversationWithUserMessage);
     setNewMessage('');
-    setLoading(true);
+    await updateDoc(conversationRef, {
+        messages: arrayUnion(userMessage)
+    });
+    
+    const otherParticipant = Object.values(activeConversation.participants).find(p => p.isAi);
 
-    if (activeConversation.isAi) {
+    if (otherParticipant?.isAi) {
+        setLoading(true);
         try {
-            // A simple way to parse the user's message for demo purposes.
-            // A more robust solution would use a more sophisticated NLP approach.
             const guestCountMatch = newMessage.match(/(\d+)\s*guests?/i);
             const budgetMatch = newMessage.match(/\$?(\d+)/i);
             
@@ -105,53 +147,47 @@ export default function ChatPage() {
             Decorations: ${result.decoration}. 
             Activity: ${result.activity}.`;
 
-            const aiMessage = { from: 'them', text: aiResponse };
-
-            const updatedConversationWithAiMessage = {
-                ...updatedConversationWithUserMessage,
-                messages: [...updatedConversationWithUserMessage.messages, aiMessage],
+            const aiMessage = { 
+                senderId: 'ai-assistant',
+                text: aiResponse,
+                timestamp: serverTimestamp()
             };
-            const updatedConversationsWithAiMessage = conversations.map(convo =>
-                convo.name === activeConversation.name ? updatedConversationWithAiMessage : convo
-            );
-            setConversations(updatedConversationsWithAiMessage);
-            setActiveConversation(updatedConversationWithAiMessage);
+             await updateDoc(conversationRef, {
+                messages: arrayUnion(aiMessage)
+            });
 
         } catch (error) {
             console.error("Error fetching AI suggestion:", error);
-            const errorMessage = { from: 'them', text: 'Sorry, I had trouble coming up with ideas right now. Please try again.' };
-            const updatedConversationWithError = {
-                ...updatedConversationWithUserMessage,
-                messages: [...updatedConversationWithUserMessage.messages, errorMessage],
-            };
-            const updatedConversationsWithError = conversations.map(convo =>
-                convo.name === activeConversation.name ? updatedConversationWithError : convo
-            );
-            setConversations(updatedConversationsWithError);
-            setActiveConversation(updatedConversationWithError);
+            const errorMessage = { 
+                senderId: 'ai-assistant',
+                text: 'Sorry, I had trouble coming up with ideas right now. Please try again.',
+                timestamp: serverTimestamp()
+             };
+            await updateDoc(conversationRef, {
+                messages: arrayUnion(errorMessage)
+            });
         } finally {
             setLoading(false);
         }
-    } else {
-        // Placeholder for non-AI chat logic
-        // In a real app, this would send the message to a backend service
-        setTimeout(() => {
-             const replyMessage = { from: 'them', text: 'Thanks for your message! We will get back to you shortly.'};
-             const updatedConversationWithReply = {
-                ...updatedConversationWithUserMessage,
-                messages: [...updatedConversationWithUserMessage.messages, replyMessage],
-            };
-            const updatedConversationsWithReply = conversations.map(convo =>
-                convo.name === activeConversation.name ? updatedConversationWithReply : convo
-            );
-            setConversations(updatedConversationsWithReply);
-            setActiveConversation(updatedConversationWithReply);
-            setLoading(false);
-        }, 1000)
     }
   };
 
+  if (conversationsLoading) {
+    return (
+        <div className="flex items-center justify-center h-screen">
+            <Loader className="h-8 w-8 animate-spin" />
+        </div>
+    )
+  }
+
+  const getOtherParticipant = (convo: Conversation) => {
+      if (!user) return null;
+      const otherParticipantId = Object.keys(convo.participants).find(id => id !== user.uid);
+      return otherParticipantId ? convo.participants[otherParticipantId] : null;
+  }
+
   return (
+    <ProtectedRoute>
     <PageWrapper
         icon={MessageSquare}
         title="Messages"
@@ -164,96 +200,115 @@ export default function ChatPage() {
           </CardHeader>
           <CardContent className="p-2">
             <div className="space-y-2">
-              {conversations.map((convo, index) => (
-                <Button
-                  key={index}
-                  variant={activeConversation.name === convo.name ? 'secondary' : 'ghost'}
+              {conversations.map((convo) => {
+                const otherParticipant = getOtherParticipant(convo);
+                if (!otherParticipant) return null;
+                return (
+                 <Button
+                  key={convo.id}
+                  variant={activeConversation?.id === convo.id ? 'secondary' : 'ghost'}
                   className="w-full justify-start gap-2 h-auto p-2"
                   onClick={() => setActiveConversation(convo)}
                 >
                   <Avatar>
-                    <AvatarImage src={convo.avatar} alt={convo.name} data-ai-hint="logo" />
-                    <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={otherParticipant.avatar} alt={otherParticipant.name} data-ai-hint="logo" />
+                    <AvatarFallback>{otherParticipant.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="text-left">
-                     <p className="font-semibold text-sm">{convo.name}</p>
-                     <p className="text-xs text-muted-foreground truncate max-w-40">{convo.messages[convo.messages.length - 1].text}</p>
+                     <p className="font-semibold text-sm">{otherParticipant.name}</p>
+                     <p className="text-xs text-muted-foreground truncate max-w-40">{convo.lastMessage?.text}</p>
                   </div>
                 </Button>
-              ))}
+                )
+            })}
             </div>
           </CardContent>
         </Card>
 
         <Card className="lg:col-span-3 flex flex-col h-[70vh]">
-          <CardHeader className="flex-shrink-0">
-            <CardTitle className="flex items-center gap-2">
-              <Avatar>
-                <AvatarImage src={activeConversation.avatar} alt={activeConversation.name} data-ai-hint="logo" />
-                <AvatarFallback>{activeConversation.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              {activeConversation.name}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
-            {activeConversation.messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex items-end gap-2 ${
-                  message.from === 'me' ? 'justify-end' : 'justify-start'
-                }`}
-              >
-                {message.from !== 'me' && (
-                   <Avatar className="h-8 w-8">
-                     {activeConversation.isAi ? <Bot /> : <AvatarImage src={activeConversation.avatar} data-ai-hint="logo" />}
-                    <AvatarFallback>{activeConversation.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                )}
-                <div
-                  className={`max-w-xs md:max-w-md p-3 rounded-lg ${
-                    message.from === 'me'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted'
-                  }`}
-                >
-                  <p className="text-sm">{message.text}</p>
-                </div>
-                 {message.from === 'me' && (
-                   <Avatar className="h-8 w-8">
-                    <AvatarFallback><User /></AvatarFallback>
-                  </Avatar>
-                )}
-              </div>
-            ))}
-             {loading && (
-                <div className="flex items-end gap-2 justify-start">
-                    <Avatar className="h-8 w-8">
-                       {activeConversation.isAi ? <Bot /> : <AvatarImage src={activeConversation.avatar} data-ai-hint="logo" />}
-                        <AvatarFallback>{activeConversation.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="max-w-xs md:max-w-md p-3 rounded-lg bg-muted">
-                        <Loader className="h-5 w-5 animate-spin" />
+         {activeConversation && user ? (
+            <>
+            <CardHeader className="flex-shrink-0">
+                <CardTitle className="flex items-center gap-2">
+                <Avatar>
+                    <AvatarImage src={getOtherParticipant(activeConversation)?.avatar} alt={getOtherParticipant(activeConversation)?.name} data-ai-hint="logo" />
+                    <AvatarFallback>{getOtherParticipant(activeConversation)?.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                {getOtherParticipant(activeConversation)?.name}
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
+                {activeConversation.messages.map((message, index) => {
+                  const from = message.senderId === user.uid ? 'me' : 'them';
+                  const isAi = getOtherParticipant(activeConversation)?.isAi;
+                  return (
+                    <div
+                        key={index}
+                        className={`flex items-end gap-2 ${
+                        from === 'me' ? 'justify-end' : 'justify-start'
+                        }`}
+                    >
+                        {from !== 'me' && (
+                        <Avatar className="h-8 w-8">
+                            {isAi ? <Bot /> : <AvatarImage src={getOtherParticipant(activeConversation)?.avatar} data-ai-hint="logo" />}
+                            <AvatarFallback>{getOtherParticipant(activeConversation)?.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        )}
+                        <div
+                        className={`max-w-xs md:max-w-md p-3 rounded-lg ${
+                            from === 'me'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted'
+                        }`}
+                        >
+                        <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                        </div>
+                        {from === 'me' && (
+                        <Avatar className="h-8 w-8">
+                            <AvatarFallback><User /></AvatarFallback>
+                        </Avatar>
+                        )}
                     </div>
+                  )
+                })}
+                {loading && (
+                    <div className="flex items-end gap-2 justify-start">
+                        <Avatar className="h-8 w-8">
+                           {getOtherParticipant(activeConversation)?.isAi ? <Bot /> : <AvatarImage src={getOtherParticipant(activeConversation)?.avatar} data-ai-hint="logo" />}
+                            <AvatarFallback>{getOtherParticipant(activeConversation)?.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="max-w-xs md:max-w-md p-3 rounded-lg bg-muted">
+                            <Loader className="h-5 w-5 animate-spin" />
+                        </div>
+                    </div>
+                )}
+                 <div ref={messagesEndRef} />
+            </CardContent>
+            <CardFooter className="p-4 border-t flex-shrink-0">
+                <div className="flex w-full items-center space-x-2">
+                <Input
+                    type="text"
+                    placeholder="Type your message..."
+                    value={newMessage}
+                    onChange={e => setNewMessage(e.target.value)}
+                    onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
+                    disabled={loading}
+                />
+                <Button onClick={handleSendMessage} disabled={loading}>
+                    <Send className="w-4 h-4 mr-2" /> Send
+                </Button>
                 </div>
-            )}
-          </CardContent>
-          <CardFooter className="p-4 border-t flex-shrink-0">
-            <div className="flex w-full items-center space-x-2">
-              <Input
-                type="text"
-                placeholder="Type your message..."
-                value={newMessage}
-                onChange={e => setNewMessage(e.target.value)}
-                onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
-                disabled={loading}
-              />
-              <Button onClick={handleSendMessage} disabled={loading}>
-                <Send className="w-4 h-4 mr-2" /> Send
-              </Button>
-            </div>
-          </CardFooter>
+            </CardFooter>
+            </>
+         ) : (
+            <CardContent className="flex flex-col items-center justify-center h-full">
+                <MessageSquare className="w-16 h-16 text-muted-foreground" />
+                <p className="mt-4 text-muted-foreground">Select a conversation to start chatting</p>
+            </CardContent>
+         )}
         </Card>
       </div>
     </PageWrapper>
+    </ProtectedRoute>
   );
 }
