@@ -21,7 +21,7 @@ export default function WelcomePage() {
         <p className="mt-2 max-w-2xl text-lg md:text-xl text-primary-foreground/80 mb-10">
           Your perfect event, simplified.
         </p>
-        <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground px-10 py-6 text-lg">
+        <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-6 text-lg">
           <Link href="/home">
             Get Started
           </Link>
