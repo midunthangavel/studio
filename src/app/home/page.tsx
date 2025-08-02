@@ -27,7 +27,7 @@ const popularVenues: VenueCardProps[] = [
     location: "Chicago, IL",
     rating: 4.8,
     price: "$8,000 per event",
-    image: "https://images.unsplash.com/photo-1523531294919-4c3c885b9389?q=80&w=600&h=400&fit=crop",
+    image: "https://placehold.co/600x400.png",
     hint: "outdoor wedding",
     guestFavorite: false,
     slug: "lakeside-manor",
