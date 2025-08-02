@@ -5,11 +5,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Bell, Search } from "lucide-react";
-import { ThemeToggle } from "./theme-toggle";
 import { WelcomeMessage } from "./welcome-message";
 import { HeaderNavigation } from "./header-navigation";
 import { usePathname } from "next/navigation";
 import { AppLogo } from "./app-logo";
+import { ThemeToggle } from "./theme-toggle";
 
 
 export function Header() {
@@ -34,9 +34,6 @@ export function Header() {
                 />
             </div>
           </div>
-          <div className="flex md:hidden">
-             <ThemeToggle />
-          </div>
           <div className="hidden md:flex items-center gap-2">
              <Button variant="ghost" asChild>
                 <Link href="/planner">Become a host</Link>
@@ -47,7 +44,6 @@ export function Header() {
                     <span className="sr-only">Notifications</span>
                 </Link>
             </Button>
-            <ThemeToggle />
           </div>
         </div>
         {/* Bottom: Navigation */}
