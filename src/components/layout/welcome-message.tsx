@@ -12,7 +12,7 @@ export function WelcomeMessage() {
     useEffect(() => {
       async function fetchLocation() {
         try {
-          const response = await fetch('http://ip-api.com/json/?fields=city,country');
+          const response = await fetch('https://ip-api.com/json/?fields=city,country');
           if (!response.ok) {
             throw new Error('Failed to fetch location');
           }
