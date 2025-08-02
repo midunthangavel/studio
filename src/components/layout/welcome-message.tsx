@@ -16,7 +16,6 @@ export function WelcomeMessage() {
           if (!response.ok) {
             // Instead of throwing an error, we'll set the locationError state.
             setLocationError('Could not fetch location details.');
-            console.error('Failed to fetch location:', response.statusText);
             return;
           }
           const data = await response.json();
