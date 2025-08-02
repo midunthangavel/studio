@@ -26,7 +26,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
           rel="stylesheet"
         />
       </head>
@@ -58,7 +58,7 @@ function ConditionalLayout({ children }: {children: React.ReactNode}) {
     return (
         <div className="relative flex min-h-screen flex-col bg-background">
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 px-4">{children}</main>
           <Footer />
         </div>
     )
