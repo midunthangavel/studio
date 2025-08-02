@@ -50,7 +50,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="container flex h-28 flex-col justify-center gap-4 max-w-screen-2xl">
+      <div className="container flex h-32 flex-col justify-center gap-4 max-w-screen-2xl pt-4">
         {/* Top: Search Bar */}
         <div className="flex items-center gap-4">
            <Link href="/home" className="font-bold text-lg text-primary font-headline hidden md:block">
