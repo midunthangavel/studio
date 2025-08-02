@@ -2,13 +2,13 @@
 'use client';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import {
   Home,
   Search,
   Sparkles,
   ConciergeBell,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 
 const categories = [
@@ -38,16 +38,19 @@ const categories = [
 
 export function HeaderNavigation() {
     const pathname = usePathname();
-    const [isClient, setIsClient] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    if (!mounted) {
+      return (
+         <nav className="flex justify-center items-center gap-10 text-sm h-12" />
+      )
+    }
 
     return (
         <nav className="flex justify-center items-center gap-10 text-sm">
             {categories.map((category) => {
-                const isActive = isClient && pathname === category.href;
+                const isActive = pathname === category.href;
                 return (
                     <Link
                     href={category.href}
@@ -59,7 +62,7 @@ export function HeaderNavigation() {
                     {category.icon}
                     <span className="text-xs font-medium flex items-center gap-1">
                         {category.name}
-                        {isClient && category.isNew && (
+                        {category.isNew && (
                             <span className="bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full">NEW</span>
                         )}
                     </span>
@@ -72,4 +75,3 @@ export function HeaderNavigation() {
         </nav>
     )
 }
-
