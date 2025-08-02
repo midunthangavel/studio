@@ -10,12 +10,18 @@ import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/context/auth-context";
 import { FavoritesProvider } from "@/context/favorites-context";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const noLayoutRoutes = ['/'];
+
+  const showLayout = !noLayoutRoutes.includes(pathname);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -34,11 +40,15 @@ export default function RootLayout({
         >
           <AuthProvider>
             <FavoritesProvider>
-              <div className="relative flex min-h-screen flex-col bg-background">
-                <Header />
-                <main className="flex-1 container">{children}</main>
-                <Footer />
-              </div>
+              {showLayout ? (
+                <div className="relative flex min-h-screen flex-col bg-background">
+                  <Header />
+                  <main className="flex-1 container">{children}</main>
+                  <Footer />
+                </div>
+              ) : (
+                <main>{children}</main>
+              )}
               <Toaster />
             </FavoritesProvider>
           </AuthProvider>
