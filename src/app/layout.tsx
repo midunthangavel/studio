@@ -6,7 +6,6 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
-import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/context/auth-context";
@@ -35,9 +34,11 @@ export default function RootLayout({
         >
           <AuthProvider>
             <FavoritesProvider>
-              <ConditionalLayout>
-                  {children}
-              </ConditionalLayout>
+              <div className="relative flex min-h-screen flex-col bg-background">
+                <Header />
+                <main className="flex-1 container">{children}</main>
+                <Footer />
+              </div>
               <Toaster />
             </FavoritesProvider>
           </AuthProvider>
@@ -45,21 +46,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
-
-function ConditionalLayout({ children }: {children: React.ReactNode}) {
-    const pathname = usePathname();
-    const noLayoutRoutes = ['/'];
-
-    if (noLayoutRoutes.includes(pathname)) {
-        return <>{children}</>;
-    }
-
-    return (
-        <div className="relative flex min-h-screen flex-col bg-background">
-          <Header />
-          <main className="flex-1 container">{children}</main>
-          <Footer />
-        </div>
-    )
 }

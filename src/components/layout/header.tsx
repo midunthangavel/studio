@@ -32,8 +32,13 @@ export function Header() {
     await auth.signOut();
     router.push('/login');
   };
+  
+  const noLayoutRoutes = ['/', '/login', '/signup'];
+  if (noLayoutRoutes.includes(pathname)) {
+    return null;
+  }
 
-  const showFullHeader = pathname === '/home' || pathname === '/search';
+  const showFullHeader = pathname === '/home' || pathname.startsWith('/search');
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
@@ -60,7 +65,7 @@ export function Header() {
           </div>
           <div className="hidden md:flex items-center gap-2">
              <Button variant="ghost" asChild>
-                <Link href="/planner">Become a host</Link>
+                <Link href="#">Become a host</Link>
             </Button>
             <ThemeToggle />
             {user ? (

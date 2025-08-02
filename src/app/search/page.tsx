@@ -71,15 +71,24 @@ export default function SearchPage() {
 
     return (
         <div className="container mx-auto px-4 py-12">
-             <div className="flex flex-col">
+             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                {/* Desktop Filters */}
+                <aside className="hidden lg:block col-span-1">
+                    <Card className="sticky top-24">
+                        <CardContent className="p-6">
+                            <h3 className="text-lg font-semibold mb-4">Filters</h3>
+                             <Filters />
+                        </CardContent>
+                    </Card>
+                </aside>
                 {/* Search Results */}
-                <main>
+                <main className='lg:col-span-3'>
                     <div className='flex justify-between items-center mb-6'>
                         <div>
                             <h1 className="text-3xl font-bold font-headline">Search Results</h1>
                             <p className="text-muted-foreground">Showing {searchResults.length} results for your special day.</p>
                         </div>
-                        <div className="md:hidden">
+                        <div className="lg:hidden">
                             <Sheet>
                                 <SheetTrigger asChild>
                                     <Button variant="outline" size="icon">
@@ -97,7 +106,7 @@ export default function SearchPage() {
                             </Sheet>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         {searchResults.map((item) => {
                             const favorited = isFavorited(item.slug);
                             return (
@@ -127,15 +136,6 @@ export default function SearchPage() {
                         )})}
                     </div>
                 </main>
-                 {/* Desktop Filters */}
-                <aside className="hidden md:block col-span-1 lg:col-span-1">
-                    <Card className="sticky top-24">
-                        <CardContent className="p-6">
-                            <h3 className="text-lg font-semibold mb-4">Filters</h3>
-                             <Filters />
-                        </CardContent>
-                    </Card>
-                </aside>
             </div>
         </div>
     );

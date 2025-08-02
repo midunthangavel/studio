@@ -4,7 +4,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/context/auth-context";
 import { MapPin } from "lucide-react";
-import { ThemeToggle } from "./theme-toggle";
 
 export function WelcomeMessage() {
     const { user } = useAuth();
@@ -15,7 +14,6 @@ export function WelcomeMessage() {
                  <div className="flex items-center gap-3">
                     <h2 className="font-semibold text-base">Welcome to VenueVoyager!</h2>
                  </div>
-                <ThemeToggle />
             </div>
         )
     }
@@ -35,7 +33,6 @@ export function WelcomeMessage() {
                     </div>
                 </div>
             </div>
-            <ThemeToggle />
         </div>
     )
 }
