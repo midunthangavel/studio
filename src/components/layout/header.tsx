@@ -22,6 +22,12 @@ export function Header() {
               Search
             </Link>
             <Link
+              href="/planner"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              AI Planner
+            </Link>
+            <Link
               href="/favorites"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
@@ -51,6 +57,9 @@ export function Header() {
                 </Link>
                 <Link href="/search" className="block px-2 py-1 text-lg">
                   Search
+                </Link>
+                <Link href="/planner" className="block px-2 py-1 text-lg text-muted-foreground">
+                  AI Planner
                 </Link>
                 <Link href="/favorites" className="block px-2 py-1 text-lg text-muted-foreground">
                   Favorites

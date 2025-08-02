@@ -7,6 +7,7 @@ import {
   Camera,
   Car,
   Church,
+  Lightbulb,
   MapPin,
   Music,
   PartyPopper,
@@ -156,6 +157,37 @@ export default function Home() {
                 </Card>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+      
+      <section id="ai-planner" className="py-16 md:py-24 bg-primary/10">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="w-full md:w-1/2">
+              <h2 className="text-3xl font-bold font-headline mb-4">
+                Need inspiration? Try our AI Planner
+              </h2>
+              <p className="text-muted-foreground mb-6">
+                Not sure where to start? Let our AI-powered event planner help you brainstorm ideas for your next event. Get suggestions for themes, decorations, activities, and more, all tailored to your needs.
+              </p>
+              <Button asChild size="lg" className="bg-accent hover:bg-accent/90">
+                <Link href="/planner">
+                  <Lightbulb className="mr-2 h-5 w-5" />
+                  Get Started
+                </Link>
+              </Button>
+            </div>
+            <div className="w-full md:w-1/2 flex justify-center">
+              <Image 
+                src="https://placehold.co/600x400.png"
+                alt="AI Planner"
+                width={500}
+                height={350}
+                className="rounded-lg shadow-xl"
+                data-ai-hint="planning event board"
+              />
+            </div>
           </div>
         </div>
       </section>
