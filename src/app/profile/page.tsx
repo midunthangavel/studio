@@ -16,13 +16,11 @@ import {
   MessageSquare,
   LogOut,
   Store,
-  Wallet,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
-import { PageWrapper } from '@/components/page-wrapper';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ProtectedRoute } from '@/components/protected-route';
@@ -138,7 +136,7 @@ export default function AccountPage() {
             className="w-full"
             onClick={handleLogout}
           >
-            <LogOut className="mr-2" />
+            <LogOut className="mr-2 h-4 w-4" />
             Log Out
           </Button>
         </div>
