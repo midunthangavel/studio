@@ -26,7 +26,7 @@ import { Separator } from '@/components/ui/separator';
 import { ProtectedRoute } from '@/components/protected-route';
 
 const accountSettings = [
-  { icon: Star, text: 'VenueVoyager Plus', href: '#' },
+  { icon: Star, text: 'FixmyEvent Plus', href: '#' },
   { icon: User, text: 'Edit Profile', href: '/profile/edit' },
   { icon: CreditCard, text: 'Saved Cards & Wallet', href: '#' },
   { icon: MapPin, text: 'Saved Addresses', href: '#' },
@@ -40,7 +40,7 @@ const myActivity = [
   { icon: MessageSquare, text: 'Questions & Answers', href: '#' },
 ];
 
-const earnWith = [{ icon: Store, text: 'Sell on VenueVoyager', href: '#' }];
+const earnWith = [{ icon: Store, text: 'Sell on FixmyEvent', href: '#' }];
 
 const feedbackAndInfo = [
   { icon: FileText, text: 'Terms, Policies and Licenses', href: '#' },
@@ -50,7 +50,7 @@ const feedbackAndInfo = [
 const LanguageSwitcher = () => (
   <div className="p-4 bg-background">
     <h3 className="text-sm font-semibold mb-3 text-muted-foreground">
-      Try VenueVoyager in your language
+      Try FixmyEvent in your language
     </h3>
     <div className="flex gap-2 overflow-x-auto pb-2">
       {['English', 'Español', 'Français', 'Deutsch', '+8 more'].map(
@@ -125,7 +125,7 @@ export default function AccountPage() {
         <Section title="My Activity" items={myActivity} />
 
         <div className="my-2" />
-        <Section title="Earn with VenueVoyager" items={earnWith} />
+        <Section title="Earn with FixmyEvent" items={earnWith} />
 
         <div className="my-2" />
         <Section title="Feedback & Information" items={feedbackAndInfo} />
