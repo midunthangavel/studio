@@ -1,32 +1,43 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
-import { AppLogo } from "@/components/layout/app-logo";
+import { Chrome } from "lucide-react";
 
 export default function WelcomePage() {
   return (
-    <div className="relative flex flex-col items-center justify-center h-screen bg-background">
-       <Image
-          src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=1920&h=1080&fit=crop"
-          alt="Elegant event venue"
-          fill
-          className="z-0 object-cover"
-          data-ai-hint="wedding ceremony"
+    <div className="flex flex-col h-screen bg-background p-8">
+      <div className="flex-1 flex flex-col justify-center items-center text-center">
+        <div 
+            className="w-24 h-24 bg-muted rounded-full mb-8" 
+            data-ai-hint="logo placeholder"
         />
-        <div className="absolute inset-0 bg-black/70 z-10" />
-      <div className="relative z-20 flex flex-col items-center justify-center text-center text-white px-4">
-        <AppLogo className="text-6xl md:text-8xl mb-6" />
         
-        <p className="mt-2 max-w-2xl text-lg md:text-xl text-primary-foreground/80 mb-10">
-          Your perfect event, simplified.
-        </p>
-        <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-6 text-lg">
-          <Link href="/home">
-            Get Started
+        <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4">
+          Explore,
+          <br />
+          Book,
+          <br />
+          Enjoy
+        </h1>
+        
+      </div>
+      
+      <div className="space-y-4">
+        <Button variant="outline" className="w-full h-14 text-base" asChild>
+            <Link href="/login">
+                <Chrome className="mr-2" /> Continue with Google
+            </Link>
+        </Button>
+         <Button className="w-full h-14 text-base" asChild>
+          <Link href="/signup">
+            Sign up
           </Link>
         </Button>
+        <p className="text-center text-muted-foreground text-sm pt-2">
+          Event tonton account? <Link href="/login" className="font-semibold text-primary">Login</Link>
+        </p>
       </div>
+
     </div>
   );
 }

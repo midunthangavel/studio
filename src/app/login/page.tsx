@@ -6,21 +6,19 @@ import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { AppLogo } from "@/components/layout/app-logo";
 import { useToast } from '@/hooks/use-toast';
-import { Loader } from 'lucide-react';
+import { Loader, ArrowLeft, Chrome, MessageCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { Label } from '@/components/ui/label';
+
+// A mock icon for Apple
+const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+        <path d="M12.012 15.388c-.623 0-1.21-.212-1.8-.626-1.173-.82-1.89-2.22-1.89-3.722 0-2.38 1.545-3.868 3.65-3.868 1.018 0 1.93.483 2.583 1.23l-.014-.012.004.004c.64.735.922 1.543.95 2.375-.028.018-.54.21-1.38.21-.755 0-1.33-.21-2.11-.21-1.12 0-2.25.68-2.25 2.12 0 1.23.86 1.87 1.95 1.87.62 0 1.25-.21 1.88-.65l.02.01c.023-.02.6-.4 1.2-.4.06 0 .1.01.13.01.02 0 .02-.001.03-.001.21.002.4.018.55.053-.05.29-.14.57-.3.84-.52.9-1.3 1.7-2.4 1.7zM14.998 4.5c0-1.24-1.01-2.25-2.26-2.25s-2.25 1.01-2.25 2.25c0 1.24 1.01 2.25 2.25 2.25s2.26-1.01 2.26-2.25z"/>
+    </svg>
+)
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -63,54 +61,61 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader className="text-center">
-            <div className="mb-4 flex justify-center">
-                <AppLogo className="text-3xl" />
-            </div>
-          <CardTitle className="text-2xl font-bold font-headline">Welcome Back</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button onClick={handleGoogleSignIn} variant="outline" className="w-full">
-            Sign in with Google
-          </Button>
+    <div className="flex flex-col h-screen bg-background p-6">
+        <div className="flex items-center mb-8">
+            <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
+                <ArrowLeft />
+            </Button>
+        </div>
+        
+      <div className="flex-1 flex flex-col justify-center">
+            <div 
+                className="w-20 h-20 bg-muted rounded-full mb-6" 
+                data-ai-hint="logo placeholder"
+            />
+            <h1 className="text-3xl font-bold font-headline mb-2">Welcome Back</h1>
+            <p className="text-muted-foreground mb-8">Login to your account</p>
 
-          <div className="flex items-center space-x-2">
-            <Separator className="flex-grow" />
-            <span className="text-xs text-muted-foreground">OR CONTINUE WITH</span>
-            <Separator className="flex-grow" />
-          </div>
-
+        <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>
-            </div>
+            <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <Button onClick={handleLogin} disabled={loading} className="w-full">
+           <Button onClick={handleLogin} disabled={loading} className="w-full h-12 text-base">
             {loading ? <Loader className="animate-spin" /> : 'Sign in'}
           </Button>
-          <div className="text-center text-sm">
+        </div>
+      </div>
+      
+       <div className="pt-8">
+        <div className="flex items-center space-x-2 my-4">
+            <Separator className="flex-grow" />
+            <span className="text-xs text-muted-foreground">OR</span>
+            <Separator className="flex-grow" />
+          </div>
+
+          <div className="space-y-3">
+             <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12 text-base">
+                <Chrome className="mr-2" /> Continue with Google
+            </Button>
+             <Button variant="outline" className="w-full h-12 text-base">
+                <AppleIcon className="mr-2 w-5 h-5" /> Continue with Apple
+            </Button>
+             <Button variant="outline" className="w-full h-12 text-base">
+                <MessageCircle className="mr-2" /> Continue with Phone
+            </Button>
+          </div>
+          <p className="text-center text-muted-foreground text-sm mt-6">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="underline">
+            <Link href="/signup" className="underline font-semibold text-primary">
               Sign up
             </Link>
-          </div>
-        </CardFooter>
-      </Card>
+          </p>
+       </div>
     </div>
   );
 }

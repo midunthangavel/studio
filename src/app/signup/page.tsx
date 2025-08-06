@@ -3,40 +3,39 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { AppLogo } from "@/components/layout/app-logo";
 import { useToast } from '@/hooks/use-toast';
-import { Loader } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { Loader, ArrowLeft, User, Mail } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function SignupPage() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
   const handleSignUp = async () => {
+    if (!agreed) {
+        toast({
+            variant: 'destructive',
+            title: 'Agreement Required',
+            description: 'You must agree to the terms and conditions.',
+        });
+        return;
+    }
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, {
-        displayName: `${firstName} ${lastName}`,
+        displayName: name,
       });
       router.push('/home');
     } catch (error: any) {
@@ -50,57 +49,34 @@ export default function SignupPage() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    const provider = new GoogleAuthProvider();
-    try {
-        await signInWithPopup(auth, provider);
-        router.push('/home');
-    } catch (error: any) {
-        toast({
-            variant: 'destructive',
-            title: 'Google Sign-in Failed',
-            description: error.message,
-        });
-    } finally {
-        setLoading(false);
-    }
-  };
-
-
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-sm">
-      <CardHeader className="text-center">
-            <div className="mb-4 flex justify-center">
-                <AppLogo className="text-3xl" />
+    <div className="flex flex-col h-screen bg-background p-6">
+      <div className="flex items-center mb-8">
+        <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
+            <ArrowLeft />
+        </Button>
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center">
+        <h1 className="text-3xl font-bold font-headline mb-2">First, tell us about you</h1>
+        <p className="text-muted-foreground mb-8">
+            Create an account to get all features
+        </p>
+        
+        <div className="space-y-4">
+           <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input 
+                id="name" 
+                placeholder="Enter your name" 
+                required 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+                className="h-12"
+              />
             </div>
-          <CardTitle className="text-2xl font-bold font-headline">Create an Account</CardTitle>
-          <CardDescription>
-            Enter your information to create a new account
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-           <Button onClick={handleGoogleSignIn} variant="outline" className="w-full">
-            Sign up with Google
-          </Button>
-           <div className="flex items-center space-x-2">
-            <Separator className="flex-grow" />
-            <span className="text-xs text-muted-foreground">OR CONTINUE WITH</span>
-            <Separator className="flex-grow" />
-          </div>
-           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="first-name">First name</Label>
-              <Input id="first-name" placeholder="Lee" required value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="last-name">Last name</Label>
-              <Input id="last-name" placeholder="Robinson" required value={lastName} onChange={(e) => setLastName(e.target.value)} />
-            </div>
-          </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
               type="email"
@@ -108,25 +84,41 @@ export default function SignupPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="h-12"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input 
+                id="password" 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                className="h-12"
+                placeholder='Enter a password'
+            />
           </div>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <Button onClick={handleSignUp} disabled={loading} className="w-full">
-            {loading ? <Loader className="animate-spin" /> : 'Create account'}
-          </Button>
-           <div className="text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/login" className="underline">
-              Sign in
-            </Link>
-          </div>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
+
+       <div className="pt-8">
+            <div className="flex items-start space-x-3 mb-6">
+                <Checkbox id="terms" checked={agreed} onCheckedChange={(checked) => setAgreed(!!checked)} className="mt-1" />
+                <Label htmlFor="terms" className="text-sm text-muted-foreground font-normal">
+                   By signing up you agree to the <Link href="#" className="font-semibold text-primary">terms of service</Link> and <Link href="#" className="font-semibold text-primary">privacy policy</Link>.
+                </Label>
+            </div>
+
+            <Button onClick={handleSignUp} disabled={loading} className="w-full h-14 text-base">
+                {loading ? <Loader className="animate-spin" /> : 'Sign Up'}
+            </Button>
+            <p className="text-center text-muted-foreground text-sm mt-6">
+                Already have an account?{" "}
+                <Link href="/login" className="underline font-semibold text-primary">
+                Login
+                </Link>
+            </p>
+       </div>
     </div>
   );
 }
