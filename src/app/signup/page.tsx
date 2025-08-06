@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useToast } from '@/hooks/use-toast';
-import { Loader, ArrowLeft, User, Mail } from 'lucide-react';
+import { Loader, ArrowLeft, User, Mail, Lock } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -22,7 +22,8 @@ export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!agreed) {
         toast({
             variant: 'destructive',
@@ -63,55 +64,55 @@ export default function SignupPage() {
             Create an account to get all features
         </p>
         
-        <div className="space-y-4">
-           <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+        <form onSubmit={handleSignUp} className="space-y-4">
+           <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input 
                 id="name" 
-                placeholder="Enter your name" 
+                placeholder="Full Name" 
                 required 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
-                className="h-12"
+                className="h-12 pl-10"
               />
             </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
+          <div className="relative">
+             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder="Email Address"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12"
+              className="h-12 pl-10"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input 
                 id="password" 
                 type="password" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                className="h-12"
-                placeholder='Enter a password'
+                className="h-12 pl-10"
+                placeholder='Password'
+                required
             />
           </div>
-        </div>
-      </div>
-
-       <div className="pt-8">
-            <div className="flex items-start space-x-3 mb-6">
+            <div className="flex items-start space-x-3 pt-4">
                 <Checkbox id="terms" checked={agreed} onCheckedChange={(checked) => setAgreed(!!checked)} className="mt-1" />
                 <Label htmlFor="terms" className="text-sm text-muted-foreground font-normal">
                    By signing up you agree to the <Link href="#" className="font-semibold text-primary">terms of service</Link> and <Link href="#" className="font-semibold text-primary">privacy policy</Link>.
                 </Label>
             </div>
-
-            <Button onClick={handleSignUp} disabled={loading} className="w-full h-14 text-base">
-                {loading ? <Loader className="animate-spin" /> : 'Sign Up'}
+             <Button type="submit" disabled={loading} className="w-full h-14 text-base !mt-8">
+                {loading ? <Loader className="animate-spin" /> : 'Create Account'}
             </Button>
+        </form>
+      </div>
+
+       <div className="pt-8">
             <p className="text-center text-muted-foreground text-sm mt-6">
                 Already have an account?{" "}
                 <Link href="/login" className="underline font-semibold text-primary">

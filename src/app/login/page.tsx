@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useToast } from '@/hooks/use-toast';
-import { Loader, ArrowLeft, Chrome, MessageCircle } from 'lucide-react';
+import { Loader, ArrowLeft, Chrome } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 
@@ -24,10 +24,12 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -44,7 +46,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = async () => {
-    setLoading(true);
+    setGoogleLoading(true);
     const provider = new GoogleAuthProvider();
     try {
         await signInWithPopup(auth, provider);
@@ -56,19 +58,19 @@ export default function LoginPage() {
             description: error.message,
         });
     } finally {
-        setLoading(false);
+        setGoogleLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background p-6">
-        <div className="flex items-center mb-8">
-            <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
+    <div className="flex flex-col h-screen bg-background">
+        <div className="p-6">
+            <Button variant="ghost" size="icon" onClick={() => router.back()}>
                 <ArrowLeft />
             </Button>
         </div>
         
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex-1 flex flex-col justify-center p-6">
             <div 
                 className="w-20 h-20 bg-muted rounded-full mb-6" 
                 data-ai-hint="logo placeholder"
@@ -76,7 +78,7 @@ export default function LoginPage() {
             <h1 className="text-3xl font-bold font-headline mb-2">Welcome Back</h1>
             <p className="text-muted-foreground mb-8">Login to your account</p>
 
-        <div className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -85,28 +87,25 @@ export default function LoginPage() {
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-           <Button onClick={handleLogin} disabled={loading} className="w-full h-12 text-base">
+           <Button type="submit" disabled={loading} className="w-full h-12 text-base">
             {loading ? <Loader className="animate-spin" /> : 'Sign in'}
           </Button>
-        </div>
+        </form>
       </div>
       
-       <div className="pt-8">
-        <div className="flex items-center space-x-2 my-4">
-            <Separator className="flex-grow" />
-            <span className="text-xs text-muted-foreground">OR</span>
-            <Separator className="flex-grow" />
+       <div className="p-6 pt-8">
+          <div className="flex items-center space-x-2 my-4">
+              <Separator className="flex-grow" />
+              <span className="text-xs text-muted-foreground">OR</span>
+              <Separator className="flex-grow" />
           </div>
 
           <div className="space-y-3">
-             <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12 text-base">
-                <Chrome className="mr-2" /> Continue with Google
+             <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12 text-base" disabled={googleLoading}>
+                {googleLoading ? <Loader className="animate-spin mr-2" /> : <Chrome className="mr-2" />} Continue with Google
             </Button>
-             <Button variant="outline" className="w-full h-12 text-base">
+             <Button variant="outline" className="w-full h-12 text-base" disabled>
                 <AppleIcon className="mr-2 w-5 h-5" /> Continue with Apple
-            </Button>
-             <Button variant="outline" className="w-full h-12 text-base">
-                <MessageCircle className="mr-2" /> Continue with Phone
             </Button>
           </div>
           <p className="text-center text-muted-foreground text-sm mt-6">

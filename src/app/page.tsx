@@ -34,7 +34,7 @@ export default function WelcomePage() {
           </Link>
         </Button>
         <p className="text-center text-muted-foreground text-sm pt-2">
-          Event tonton account? <Link href="/login" className="font-semibold text-primary">Login</Link>
+          Already have an account? <Link href="/login" className="font-semibold text-primary">Login</Link>
         </p>
       </div>
 
