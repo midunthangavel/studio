@@ -17,7 +17,6 @@ export default function AppLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -39,7 +38,7 @@ export default function AppLayout({
             <FavoritesProvider>
                 <div className="relative flex min-h-screen flex-col bg-background">
                   <Header />
-                  <main className="flex-1">{children}</main>
+                  <main className="flex-1 pb-16 md:pb-0">{children}</main>
                   <Footer />
                 </div>
               <Toaster />

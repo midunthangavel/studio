@@ -34,6 +34,7 @@ import { suggestEventIdeas, SuggestEventIdeasOutput } from '@/ai/flows/suggest-e
 import { Separator } from '@/components/ui/separator';
 import { PageWrapper } from '@/components/shared/page-wrapper';
 import { useToast } from '@/hooks/use-toast';
+import { ProtectedRoute } from '@/components/shared/protected-route';
 
 const formSchema = z.object({
   eventType: z.string().min(2, {
@@ -84,6 +85,7 @@ export default function PlannerPage() {
   }
 
   return (
+    <ProtectedRoute>
     <PageWrapper
         icon={Sparkles}
         title="AI Planner"
@@ -244,5 +246,6 @@ export default function PlannerPage() {
         </div>
       </div>
     </PageWrapper>
+    </ProtectedRoute>
   );
 }

@@ -9,6 +9,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { AppLogo } from "@/components/layout/header/app-logo";
 
 
 export default function WelcomePage() {
@@ -37,9 +38,11 @@ export default function WelcomePage() {
     <div className="flex flex-col h-screen bg-background p-8">
       <div className="flex-1 flex flex-col justify-center items-center text-center">
         <div 
-            className="w-24 h-24 bg-muted rounded-full mb-8" 
+            className="w-24 h-24 bg-muted rounded-full mb-8 flex items-center justify-center" 
             data-ai-hint="logo placeholder"
-        />
+        >
+          <AppLogo className="text-4xl" />
+        </div>
         
         <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4">
           Explore,

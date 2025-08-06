@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, [pathname, router]);
 
-  if (loading) {
+  if (loading && !user && !['/login', '/signup', '/'].includes(pathname)) {
     return (
         <div className="flex items-center justify-center h-screen">
             <Loader className="h-8 w-8 animate-spin" />
@@ -46,8 +46,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading: loading }}>
-      {children}
+    <AuthContext.Provider value={{ user, loading }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 }

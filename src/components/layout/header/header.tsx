@@ -3,10 +3,9 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Bell, LogOut, Search, User, MessageSquare } from "lucide-react";
+import { Bell, LogOut, User, MessageSquare } from "lucide-react";
 import { HeaderNavigation } from "./header-navigation";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { AppLogo } from "./app-logo";
 import { useAuth } from "@/context/auth-context";
 import { auth } from "@/lib/firebase";
@@ -23,7 +22,6 @@ import { ThemeToggle } from "./theme-toggle";
 
 
 export function Header() {
-  const pathname = usePathname();
   const { user } = useAuth();
   const router = useRouter();
 
@@ -66,7 +64,7 @@ export function Header() {
               </Button>
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="hidden md:inline-flex">
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                      <Avatar className="h-8 w-8">
                        <AvatarImage src={user.photoURL ?? undefined} />
                        <AvatarFallback>{user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}</AvatarFallback>
@@ -77,21 +75,21 @@ export function Header() {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push('/profile')}>
-                    <User className="mr-2" />
-                    Profile
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/bookings')}>
-                    <Bell className="mr-2" />
-                    Bookings
+                    <Bell className="mr-2 h-4 w-4" />
+                    <span>Bookings</span>
                   </DropdownMenuItem>
                    <DropdownMenuItem onClick={() => router.push('/chat')}>
-                    <MessageSquare className="mr-2" />
-                    Messages
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    <span>Messages</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2" />
-                    Log out
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

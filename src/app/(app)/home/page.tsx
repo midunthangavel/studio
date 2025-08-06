@@ -17,82 +17,11 @@ import { useAuth } from "@/context/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { allVenues } from "@/lib/venues";
 
-const popularVenues: VenueCardProps[] = [
-  {
-    name: "The Grand Ballroom",
-    location: "New York, NY",
-    rating: 4.97,
-    price: "$12,000 per event",
-    image: "https://images.unsplash.com/photo-1542665952-14513db15293?q=80&w=600&h=400&fit=crop",
-    hint: "luxury ballroom",
-    guestFavorite: true,
-    slug: "the-grand-ballroom",
-  },
-  {
-    name: "Lakeside Manor",
-    location: "Chicago, IL",
-    rating: 4.8,
-    price: "$8,000 per event",
-    image: "https://placehold.co/600x400.png",
-    hint: "outdoor wedding",
-    guestFavorite: false,
-    slug: "lakeside-manor",
-  },
-  {
-    name: "The Loft Downtown",
-    location: "Los Angeles, CA",
-    rating: 4.9,
-    price: "$9,500 per event",
-    image: "https://placehold.co/600x400.png",
-    hint: "urban loft",
-    guestFavorite: true,
-    slug: "the-loft-downtown",
-  },
-  {
-    name: "The Garden Pavilion",
-    location: "San Francisco, CA",
-    rating: 4.85,
-    price: "$7,500 per event",
-    image: "https://placehold.co/600x400.png",
-    hint: "garden party",
-    guestFavorite: false,
-    slug: "the-garden-pavilion",
-  },
-];
+const popularVenues: VenueCardProps[] = allVenues.slice(0, 4);
+const availableNextMonth: VenueCardProps[] = allVenues.slice(5, 8);
 
-const availableNextMonth: VenueCardProps[] = [
-    {
-        name: "Sunset Beach Resort",
-        location: "Miami, FL",
-        rating: 5.0,
-        price: "$15,000 per event",
-        image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&h=400&fit=crop",
-        hint: "beach resort",
-        guestFavorite: true,
-        slug: "sunset-beach-resort",
-    },
-    {
-        name: "Enchanted Forest Hall",
-        location: "Asheville, NC",
-        rating: 4.99,
-        price: "$11,200 per event",
-        image: "https://placehold.co/600x400.png",
-        hint: "forest wedding",
-        guestFavorite: true,
-        slug: "enchanted-forest-hall",
-    },
-    {
-        name: "The Mountain Chalet",
-        location: "Denver, CO",
-        rating: 4.95,
-        price: "$10,500 per event",
-        image: "https://placehold.co/600x400.png",
-        hint: "mountain view",
-        guestFavorite: false,
-        slug: "the-mountain-chalet",
-    }
-]
 
 const WelcomeHeader = () => {
     const { user } = useAuth();
@@ -140,7 +69,7 @@ const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Venu
                     {venues.map((venue) => {
                         const favorited = isFavorited(venue.slug);
                         return (
-                        <Link href={`/venues/${venue.slug}`} key={venue.name} passHref>
+                        <Link href={`/venues/${venue.slug}`} key={venue.slug} passHref>
                             <VenueCard
                                 {...venue}
                                 isCard
