@@ -13,7 +13,7 @@ const firebaseConfig = {
   "storageBucket": "venuevoyager-kga4a.firebasestorage.app",
   "apiKey": "AIzaSyBuMLekGEy4GKRE-Jw-I6jc1uGgEFMThG8",
   "authDomain": "venuevoyager-kga4a.firebaseapp.com",
-  "measurementId": "",
+  "measurementId": "G-11V622151G",
   "messagingSenderId": "70267555311"
 };
 

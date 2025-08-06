@@ -202,8 +202,8 @@ export default function BudgetPage() {
                             {/* Mobile Card View */}
                             <div className="md:hidden space-y-4">
                                 {fields.map((field, index) => (
-                                    <Card key={field.id} className="p-4">
-                                        <div className="flex justify-between items-start mb-4">
+                                    <Card key={field.id} className="p-4 space-y-4">
+                                        <div className="flex justify-between items-start mb-2">
                                             <Input 
                                                 placeholder="Expense Name"
                                                 className="text-lg font-semibold border-none shadow-none p-0 focus-visible:ring-0"
@@ -213,24 +213,22 @@ export default function BudgetPage() {
                                                 <Trash2 className="h-4 w-4 text-destructive" />
                                             </Button>
                                         </div>
-                                        <div className="space-y-4">
-                                             <Select
-                                                onValueChange={(value) => update(index, { ...field, category: value })}
-                                                defaultValue={field.category}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Category" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {expenseCategories.map(cat => (
-                                                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-muted-foreground">$</span>
-                                                <Input type="number" placeholder='0.00' {...form.register(`expenses.${index}.amount`)} />
-                                            </div>
+                                         <Select
+                                            onValueChange={(value) => update(index, { ...field, category: value })}
+                                            defaultValue={field.category}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Category" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {expenseCategories.map(cat => (
+                                                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-muted-foreground">$</span>
+                                            <Input type="number" placeholder='0.00' {...form.register(`expenses.${index}.amount`)} />
                                         </div>
                                     </Card>
                                 ))}
