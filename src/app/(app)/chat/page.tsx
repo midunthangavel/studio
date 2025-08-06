@@ -10,9 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { MessageSquare, Send, User, Bot, Loader } from 'lucide-react';
-import { PageWrapper } from '@/components/page-wrapper';
+import { PageWrapper } from '@/components/shared/page-wrapper';
 import { suggestEventIdeas } from '@/ai/flows/suggest-event-ideas';
-import { ProtectedRoute } from '@/components/protected-route';
+import { ProtectedRoute } from '@/components/shared/protected-route';
 
 interface Message {
   id: string;

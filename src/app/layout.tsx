@@ -3,7 +3,7 @@
 'use client';
 
 import "./globals.css";
-import { Header } from "@/components/layout/header";
+import { Header } from "@/components/layout/header/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "next-themes";
@@ -18,9 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const noLayoutRoutes = ['/'];
+  const noLayoutRoutes = ['/login', '/signup'];
+  const isWelcomePage = pathname === '/';
 
-  const showLayout = !noLayoutRoutes.includes(pathname);
+  const showLayout = !noLayoutRoutes.includes(pathname) && !isWelcomePage;
 
   return (
     <html lang="en" suppressHydrationWarning>

@@ -23,7 +23,7 @@ import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ProtectedRoute } from '@/components/protected-route';
+import { ProtectedRoute } from '@/components/shared/protected-route';
 
 const accountSettings = [
   { icon: Star, text: 'FixmyEvent Plus', href: '#' },

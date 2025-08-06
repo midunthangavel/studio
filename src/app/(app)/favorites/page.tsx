@@ -4,9 +4,9 @@
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { VenueCard, VenueCardProps } from "@/components/venue-card";
-import { PageWrapper } from "@/components/page-wrapper";
+import { PageWrapper } from "@/components/shared/page-wrapper";
 import Link from "next/link";
-import { ProtectedRoute } from "@/components/protected-route";
+import { ProtectedRoute } from "@/components/shared/protected-route";
 import { useFavorites } from "@/context/favorites-context";
 
 function FavoritesPage() {

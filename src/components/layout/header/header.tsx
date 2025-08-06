@@ -5,13 +5,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Bell, LogOut, Search, User, MessageSquare } from "lucide-react";
-import { WelcomeMessage } from "./welcome-message";
 import { HeaderNavigation } from "./header-navigation";
 import { usePathname, useRouter } from "next/navigation";
 import { AppLogo } from "./app-logo";
 import { useAuth } from "@/context/auth-context";
 import { auth } from "@/lib/firebase";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,11 +32,6 @@ export function Header() {
     router.push('/login');
   };
   
-  const noLayoutRoutes = ['/', '/login', '/signup'];
-  if (noLayoutRoutes.includes(pathname)) {
-    return null;
-  }
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-auto flex-col justify-center gap-4 py-3">

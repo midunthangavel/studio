@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 import { suggestEventIdeas, SuggestEventIdeasOutput } from '@/ai/flows/suggest-event-ideas';
 import { Separator } from '@/components/ui/separator';
-import { PageWrapper } from '@/components/page-wrapper';
+import { PageWrapper } from '@/components/shared/page-wrapper';
 import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({

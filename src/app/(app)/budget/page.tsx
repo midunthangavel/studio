@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { useAuth } from '@/context/auth-context';
 import { db } from '@/lib/firebase';
 import { doc, setDoc, onSnapshot, serverTimestamp } from 'firebase/firestore';
-import { PageWrapper } from '@/components/page-wrapper';
+import { PageWrapper } from '@/components/shared/page-wrapper';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Loader, PlusCircle, Trash2, Wallet } from 'lucide-react';
-import { ProtectedRoute } from '@/components/protected-route';
+import { ProtectedRoute } from '@/components/shared/protected-route';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 

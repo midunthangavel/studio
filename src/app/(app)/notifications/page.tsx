@@ -2,7 +2,7 @@
 import { Bell, CheckCircle, Clock, MessageSquare, Gift } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { PageWrapper } from "@/components/page-wrapper";
+import { PageWrapper } from "@/components/shared/page-wrapper";
 
 const notifications = [
   {

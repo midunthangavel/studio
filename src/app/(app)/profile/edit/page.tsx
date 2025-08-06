@@ -1,7 +1,7 @@
 
 'use client';
 
-import { PageWrapper } from '@/components/page-wrapper';
+import { PageWrapper } from '@/components/shared/page-wrapper';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { User } from 'lucide-react';
 

@@ -335,5 +335,3 @@ export default function VenueDetailPage({ params }: { params: { slug: string } }
     </div>
   );
 }
-
-    
