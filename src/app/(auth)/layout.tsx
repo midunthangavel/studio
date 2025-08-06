@@ -2,14 +2,14 @@
 
 'use client';
 
-import "./globals.css";
+import "../globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/context/auth-context";
 import { FavoritesProvider } from "@/context/favorites-context";
 
-export default function RootLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

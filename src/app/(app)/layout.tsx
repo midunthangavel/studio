@@ -2,18 +2,22 @@
 
 'use client';
 
-import "./globals.css";
+import "../globals.css";
+import { Header } from "@/components/layout/header/header";
+import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/context/auth-context";
 import { FavoritesProvider } from "@/context/favorites-context";
+import { usePathname } from "next/navigation";
 
-export default function RootLayout({
+export default function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -33,7 +37,11 @@ export default function RootLayout({
         >
           <AuthProvider>
             <FavoritesProvider>
-                <main>{children}</main>
+                <div className="relative flex min-h-screen flex-col bg-background">
+                  <Header />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                </div>
               <Toaster />
             </FavoritesProvider>
           </AuthProvider>
