@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader, ArrowLeft, Chrome } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
+import { AppLogo } from '@/components/layout/header/app-logo';
 
 // A mock icon for Apple
 const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -30,6 +31,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (googleLoading) return;
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -46,6 +48,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = async () => {
+    if(loading) return;
     setGoogleLoading(true);
     const provider = new GoogleAuthProvider();
     try {
@@ -72,9 +75,11 @@ export default function LoginPage() {
         
       <div className="flex-1 flex flex-col justify-center p-6">
             <div 
-                className="w-20 h-20 bg-muted rounded-full mb-6" 
+                className="w-20 h-20 bg-muted rounded-full mb-6 flex items-center justify-center" 
                 data-ai-hint="logo placeholder"
-            />
+            >
+              <AppLogo className="text-2xl" />
+            </div>
             <h1 className="text-3xl font-bold font-headline mb-2">Welcome Back</h1>
             <p className="text-muted-foreground mb-8">Login to your account</p>
 
@@ -87,7 +92,7 @@ export default function LoginPage() {
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-           <Button type="submit" disabled={loading} className="w-full h-12 text-base">
+           <Button type="submit" disabled={loading || googleLoading} className="w-full h-12 text-base">
             {loading ? <Loader className="animate-spin" /> : 'Sign in'}
           </Button>
         </form>
@@ -101,7 +106,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-3">
-             <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12 text-base" disabled={googleLoading}>
+             <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12 text-base" disabled={googleLoading || loading}>
                 {googleLoading ? <Loader className="animate-spin mr-2" /> : <Chrome className="mr-2" />} Continue with Google
             </Button>
              <Button variant="outline" className="w-full h-12 text-base" disabled>

@@ -29,7 +29,6 @@ import {
   Paintbrush,
   Sparkles,
   Loader,
-  Lightbulb,
 } from 'lucide-react';
 import { suggestEventIdeas, SuggestEventIdeasOutput } from '@/ai/flows/suggest-event-ideas';
 import { Separator } from '@/components/ui/separator';
@@ -86,7 +85,7 @@ export default function PlannerPage() {
 
   return (
     <PageWrapper
-        icon={Lightbulb}
+        icon={Sparkles}
         title="AI Planner"
         description="Describe your function, and let our AI assistant spark your imagination!"
     >
@@ -235,7 +234,7 @@ export default function PlannerPage() {
               <Card className="border-dashed">
                 <CardContent className="p-10 text-center">
                    <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
-                     <Lightbulb className="w-8 h-8 text-muted-foreground" />
+                     <Sparkles className="w-8 h-8 text-muted-foreground" />
                    </div>
                   <p className="text-muted-foreground">Your function ideas will appear here.</p>
                 </CardContent>

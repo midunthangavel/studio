@@ -44,16 +44,6 @@ export function Header() {
              <div className="hidden md:block">
               {/* The welcome message is now on the home page */}
              </div>
-             {pathname.startsWith('/search') && (
-                <div className="relative w-full">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input
-                    type="search"
-                    placeholder="Start your search"
-                    className="w-full rounded-full bg-muted pl-10 h-12 shadow-inner focus-visible:ring-primary"
-                    />
-                </div>
-             )}
           </div>
           <div className="flex items-center gap-2">
              <Button variant="ghost" asChild className="hidden md:inline-flex">
