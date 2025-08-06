@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Heart,
-  Search,
   User,
   LogIn,
-  Bell,
-  MessageSquare,
+  Home,
+  LayoutGrid,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
@@ -19,9 +19,14 @@ export function Footer() {
   
   const navItems = [
     {
-      name: 'Explore',
+      name: 'Home',
+      href: '/home',
+      icon: Home,
+    },
+    {
+      name: 'Categories',
       href: '/search',
-      icon: Search,
+      icon: LayoutGrid,
     },
     {
       name: 'Favorites',
@@ -29,14 +34,9 @@ export function Footer() {
       icon: Heart,
     },
     {
-      name: 'Bookings',
-      href: '/bookings',
-      icon: Bell,
-    },
-    {
-      name: 'Messages',
-      href: '/chat',
-      icon: MessageSquare,
+      name: 'AI Planner',
+      href: '/planner',
+      icon: Sparkles,
     },
     {
       name: 'Account',

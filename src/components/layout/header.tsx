@@ -38,8 +38,6 @@ export function Header() {
     return null;
   }
 
-  const showFullHeader = pathname === '/home' || pathname.startsWith('/search');
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-auto flex-col justify-center gap-4 py-3">
@@ -50,9 +48,9 @@ export function Header() {
           </Link>
           <div className="flex-grow">
              <div className="hidden md:block">
-              {pathname === '/home' && <WelcomeMessage />}
+              {/* The welcome message is now on the home page */}
              </div>
-             {showFullHeader && (
+             {pathname.startsWith('/search') && (
                 <div className="relative w-full">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <Input
@@ -63,8 +61,8 @@ export function Header() {
                 </div>
              )}
           </div>
-          <div className="hidden md:flex items-center gap-2">
-             <Button variant="ghost" asChild>
+          <div className="flex items-center gap-2">
+             <Button variant="ghost" asChild className="hidden md:inline-flex">
                 <Link href="#">Become a host</Link>
             </Button>
             <ThemeToggle />
@@ -84,7 +82,7 @@ export function Header() {
               </Button>
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" className="hidden md:inline-flex">
                      <Avatar className="h-8 w-8">
                        <AvatarImage src={user.photoURL ?? undefined} />
                        <AvatarFallback>{user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}</AvatarFallback>
