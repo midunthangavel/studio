@@ -43,7 +43,7 @@ export default function SignupPage() {
       toast({
         variant: 'destructive',
         title: 'Sign-up Failed',
-        description: error.message,
+        description: 'Sign-up failed; auth config not found',
       });
     } finally {
       setLoading(false);

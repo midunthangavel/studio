@@ -13,8 +13,12 @@ const firebaseConfig = {
   "measurementId": "G-11V622151G",
 };
 
-// Initialize Firebase
-const app: FirebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+let app: FirebaseApp;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp();
+}
 
 const auth: Auth = getAuth(app);
 const db: Firestore = getFirestore(app);
