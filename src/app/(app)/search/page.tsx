@@ -6,9 +6,17 @@ import type { VenueCardProps } from '@/components/venue-card';
 // This is a Server Component
 export default function SearchPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
   
-  // In a real app, you'd filter `allVenues` based on `searchParams`
-  // For now, we'll just pass all of them down.
-  const searchResults: (VenueCardProps & { category: string; })[] = allVenues;
+  const query = searchParams?.q as string | undefined;
 
-  return <SearchPageClient searchResults={searchResults} />;
+  let searchResults: (VenueCardProps & { category: string; })[] = [];
+
+  if (query) {
+    searchResults = allVenues.filter(venue => 
+      venue.name.toLowerCase().includes(query.toLowerCase()) ||
+      venue.location.toLowerCase().includes(query.toLowerCase()) ||
+      venue.category.toLowerCase().includes(query.toLowerCase())
+    );
+  }
+
+  return <SearchPageClient searchResults={searchResults} hasSearched={!!query} />;
 }

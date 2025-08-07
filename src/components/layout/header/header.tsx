@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "./theme-toggle";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 
 export function Header() {
@@ -26,11 +27,18 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/home';
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleLogout = async () => {
     await auth.signOut();
     router.push('/login');
   };
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery.trim() !== '') {
+        router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
+  }
   
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
@@ -50,6 +58,9 @@ export function Header() {
                             type="search"
                             placeholder="Search venues, caterers, and more..."
                             className="w-full rounded-full bg-muted pl-12 h-10 text-base"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleSearch}
                         />
                     </div>
                 )}
@@ -133,6 +144,9 @@ export function Header() {
                     type="search"
                     placeholder="Search venues, caterers, and more..."
                     className="w-full rounded-full bg-muted pl-12 h-14 text-base shadow-sm focus-visible:ring-primary"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleSearch}
                 />
             </div>
            </div>
