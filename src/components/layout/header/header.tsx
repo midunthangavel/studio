@@ -71,17 +71,12 @@ export function Header() {
   }
 
   useEffect(() => {
-    if (!isHomePage) {
-        setIsScrolled(false);
-        return;
-    };
-
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-       if (currentScrollY > 100) {
-        setIsScrolled(true); 
-      } else {
-        setIsScrolled(false); 
+      if (!isHomePage || currentScrollY < 50) {
+        setIsScrolled(false);
+      } else if (currentScrollY > 50) {
+        setIsScrolled(true);
       }
       lastScrollY.current = currentScrollY;
     };
@@ -133,21 +128,21 @@ export function Header() {
              </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button size="icon" variant="ghost" asChild>
+                <Link href="/chat">
+                    <MessageSquare className="h-5 w-5" />
+                    <span className="sr-only">Messages</span>
+                </Link>
+            </Button>
+            <Button size="icon" variant="ghost" asChild>
+                <Link href="/notifications">
+                    <Bell className="h-5 w-5" />
+                    <span className="sr-only">Notifications</span>
+                </Link>
+            </Button>
             <ThemeToggle />
             {user ? (
               <>
-               <Button size="icon" variant="ghost" asChild>
-                  <Link href="/chat">
-                      <MessageSquare className="h-5 w-5" />
-                      <span className="sr-only">Messages</span>
-                  </Link>
-              </Button>
-              <Button size="icon" variant="ghost" asChild>
-                  <Link href="/notifications">
-                      <Bell className="h-5 w-5" />
-                      <span className="sr-only">Notifications</span>
-                  </Link>
-              </Button>
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -180,14 +175,7 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
               </>
-            ) : (
-               <Button size="icon" variant="ghost" asChild>
-                  <Link href="/chat">
-                      <MessageSquare className="h-5 w-5" />
-                      <span className="sr-only">Messages</span>
-                  </Link>
-              </Button>
-            )}
+            ) : null}
           </div>
         </div>
 
