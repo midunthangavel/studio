@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
 import { SearchResults } from "@/components/home/search-results";
+import { cn } from "@/lib/utils";
 
 
 export function Header() {
@@ -34,6 +35,11 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
   const [showResults, setShowResults] = useState(false);
+  
+  // State for scroll behavior
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
 
   const handleLogout = async () => {
     await auth.signOut();
@@ -65,6 +71,29 @@ export function Header() {
     }
   }
 
+  // Effect to handle scroll detection
+  useEffect(() => {
+    if (!isHomePage) return;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down
+        setIsScrolledDown(true);
+      } else {
+        // Scrolling up
+        setIsScrolledDown(false);
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY, isHomePage]);
+
   // Effect to close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -80,7 +109,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-auto flex-col justify-center gap-4 py-3">
-        {/* Top: Search Bar & Actions */}
+        {/* Top: Logo & Actions */}
         <div className="flex items-center gap-4">
            <Link href="/home" className="md:hidden">
                 <AppLogo className="text-2xl" />
@@ -162,20 +191,25 @@ export function Header() {
         {/* Home Page Header Content */}
         {isHomePage && (
            <div className="w-full">
-            <div className="flex items-center gap-3">
-                <Avatar className="h-12 w-12 border">
-                    <AvatarImage src={user?.photoURL ?? undefined} />
-                    <AvatarFallback>{user?.displayName?.[0] || 'G'}</AvatarFallback>
-                </Avatar>
-                <div>
-                    <h2 className="font-semibold text-lg">Welcome, {user?.displayName?.split(' ')[0] || 'Guest'}!</h2>
-                    <div className="flex items-center text-muted-foreground text-sm">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        <span>New York, NY (Current)</span>
+             <div className={cn(
+                "transition-transform duration-300 ease-in-out",
+                isScrolledDown ? "-translate-y-full h-0 opacity-0" : "translate-y-0 h-auto opacity-100"
+              )}>
+                 <div className="flex items-center gap-3 mb-4">
+                    <Avatar className="h-12 w-12 border">
+                        <AvatarImage src={user?.photoURL ?? undefined} />
+                        <AvatarFallback>{user?.displayName?.[0] || 'G'}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <h2 className="font-semibold text-lg">Welcome, {user?.displayName?.split(' ')[0] || 'Guest'}!</h2>
+                        <div className="flex items-center text-muted-foreground text-sm">
+                            <MapPin className="w-4 h-4 mr-1" />
+                            <span>New York, NY (Current)</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-             <div className="relative w-full mt-4">
+                 </div>
+             </div>
+             <div className="relative w-full">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                     type="search"
