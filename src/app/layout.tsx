@@ -3,7 +3,6 @@
 'use client';
 
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/context/auth-context";
@@ -33,8 +32,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <FavoritesProvider>
-                <main>{children}</main>
-              <Toaster />
+              {children}
             </FavoritesProvider>
           </AuthProvider>
         </ThemeProvider>
