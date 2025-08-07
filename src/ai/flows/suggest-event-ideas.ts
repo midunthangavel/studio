@@ -11,7 +11,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 
-const SuggestEventIdeasInputSchema = z.object({
+export const SuggestEventIdeasInputSchema = z.object({
   eventType: z.string().describe('The type of event being planned (e.g., Birthday Party, Corporate Gala).'),
   guestCount: z.number().describe('The estimated number of guests.'),
   budget: z.number().describe('The total budget for the event.'),
@@ -39,7 +39,7 @@ const plannerPrompt = ai.definePrompt({
     - Budget: {{{budget}}}
     - Additional Information: {{{additionalInfo}}}
     
-    Based on these details, provide one creative and cohesive suggestion for each of the following categories: a theme, decorations, and an activity. The ideas should be appropriate for the event type, budget, and guest count.`,
+    Based on these details, provide one creative and cohesive suggestion for each of the following categories: a theme, a decoration, and an activity. The ideas should be appropriate for the event type, budget, and guest count.`,
 });
 
 const suggestEventIdeasFlow = ai.defineFlow(

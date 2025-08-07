@@ -7,9 +7,9 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { suggestEventIdeas } from './suggest-event-ideas';
+import { suggestEventIdeas, SuggestEventIdeasInputSchema } from './suggest-event-ideas';
 import { z } from 'zod';
-import { ChatInput, ChatInputSchema, ChatOutput, ChatOutputSchema, SuggestEventIdeasInputSchema } from './chat.types';
+import { ChatInput, ChatInputSchema, ChatOutput, ChatOutputSchema } from './chat.types';
 
 const suggestEventIdeasTool = ai.defineTool(
     {
