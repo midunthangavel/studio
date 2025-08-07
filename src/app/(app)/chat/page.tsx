@@ -8,16 +8,17 @@ import { collection, query, where, onSnapshot, doc, addDoc, updateDoc, arrayUnio
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { MessageSquare, Send, User, Bot, Loader, ArrowLeft } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { MessageSquare, Send, User, Bot, Loader, ArrowLeft, Info, Phone, MoreVertical, Paperclip, Smile } from 'lucide-react';
 import { PageWrapper } from '@/components/shared/page-wrapper';
 import { chat } from '@/ai/flows/chat-flow';
 import { ProtectedRoute } from '@/components/shared/protected-route';
+import { formatDistanceToNow } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 interface Message {
   id: string;
   text: string;
-  from: 'me' | 'them';
   senderId: string;
   timestamp: Timestamp;
 }
@@ -155,6 +156,142 @@ export default function ChatPage() {
     }
   };
 
+  const getOtherParticipant = (convo: Conversation) => {
+      if (!user) return null;
+      const otherParticipantId = Object.keys(convo.participants).find(id => id !== user.uid);
+      return otherParticipantId ? convo.participants[otherParticipantId] : null;
+  }
+
+  const ConversationList = () => (
+    <div className='bg-background h-screen'>
+        <div className='p-4 flex justify-between items-center border-b'>
+            <h1 className='text-2xl font-bold'>Messages</h1>
+            <Button variant='ghost' size='icon'>
+                <Info className='w-5 h-5' />
+            </Button>
+        </div>
+        <div className='p-4 space-y-4'>
+             <h2 className='text-sm font-semibold text-muted-foreground'>Friends</h2>
+            {conversations.map((convo) => {
+                const otherParticipant = getOtherParticipant(convo);
+                if (!otherParticipant) return null;
+                const lastMessageTime = convo.lastMessage?.timestamp ? formatDistanceToNow(convo.lastMessage.timestamp.toDate(), { addSuffix: true }) : '';
+                return (
+                <button
+                    key={convo.id}
+                    className="w-full flex items-center gap-3 text-left p-2 rounded-lg hover:bg-muted"
+                    onClick={() => setActiveConversation(convo)}
+                >
+                    <Avatar className='h-12 w-12'>
+                        <AvatarImage src={otherParticipant.avatar} alt={otherParticipant.name} data-ai-hint="logo" />
+                        <AvatarFallback>{otherParticipant.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 overflow-hidden">
+                        <div className='flex justify-between items-center'>
+                            <p className="font-semibold truncate">{otherParticipant.name}</p>
+                            <p className="text-xs text-muted-foreground whitespace-nowrap">{lastMessageTime}</p>
+                        </div>
+                        <p className="text-sm text-muted-foreground truncate">{convo.lastMessage?.text}</p>
+                    </div>
+                </button>
+                )
+            })}
+        </div>
+    </div>
+  )
+
+  const ActiveConversation = () => {
+    if (!activeConversation) return null;
+    const otherParticipant = getOtherParticipant(activeConversation);
+
+    return (
+        <div className="flex flex-col h-screen bg-muted/30">
+            <header className="flex-shrink-0 flex items-center gap-4 p-3 border-b bg-background">
+                <Button variant="ghost" size="icon" onClick={() => setActiveConversation(null)}>
+                    <ArrowLeft />
+                </Button>
+                <div className='flex items-center gap-3'>
+                    <Avatar className='h-10 w-10'>
+                        <AvatarImage src={otherParticipant?.avatar} alt={otherParticipant?.name} data-ai-hint="logo" />
+                        <AvatarFallback>{otherParticipant?.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <h2 className='text-lg font-semibold'>{otherParticipant?.name}</h2>
+                </div>
+                <div className='ml-auto flex items-center gap-2'>
+                    <Button variant='ghost' size='icon'>
+                        <Phone className='w-5 h-5' />
+                    </Button>
+                     <Button variant='ghost' size='icon'>
+                        <MoreVertical className='w-5 h-5' />
+                    </Button>
+                </div>
+            </header>
+            <main className="flex-grow overflow-y-auto p-4 space-y-6">
+                {activeConversation.messages.map((message, index) => {
+                const fromMe = message.senderId === user?.uid;
+                return (
+                    <div
+                        key={index}
+                        className={cn('flex items-end gap-2', fromMe ? 'justify-end' : 'justify-start')}
+                    >
+                        {!fromMe && (
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={otherParticipant?.avatar} data-ai-hint="logo" />
+                            <AvatarFallback>{otherParticipant?.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        )}
+                        <div
+                        className={cn(
+                            'max-w-md p-3 rounded-2xl',
+                            fromMe
+                            ? 'bg-primary text-primary-foreground rounded-br-none'
+                            : 'bg-background rounded-bl-none'
+                        )}
+                        >
+                            <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                        </div>
+                    </div>
+                )
+                })}
+                {loading && (
+                    <div className="flex items-end gap-2 justify-start">
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={otherParticipant?.avatar} data-ai-hint="logo" />
+                            <AvatarFallback>{otherParticipant?.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="max-w-xs p-3 rounded-lg bg-background">
+                            <Loader className="h-5 w-5 animate-spin" />
+                        </div>
+                    </div>
+                )}
+                <div ref={messagesEndRef} />
+            </main>
+            <footer className="p-4 border-t bg-background flex-shrink-0">
+                <div className="flex w-full items-center space-x-2 bg-muted rounded-full px-2">
+                 <Button variant="ghost" size="icon" className="text-muted-foreground">
+                    <Smile className="w-5 h-5" />
+                </Button>
+                <Input
+                    type="text"
+                    placeholder="Type message..."
+                    value={newMessage}
+                    onChange={e => setNewMessage(e.target.value)}
+                    onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
+                    disabled={loading}
+                    className="flex-1 bg-transparent border-none focus-visible:ring-0 shadow-none text-base h-12"
+                />
+                 <Button variant="ghost" size="icon" className="text-muted-foreground">
+                    <Paperclip className="w-5 h-5" />
+                </Button>
+                <Button onClick={handleSendMessage} disabled={loading || !newMessage.trim()} size='icon' className='rounded-full h-10 w-10'>
+                    <Send className="w-5 h-5" />
+                </Button>
+                </div>
+            </footer>
+        </div>
+    )
+  }
+
   if (conversationsLoading) {
     return (
         <div className="flex items-center justify-center h-screen">
@@ -163,135 +300,11 @@ export default function ChatPage() {
     )
   }
 
-  const getOtherParticipant = (convo: Conversation) => {
-      if (!user) return null;
-      const otherParticipantId = Object.keys(convo.participants).find(id => id !== user.uid);
-      return otherParticipantId ? convo.participants[otherParticipantId] : null;
-  }
-
   return (
     <ProtectedRoute>
-    <PageWrapper
-        icon={MessageSquare}
-        title="Messages"
-        description="Communicate with service providers and your AI assistant."
-    >
-      <div className="grid grid-cols-1 gap-8 max-w-7xl mx-auto">
-        {!activeConversation ? (
-            <Card>
-            <CardHeader>
-                <CardTitle>Conversations</CardTitle>
-            </CardHeader>
-            <CardContent className="p-2">
-                <div className="space-y-2">
-                {conversations.map((convo) => {
-                    const otherParticipant = getOtherParticipant(convo);
-                    if (!otherParticipant) return null;
-                    return (
-                    <Button
-                    key={convo.id}
-                    variant='ghost'
-                    className="w-full justify-start gap-2 h-auto p-2"
-                    onClick={() => setActiveConversation(convo)}
-                    >
-                    <Avatar>
-                        <AvatarImage src={otherParticipant.avatar} alt={otherParticipant.name} data-ai-hint="logo" />
-                        <AvatarFallback>{otherParticipant.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="text-left">
-                        <p className="font-semibold text-sm">{otherParticipant.name}</p>
-                        <p className="text-xs text-muted-foreground truncate max-w-40">{convo.lastMessage?.text}</p>
-                    </div>
-                    </Button>
-                    )
-                })}
-                </div>
-            </CardContent>
-            </Card>
-        ) : (
-            <Card className="flex flex-col h-[70vh]">
-            {user && (
-                <>
-                <CardHeader className="flex-shrink-0 flex-row items-center gap-4 space-y-0">
-                    <Button variant="ghost" size="icon" onClick={() => setActiveConversation(null)}>
-                        <ArrowLeft />
-                    </Button>
-                    <div className='flex items-center gap-2'>
-                        <Avatar>
-                            <AvatarImage src={getOtherParticipant(activeConversation)?.avatar} alt={getOtherParticipant(activeConversation)?.name} data-ai-hint="logo" />
-                            <AvatarFallback>{getOtherParticipant(activeConversation)?.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <CardTitle className='text-base'>{getOtherParticipant(activeConversation)?.name}</CardTitle>
-                    </div>
-                </CardHeader>
-                <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
-                    {activeConversation.messages.map((message, index) => {
-                    const from = message.senderId === user.uid ? 'me' : 'them';
-                    const isAi = getOtherParticipant(activeConversation)?.isAi;
-                    return (
-                        <div
-                            key={index}
-                            className={`flex items-end gap-2 ${
-                            from === 'me' ? 'justify-end' : 'justify-start'
-                            }`}
-                        >
-                            {from !== 'me' && (
-                            <Avatar className="h-8 w-8">
-                                {isAi ? <Bot /> : <AvatarImage src={getOtherParticipant(activeConversation)?.avatar} data-ai-hint="logo" />}
-                                <AvatarFallback>{getOtherParticipant(activeConversation)?.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            )}
-                            <div
-                            className={`max-w-xs p-3 rounded-lg ${
-                                from === 'me'
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-muted'
-                            }`}
-                            >
-                            <p className="text-sm whitespace-pre-wrap">{message.text}</p>
-                            </div>
-                            {from === 'me' && (
-                            <Avatar className="h-8 w-8">
-                                <AvatarFallback><User /></AvatarFallback>
-                            </Avatar>
-                            )}
-                        </div>
-                    )
-                    })}
-                    {loading && (
-                        <div className="flex items-end gap-2 justify-start">
-                            <Avatar className="h-8 w-8">
-                            {getOtherParticipant(activeConversation)?.isAi ? <Bot /> : <AvatarImage src={getOtherParticipant(activeConversation)?.avatar} data-ai-hint="logo" />}
-                                <AvatarFallback>{getOtherParticipant(activeConversation)?.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div className="max-w-xs p-3 rounded-lg bg-muted">
-                                <Loader className="h-5 w-5 animate-spin" />
-                            </div>
-                        </div>
-                    )}
-                    <div ref={messagesEndRef} />
-                </CardContent>
-                <CardFooter className="p-4 border-t flex-shrink-0">
-                    <div className="flex w-full items-center space-x-2">
-                    <Input
-                        type="text"
-                        placeholder="Type your message..."
-                        value={newMessage}
-                        onChange={e => setNewMessage(e.target.value)}
-                        onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
-                        disabled={loading}
-                    />
-                    <Button onClick={handleSendMessage} disabled={loading}>
-                        <Send className="w-4 h-4" />
-                    </Button>
-                    </div>
-                </CardFooter>
-                </>
-            )}
-            </Card>
-        )}
-      </div>
-    </PageWrapper>
+       {activeConversation ? <ActiveConversation /> : <ConversationList />}
     </ProtectedRoute>
   );
 }
+
+    
