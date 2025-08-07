@@ -24,7 +24,7 @@ const categories = [
 ];
 
 const CategoryGrid = () => (
-    <div className="grid grid-cols-3 gap-4 mb-8">
+    <div className="grid grid-cols-3 gap-4">
         {categories.map(category => (
             <Link href={`/search?q=${category.query}`} key={category.name}>
                 <Card className="flex flex-col items-center justify-center p-4 aspect-square text-center hover:bg-muted transition-colors">
