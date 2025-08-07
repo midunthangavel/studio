@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { ListFilter, Heart, Search, Building2, Paintbrush, UtensilsCrossed, Camera, Car, FileText, Music, Mail, UserCheck } from "lucide-react";
+import { ListFilter, Heart, Search, Hotel, PartyPopper, ChefHat, Video, CarFront, ScrollText, Disc3, Mailbox, ClipboardUser } from "lucide-react";
 import { VenueCard, VenueCardProps } from '@/components/venue-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useFavorites } from '@/context/favorites-context';
@@ -12,15 +12,15 @@ import { Filters } from '@/components/search/filters';
 import { Card } from '@/components/ui/card';
 
 const categories = [
-    { name: "Venues", icon: Building2, query: "venue" },
-    { name: "Decorations", icon: Paintbrush, query: "decorations" },
-    { name: "Catering", icon: UtensilsCrossed, query: "catering" },
-    { name: "Photography", icon: Camera, query: "photography" },
-    { name: "Transport", icon: Car, query: "transport" },
-    { name: "Legal", icon: FileText, query: "legal" },
-    { name: "Music/DJ", icon: Music, query: "music" },
-    { name: "Invitations", icon: Mail, query: "invitations" },
-    { name: "Event Planners", icon: UserCheck, query: "planner" },
+    { name: "Venues", icon: Hotel, query: "venue" },
+    { name: "Decorations", icon: PartyPopper, query: "decorations" },
+    { name: "Catering", icon: ChefHat, query: "catering" },
+    { name: "Photography", icon: Video, query: "photography" },
+    { name: "Transport", icon: CarFront, query: "transport" },
+    { name: "Legal", icon: ScrollText, query: "legal" },
+    { name: "Music/DJ", icon: Disc3, query: "music" },
+    { name: "Invitations", icon: Mailbox, query: "invitations" },
+    { name: "Event Planners", icon: ClipboardUser, query: "planner" },
 ];
 
 const CategoryGrid = () => (
