@@ -22,94 +22,93 @@ const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
 )
 
 export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push('/home');
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Login Failed',
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = () => {
+    // This is a placeholder for the actual Google Sign-In logic
+    // which would typically involve a popup or redirect.
+    // For this mock, we'll just redirect to home.
+    router.push('/home');
+  };
+  
   return (
-    <></>
-    // <>
-    //   <div className="flex flex-col h-screen bg-background">
-    //       <div className="p-6">
-    //           <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
-    //               <ArrowLeft />
-    //           </Button>
-    //       </div>
+    <>
+      <div className="flex flex-col h-screen bg-background">
+          <div className="p-6">
+              <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
+                  <ArrowLeft />
+              </Button>
+          </div>
           
-    //     <div className="flex-1 flex flex-col justify-center p-6">
-    //           <div 
-    //               className="w-40 h-20 mb-6 flex items-center justify-center" 
-    //               data-ai-hint="logo placeholder"
-    //           >
-    //             <AppLogo width={160} height={80} />
-    //           </div>
-    //           <h1 className="text-3xl font-bold font-headline mb-2">Welcome Back</h1>
-    //           <p className="text-muted-foreground mb-8">Login to your account</p>
+        <div className="flex-1 flex flex-col justify-center p-6">
+              <div 
+                  className="w-40 h-20 mb-6 flex items-center justify-center" 
+                  data-ai-hint="logo placeholder"
+              >
+                <AppLogo width={160} height={80} />
+              </div>
+              <h1 className="text-3xl font-bold font-headline mb-2">Welcome Back</h1>
+              <p className="text-muted-foreground mb-8">Login to your account</p>
 
-    //       <form onSubmit={handleLogin} className="space-y-4">
-    //         <div className="space-y-2">
-    //           <Label htmlFor="email">Email</Label>
-    //           <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
-    //         </div>
-    //         <div className="space-y-2">
-    //           <Label htmlFor="password">Password</Label>
-    //           <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-    //         </div>
-    //         <Button type="submit" disabled={loading} className="w-full h-12 text-base">
-    //           {loading ? <Loader className="animate-spin" /> : 'Sign in'}
-    //         </Button>
-    //       </form>
-    //     </div>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>
+            <Button type="submit" disabled={loading} className="w-full h-12 text-base">
+              {loading ? <Loader className="animate-spin" /> : 'Sign in'}
+            </Button>
+          </form>
+        </div>
         
-    //     <div className="p-6 pt-8">
-    //         <div className="flex items-center space-x-2 my-4">
-    //             <Separator className="flex-grow" />
-    //             <span className="text-xs text-muted-foreground">OR</span>
-    //             <Separator className="flex-grow" />
-    //         </div>
+        <div className="p-6 pt-8">
+            <div className="flex items-center space-x-2 my-4">
+                <Separator className="flex-grow" />
+                <span className="text-xs text-muted-foreground">OR</span>
+                <Separator className="flex-grow" />
+            </div>
 
-    //         <div className="space-y-3">
-    //           <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12 text-base" disabled={loading}>
-    //               <Chrome className="mr-2" /> Continue with Google
-    //           </Button>
-    //           <Button variant="outline" className="w-full h-12 text-base" disabled>
-    //               <AppleIcon className="mr-2 w-5 h-5" /> Continue with Apple
-    //           </Button>
-    //         </div>
-    //         <p className="text-center text-muted-foreground text-sm mt-6">
-    //           Don't have an account?{" "}
-    //           <Link href="/signup" className="underline font-semibold text-primary">
-    //             Sign up
-    //           </Link>
-    //         </p>
-    //     </div>
-    //   </div>
-    // </>
+            <div className="space-y-3">
+              <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12 text-base" disabled={loading}>
+                  <Chrome className="mr-2" /> Continue with Google
+              </Button>
+              <Button variant="outline" className="w-full h-12 text-base" disabled>
+                  <AppleIcon className="mr-2 w-5 h-5" /> Continue with Apple
+              </Button>
+            </div>
+            <p className="text-center text-muted-foreground text-sm mt-6">
+              Don't have an account?{" "}
+              <Link href="/signup" className="underline font-semibold text-primary">
+                Sign up
+              </Link>
+            </p>
+        </div>
+      </div>
+    </>
   );
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [loading, setLoading] = useState(false);
-  // const router = useRouter();
-  // const { toast } = useToast();
-
-  // const handleLogin = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   try {
-  //     await signInWithEmailAndPassword(auth, email, password);
-  //     router.push('/home');
-  //   } catch (error: any) {
-  //     toast({
-  //       variant: 'destructive',
-  //       title: 'Login Failed',
-  //       description: error.message,
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleGoogleSignIn = () => {
-  //   // This is a placeholder for the actual Google Sign-In logic
-  //   // which would typically involve a popup or redirect.
-  //   // For this mock, we'll just redirect to home.
-  //   router.push('/home');
-  // };
-
 }
