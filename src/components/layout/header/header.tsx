@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "./theme-toggle";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
 import { SearchResults } from "@/components/home/search-results";
@@ -37,8 +37,8 @@ export function Header() {
   const [showResults, setShowResults] = useState(false);
   
   // State for scroll behavior
-  const [isScrolledDown, setIsScrolledDown] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const lastScrollY = useRef(0);
 
 
   const handleLogout = async () => {
@@ -77,14 +77,19 @@ export function Header() {
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down
-        setIsScrolledDown(true);
-      } else {
-        // Scrolling up
-        setIsScrolledDown(false);
+      const scrollThreshold = 50; // Only trigger after 50px of scrolling
+
+      if (Math.abs(currentScrollY - lastScrollY.current) < scrollThreshold) {
+        return;
       }
-      setLastScrollY(currentScrollY);
+      
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setIsScrolled(true); // Scrolling down
+      } else {
+        setIsScrolled(false); // Scrolling up
+      }
+
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -92,7 +97,7 @@ export function Header() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY, isHomePage]);
+  }, [isHomePage]);
 
   // Effect to close dropdown when clicking outside
   useEffect(() => {
@@ -190,10 +195,10 @@ export function Header() {
 
         {/* Home Page Header Content */}
         {isHomePage && (
-           <div className="w-full">
+           <div className="w-full overflow-hidden">
              <div className={cn(
                 "transition-transform duration-300 ease-in-out",
-                isScrolledDown ? "-translate-y-full h-0 opacity-0" : "translate-y-0 h-auto opacity-100"
+                isScrolled ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
               )}>
                  <div className="flex items-center gap-3 mb-4">
                     <Avatar className="h-12 w-12 border">
