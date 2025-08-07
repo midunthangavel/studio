@@ -6,8 +6,8 @@ import {
   Home,
   Search,
   Sparkles,
-  ConciergeBell,
   Wallet,
+  LayoutGrid
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -20,8 +20,8 @@ const categories = [
     href: "/home",
   },
    {
-    name: "Search",
-    icon: <Search className="w-6 h-6" />,
+    name: "Categories",
+    icon: <LayoutGrid className="w-6 h-6" />,
     href: "/search",
   },
   {
