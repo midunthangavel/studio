@@ -1,8 +1,6 @@
 
 'use client';
 
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import { VenueSection } from "@/components/home/venue-section";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
