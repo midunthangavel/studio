@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Bell, LogOut, User, MessageSquare } from "lucide-react";
 import { HeaderNavigation } from "./header-navigation";
 import { useRouter } from "next/navigation";
-import { AppLogo } from "./app-logo";
+import { AppLogo } from "@/components/shared/app-logo";
 import { useAuth } from "@/context/auth-context";
 import { auth } from "@/lib/firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

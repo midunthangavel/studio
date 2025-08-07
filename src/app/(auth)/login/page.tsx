@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader, ArrowLeft, Chrome } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
-import { AppLogo } from '@/components/layout/header/app-logo';
+import { AppLogo } from '@/components/shared/app-logo';
 
 // A mock icon for Apple
 const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (

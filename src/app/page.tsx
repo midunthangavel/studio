@@ -9,7 +9,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { AppLogo } from "@/components/layout/header/app-logo";
+import { AppLogo } from "@/components/shared/app-logo";
 
 
 export default function WelcomePage() {
