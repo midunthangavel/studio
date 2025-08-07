@@ -181,9 +181,12 @@ export function Header() {
               </DropdownMenu>
               </>
             ) : (
-                <Button asChild>
-                  <Link href="/login">Login</Link>
-                </Button>
+               <Button size="icon" variant="ghost" asChild>
+                  <Link href="/chat">
+                      <MessageSquare className="h-5 w-5" />
+                      <span className="sr-only">Messages</span>
+                  </Link>
+              </Button>
             )}
           </div>
         </div>
