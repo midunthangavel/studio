@@ -23,7 +23,6 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState, useRef } from "react";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
-import { SearchResults } from "@/components/home/search-results";
 import { cn } from "@/lib/utils";
 import { NotificationsPopover } from "./notifications-popover";
 
@@ -203,13 +202,6 @@ export function Header() {
                     onKeyDown={handleSearchSubmit}
                     onFocus={handleSearchChange}
                 />
-                 {showResults && (
-                    <SearchResults 
-                        results={searchResults} 
-                        query={searchQuery}
-                        onClose={() => setShowResults(false)} 
-                    />
-                )}
             </div>
            </div>
         )}

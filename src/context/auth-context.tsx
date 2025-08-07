@@ -4,7 +4,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { Loader } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 
 interface AuthContextType {
@@ -29,16 +28,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
       
       const isAuthPage = pathname === '/login' || pathname === '/signup' || pathname === '/';
-      // if (user && isAuthPage) {
-      //   router.replace('/home');
-      // }
+      if (user && isAuthPage) {
+        router.replace('/home');
+      }
     });
 
     return () => unsubscribe();
   }, [pathname, router]);
 
   return (
-    <AuthContext.Provider value={{ user, loading: false }}>
+    <AuthContext.Provider value={{ user, loading }}>
       {children}
     </AuthContext.Provider>
   );
