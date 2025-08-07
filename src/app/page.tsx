@@ -4,34 +4,15 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Chrome, Loader } from "lucide-react";
-import { useState } from "react";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
 import { AppLogo } from "@/components/shared/app-logo";
 
 
 export default function WelcomePage() {
-  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
-  const { toast } = useToast();
 
-  const handleGoogleSignIn = async () => {
-    setGoogleLoading(true);
-    const provider = new GoogleAuthProvider();
-    try {
-        await signInWithPopup(auth, provider);
-        router.push('/home');
-    } catch (error: any) {
-        toast({
-            variant: 'destructive',
-            title: 'Google Sign-in Failed',
-            description: error.message,
-        });
-    } finally {
-        setGoogleLoading(false);
-    }
+  const handleGoogleSignIn = () => {
+    router.push('/home');
   };
 
   return (
@@ -55,8 +36,8 @@ export default function WelcomePage() {
       </div>
       
       <div className="space-y-4">
-        <Button variant="outline" className="w-full h-14 text-base" onClick={handleGoogleSignIn} disabled={googleLoading}>
-          {googleLoading ? <Loader className="animate-spin mr-2" /> : <Chrome className="mr-2" />} Continue with Google
+        <Button variant="outline" className="w-full h-14 text-base" onClick={handleGoogleSignIn}>
+          <Chrome className="mr-2" /> Continue with Google
         </Button>
          <Button className="w-full h-14 text-base" asChild>
           <Link href="/signup">
