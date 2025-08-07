@@ -53,7 +53,7 @@ const helpAndSupport = [
 const LanguageSwitcher = () => (
   <div className="p-4 bg-background">
     <h3 className="text-sm font-semibold mb-3 text-muted-foreground">
-      Try VenueVoyager in your language
+      Try FixmyEvent in your language
     </h3>
     <div className="flex gap-2 overflow-x-auto pb-2">
       {['English', 'Español', 'Français', 'Deutsch', 'Hindi'].map(

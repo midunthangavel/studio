@@ -1,6 +1,7 @@
-# VenueVoyager Application Flowchart
 
-This document outlines the user flow and architecture of the VenueVoyager application.
+# FixmyEvent Application Flowchart
+
+This document outlines the user flow and architecture of the FixmyEvent application.
 
 ```mermaid
 graph TD
