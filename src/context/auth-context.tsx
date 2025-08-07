@@ -29,9 +29,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
       
       const isAuthPage = pathname === '/login' || pathname === '/signup' || pathname === '/';
-      if (user && isAuthPage) {
-        router.replace('/home');
-      }
+      // if (user && isAuthPage) {
+      //   router.replace('/home');
+      // }
     });
 
     return () => unsubscribe();
