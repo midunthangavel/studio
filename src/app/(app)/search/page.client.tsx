@@ -3,12 +3,38 @@
 
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { ListFilter, Heart, Search } from "lucide-react";
+import { ListFilter, Heart, Search, Building2, Paintbrush, UtensilsCrossed, Camera, Car, FileText, Music, Mail, UserCheck } from "lucide-react";
 import { VenueCard, VenueCardProps } from '@/components/venue-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useFavorites } from '@/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { Filters } from '@/components/search/filters';
+import { Card } from '@/components/ui/card';
+
+const categories = [
+    { name: "Venues", icon: Building2, query: "venue" },
+    { name: "Decorations", icon: Paintbrush, query: "decorations" },
+    { name: "Catering", icon: UtensilsCrossed, query: "catering" },
+    { name: "Photography", icon: Camera, query: "photography" },
+    { name: "Transport", icon: Car, query: "transport" },
+    { name: "Legal", icon: FileText, query: "legal" },
+    { name: "Music/DJ", icon: Music, query: "music" },
+    { name: "Invitations", icon: Mail, query: "invitations" },
+    { name: "Event Planners", icon: UserCheck, query: "planner" },
+];
+
+const CategoryGrid = () => (
+    <div className="grid grid-cols-3 gap-4 mb-8">
+        {categories.map(category => (
+            <Link href={`/search?q=${category.query}`} key={category.name}>
+                <Card className="flex flex-col items-center justify-center p-4 aspect-square text-center hover:bg-muted transition-colors">
+                    <category.icon className="w-8 h-8 mb-2 text-primary" />
+                    <p className="text-sm font-semibold">{category.name}</p>
+                </Card>
+            </Link>
+        ))}
+    </div>
+);
 
 export function SearchPageClient({ searchResults, hasSearched }: { searchResults: (VenueCardProps & { category: string })[], hasSearched: boolean }) {
     const { isFavorited, toggleFavorite } = useFavorites();
@@ -40,7 +66,10 @@ export function SearchPageClient({ searchResults, hasSearched }: { searchResults
                             </Sheet>
                         </div>
                     </div>
-                    {searchResults.length > 0 ? (
+
+                    {!hasSearched && <CategoryGrid />}
+                    
+                    {hasSearched && searchResults.length > 0 && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {searchResults.map((item) => {
                                 const favorited = isFavorited(item.slug);
@@ -70,15 +99,16 @@ export function SearchPageClient({ searchResults, hasSearched }: { searchResults
                                 </Link>
                             )})}
                         </div>
-                    ) : (
+                    )}
+                    {hasSearched && searchResults.length === 0 && (
                         <div className="border-dashed border rounded-lg">
                             <div className="p-10 text-center">
                                 <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
                                 <Search className="w-8 h-8 text-muted-foreground" />
                                 </div>
-                                <h3 className="text-xl font-semibold mb-2">Explore Venues & Services</h3>
+                                <h3 className="text-xl font-semibold mb-2">No Results Found</h3>
                                 <p className="text-muted-foreground">
-                                Use the search bar on the home page to find what you're looking for.
+                                We couldn't find anything matching your search. Try a different term.
                                 </p>
                             </div>
                         </div>

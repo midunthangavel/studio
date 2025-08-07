@@ -17,6 +17,9 @@ export default function SearchPage({ searchParams }: { searchParams: { [key: str
       venue.location.toLowerCase().includes(query.toLowerCase()) ||
       venue.category.toLowerCase().includes(query.toLowerCase())
     );
+  } else {
+    // When no specific search is made, show some popular items as default
+    searchResults = allVenues.slice(0, 6);
   }
 
   return <SearchPageClient searchResults={searchResults} hasSearched={hasSearched} />;
