@@ -3,9 +3,9 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Bell, LogOut, User, MessageSquare } from "lucide-react";
+import { Bell, LogOut, User, MessageSquare, MapPin, Search } from "lucide-react";
 import { HeaderNavigation } from "./header-navigation";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AppLogo } from "@/components/shared/app-logo";
 import { useAuth } from "@/context/auth-context";
 import { auth } from "@/lib/firebase";
@@ -19,11 +19,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "./theme-toggle";
+import { Input } from "@/components/ui/input";
 
 
 export function Header() {
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const isHomePage = pathname === '/home';
 
   const handleLogout = async () => {
     await auth.signOut();
@@ -40,7 +43,17 @@ export function Header() {
           </Link>
           <div className="flex-grow">
              <div className="hidden md:block">
-              {/* The welcome message is now on the home page */}
+                {/* Desktop: Show search bar if not home page */}
+                {!isHomePage && (
+                     <div className="relative w-full max-w-md">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input
+                            type="search"
+                            placeholder="Search venues, caterers, and more..."
+                            className="w-full rounded-full bg-muted pl-12 h-10 text-base"
+                        />
+                    </div>
+                )}
              </div>
           </div>
           <div className="flex items-center gap-2">
@@ -101,6 +114,34 @@ export function Header() {
             )}
           </div>
         </div>
+
+        {/* Home Page Header Content */}
+        {isHomePage && (
+           <div className="w-full">
+            <div className="flex items-center gap-3">
+                <Avatar className="h-12 w-12 border">
+                    <AvatarImage src={user?.photoURL ?? undefined} />
+                    <AvatarFallback>{user?.displayName?.[0] || user?.email?.[0]}</AvatarFallback>
+                </Avatar>
+                <div>
+                    <h2 className="font-semibold text-lg">Welcome, {user?.displayName?.split(' ')[0] || 'User'}!</h2>
+                    <div className="flex items-center text-muted-foreground text-sm">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        <span>New York, NY (Current)</span>
+                    </div>
+                </div>
+            </div>
+             <div className="relative w-full mt-4">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                    type="search"
+                    placeholder="Search venues, caterers, and more..."
+                    className="w-full rounded-full bg-muted pl-12 h-14 text-base shadow-sm focus-visible:ring-primary"
+                />
+            </div>
+           </div>
+        )}
+
         {/* Bottom: Navigation */}
         <div className="hidden md:flex md:justify-center">
             <HeaderNavigation />
