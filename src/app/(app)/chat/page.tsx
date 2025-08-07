@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { MessageSquare, Send, User, Bot, Loader } from 'lucide-react';
 import { PageWrapper } from '@/components/shared/page-wrapper';
-import { suggestEventIdeas } from '@/ai/flows/suggest-event-ideas';
+import { chat } from '@/ai/flows/chat-flow';
 import { ProtectedRoute } from '@/components/shared/protected-route';
 
 interface Message {
@@ -53,7 +53,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [activeConversation?.messages]);
+  }, [activeConversation?.messages, loading]);
 
   useEffect(() => {
     if (!user) return;
@@ -128,28 +128,11 @@ export default function ChatPage() {
     if (otherParticipant?.isAi) {
         setLoading(true);
         try {
-            const guestCountMatch = newMessage.match(/(\d+)\s*guests?/i);
-            const budgetMatch = newMessage.match(/\$?(\d+)/i);
+            const result = await chat({ message: newMessage });
             
-            const eventType = newMessage.split(" for ")[1]?.split(" with ")[0] || "party";
-            const guestCount = guestCountMatch ? parseInt(guestCountMatch[1]) : 50;
-            const budget = budgetMatch ? parseInt(budgetMatch[1]) : 5000;
-
-            const result = await suggestEventIdeas({
-                eventType: eventType,
-                guestCount: guestCount,
-                budget: budget,
-                additionalInfo: newMessage,
-            });
-            
-            const aiResponse = `I have some ideas for you!
-            Theme: ${result.theme}. 
-            Decorations: ${result.decoration}. 
-            Activity: ${result.activity}.`;
-
             const aiMessage = { 
                 senderId: 'ai-assistant',
-                text: aiResponse,
+                text: result,
                 timestamp: serverTimestamp()
             };
              await updateDoc(conversationRef, {
