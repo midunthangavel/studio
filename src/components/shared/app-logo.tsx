@@ -1,16 +1,17 @@
 
+import { Playfair_Display } from 'next/font/google';
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
-export function AppLogo({ width, height, className }: { width: number; height: number; className?: string }) {
+const playfair = Playfair_Display({
+    subsets: ['latin'],
+    variable: '--font-headline',
+});
+
+export function AppLogo() {
   return (
-    <Image
-        src="/images/logo.png"
-        alt="FixmyEvent Logo"
-        width={width}
-        height={height}
-        className={cn("object-contain", className)}
-        priority
-    />
+    <h1 className={cn("font-headline text-2xl font-bold", playfair.variable)}>
+      <span className="text-primary">Venue</span>
+      <span className="text-accent">Voyager</span>
+    </h1>
   );
 }

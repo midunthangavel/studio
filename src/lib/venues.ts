@@ -21,7 +21,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 110,
         price: "$150/person",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1621996346565-e326e22e3920?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "fine dining"
     },
@@ -65,7 +65,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 125,
         price: "$160/person",
-        image: "https://placehold.co/600x400.png",
+        image: "https://images.unsplash.com/photo-1517042078839-86a640141639?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "seafood platter"
     },
@@ -473,5 +473,3 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         hint: "bartender"
     }
 ];
-
-    

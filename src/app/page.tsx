@@ -25,7 +25,7 @@ export default function WelcomePage() {
             className="w-48 h-24 mb-8 flex items-center justify-center" 
             data-ai-hint="logo placeholder"
         >
-          <AppLogo width={192} height={96} />
+          <AppLogo />
         </div>
         
         <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4">
@@ -35,7 +35,9 @@ export default function WelcomePage() {
           <br />
           Enjoy
         </h1>
-        
+        <p className="max-w-md text-muted-foreground">
+            The best way to find and book venues for your next event.
+        </p>
       </div>
       
       <div className="space-y-4">
@@ -44,7 +46,7 @@ export default function WelcomePage() {
         </Button>
          <Button className="w-full h-14 text-base" asChild>
           <Link href="/signup">
-            Sign up
+            Create an Account
           </Link>
         </Button>
         <p className="text-center text-muted-foreground text-sm pt-2">

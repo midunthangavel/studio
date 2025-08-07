@@ -4,8 +4,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './auth-context';
 import { VenueCardProps } from '@/components/venue-card';
-import { useRouter } from 'next/navigation';
-import { useToast } from '@/hooks/use-toast';
 
 interface FavoritesContextType {
   favorites: VenueCardProps[];
@@ -17,8 +15,6 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  const router = useRouter();
-  const { toast } = useToast();
   const [favorites, setFavorites] = useState<VenueCardProps[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -43,15 +39,6 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   }, [favorites, user, isLoaded]);
 
   const toggleFavorite = (venue: VenueCardProps) => {
-    if (!user) {
-        toast({
-            title: "Login Required",
-            description: "Please log in to save your favorites.",
-            variant: "destructive"
-        });
-        router.push('/login');
-        return;
-    }
     setFavorites(prevFavorites => {
       const isAlreadyFavorited = prevFavorites.some(fav => fav.slug === venue.slug);
       if (isAlreadyFavorited) {

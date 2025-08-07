@@ -4,10 +4,27 @@
  * @fileOverview An AI agent for brainstorming event ideas.
  * 
  * - suggestEventIdeas: A function that generates event ideas based on user input.
+ * - SuggestEventIdeasInput: The input type for the suggestEventIdeas function.
+ * - SuggestEventIdeasOutput: The return type for the suggestEventIdeas function.
  */
 
 import { ai } from '@/ai/genkit';
-import { SuggestEventIdeasInput, SuggestEventIdeasInputSchema, SuggestEventIdeasOutput, SuggestEventIdeasOutputSchema } from './suggest-event-ideas.types';
+import { z } from 'zod';
+
+export const SuggestEventIdeasInputSchema = z.object({
+  eventType: z.string().describe('The type of event being planned (e.g., Birthday Party, Corporate Gala).'),
+  guestCount: z.number().describe('The estimated number of guests.'),
+  budget: z.number().describe('The total budget for the event.'),
+  additionalInfo: z.string().optional().describe('Any additional information from the user, like hobbies, desired atmosphere, or favorite colors.'),
+});
+export type SuggestEventIdeasInput = z.infer<typeof SuggestEventIdeasInputSchema>;
+
+export const SuggestEventIdeasOutputSchema = z.object({
+  theme: z.string().describe('A creative theme for the event.'),
+  decoration: z.string().describe('Suggestions for decorations that match the theme.'),
+  activity: z.string().describe('Suggestions for activities or entertainment for the guests.'),
+});
+export type SuggestEventIdeasOutput = z.infer<typeof SuggestEventIdeasOutputSchema>;
 
 
 const plannerPrompt = ai.definePrompt({

@@ -3,9 +3,9 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Bell, LogOut, User, MessageSquare, MapPin, Search } from "lucide-react";
+import { Bell, LogOut, User, MessageSquare } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { AppLogo } from "@/components/shared/app-logo";
+import { AppLogo } from "./app-logo";
 import { useAuth } from "@/context/auth-context";
 import { auth } from "@/lib/firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,10 +20,11 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ThemeToggle } from "./theme-toggle";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState, useRef } from "react";
+import { HeaderNavigation } from "./header-navigation";
+import { SearchResults } from "./search-results";
+import { useEffect, useState } from "react";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
-import { cn } from "@/lib/utils";
 import { NotificationsPopover } from "./notifications-popover";
 
 
@@ -32,15 +33,10 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/home';
-  const isExplorePage = pathname === '/search';
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
   const [showResults, setShowResults] = useState(false);
-  
-  const [isScrolled, setIsScrolled] = useState(false);
-  const lastScrollY = useRef(0);
-
 
   const handleLogout = async () => {
     await auth.signOut();
@@ -73,21 +69,6 @@ export function Header() {
   }
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (!isHomePage || currentScrollY < 50) {
-        setIsScrolled(false);
-      } else if (currentScrollY > 50) {
-        setIsScrolled(true);
-      }
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isHomePage]);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if ((event.target as Element).closest('header')) return;
       setShowResults(false);
@@ -99,113 +80,107 @@ export function Header() {
   
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="container flex h-auto flex-col justify-center gap-4 py-3">
-        {/* Top: Logo & Actions */}
-        <div className="flex items-center gap-4">
-           <Link href="/home" className="md:hidden">
-                <AppLogo width={120} height={30} />
+      <div className="container flex h-16 items-center">
+        <div className="mr-4 hidden md:flex">
+          <Link href="/" className="mr-6 flex items-center space-x-2">
+            <AppLogo />
           </Link>
-          <div className="flex-grow">
-             <div className="hidden md:block">
-                <Link href="/home">
-                    <AppLogo width={120} height={30} />
-                </Link>
-             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button size="icon" variant="ghost" asChild>
-                <Link href="/chat">
-                    <MessageSquare className="h-5 w-5" />
-                    <span className="sr-only">Messages</span>
-                </Link>
-            </Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button size="icon" variant="ghost">
-                    <Bell className="h-5 w-5" />
-                    <span className="sr-only">Notifications</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 p-0" align="end">
-                <NotificationsPopover />
-              </PopoverContent>
-            </Popover>
-            <ThemeToggle />
-            {user ? (
-              <>
-               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                     <Avatar className="h-8 w-8">
-                       <AvatarImage src={user.photoURL ?? undefined} />
-                       <AvatarFallback>{user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}</AvatarFallback>
-                     </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push('/profile')}>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/bookings')}>
-                    <Bell className="mr-2 h-4 w-4" />
-                    <span>Bookings</span>
-                  </DropdownMenuItem>
-                   <DropdownMenuItem onClick={() => router.push('/chat')}>
-                    <MessageSquare className="mr-2 h-4 w-4" />
-                    <span>Messages</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              </>
-            ) : null}
-          </div>
+          <HeaderNavigation />
         </div>
-
-        {(isHomePage || isExplorePage) && (
-           <div className="w-full flex flex-col gap-4">
-             {isHomePage && (
-                <div className={cn(
-                    "w-full transition-all duration-300 ease-in-out overflow-hidden",
-                    isScrolled ? "h-0 opacity-0" : "h-16 opacity-100"
-                )}>
-                    <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12 border">
-                            <AvatarImage src={user?.photoURL ?? undefined} />
-                            <AvatarFallback>{user?.displayName?.[0] || 'G'}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <h2 className="font-semibold text-lg">Welcome, {user?.displayName?.split(' ')[0] || 'Guest'}!</h2>
-                            <div className="flex items-center text-muted-foreground text-sm">
-                                <MapPin className="w-4 h-4 mr-1" />
-                                <span>New York, NY (Current)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-             )}
-             <div className="relative w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
+        
+        <div className="relative flex-1">
+          {!isHomePage && (
+              <>
+                 <Input
                     type="search"
-                    placeholder="Search venues, caterers, and more..."
-                    className="w-full rounded-full bg-muted pl-12 h-14 text-base shadow-sm focus-visible:ring-primary"
+                    placeholder="Search..."
+                    className="h-9"
                     value={searchQuery}
                     onChange={handleSearchChange}
                     onKeyDown={handleSearchSubmit}
                     onFocus={handleSearchChange}
                 />
-            </div>
-           </div>
-        )}
+                {showResults && <SearchResults results={searchResults} />}
+              </>
+          )}
+        </div>
+        
+        <div className="flex flex-1 items-center justify-end space-x-2">
+           <Popover>
+            <PopoverTrigger asChild>
+              <Button size="icon" variant="ghost">
+                  <Bell className="h-5 w-5" />
+                  <span className="sr-only">Notifications</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-0" align="end">
+              <NotificationsPopover />
+            </PopoverContent>
+           </Popover>
+          <Button size="icon" variant="ghost" asChild>
+            <Link href="/chat">
+                <MessageSquare className="h-5 w-5" />
+                <span className="sr-only">Messages</span>
+            </Link>
+          </Button>
+          <ThemeToggle />
+          {user ? (
+            <>
+             <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                   <Avatar className="h-8 w-8">
+                     <AvatarImage src={user.photoURL ?? undefined} />
+                     <AvatarFallback>{user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}</AvatarFallback>
+                   </Avatar>
+                 </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push('/profile')}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/bookings')}>
+                  <Bell className="mr-2 h-4 w-4" />
+                  <span>Bookings</span>
+                </DropdownMenuItem>
+                 <DropdownMenuItem onClick={() => router.push('/chat')}>
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  <span>Messages</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            </>
+          ) : (
+            <Button asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+          )}
+        </div>
       </div>
+       {isHomePage && (
+         <div className="container pb-4">
+             <div className="relative mt-2">
+                 <Input
+                    type="search"
+                    placeholder="Search for venues, catering, and more..."
+                    className="w-full h-12 rounded-full bg-muted pl-10"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    onKeyDown={handleSearchSubmit}
+                    onFocus={handleSearchChange}
+                />
+                {showResults && <SearchResults results={searchResults} />}
+             </div>
+        </div>
+      )}
     </header>
   );
 }
