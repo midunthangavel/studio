@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Bell, LogOut, User, MessageSquare } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { AppLogo } from "./app-logo";
+import { AppLogo } from "@/components/shared/app-logo";
 import { useAuth } from "@/context/auth-context";
 import { auth } from "@/lib/firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,18 +21,35 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ThemeToggle } from "./theme-toggle";
 import { Input } from "@/components/ui/input";
 import { HeaderNavigation } from "./header-navigation";
-import { SearchResults } from "./search-results";
 import { useEffect, useState } from "react";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
 import { NotificationsPopover } from "./notifications-popover";
 
+function SearchResults({ results }: { results: (VenueCardProps & { category: string; })[] }) {
+    if (results.length === 0) return null;
+    return (
+        <div className="absolute top-full left-0 w-full bg-background border rounded-lg mt-2 shadow-lg z-50 max-h-96 overflow-y-auto">
+            <ul className="divide-y">
+                {results.map(item => (
+                    <li key={item.slug}>
+                        <Link href={`/venues/${item.slug}`} className="block p-4 hover:bg-muted">
+                            <h4 className="font-semibold">{item.name}</h4>
+                            <p className="text-sm text-muted-foreground">{item.location} - <span className="text-primary">{item.category}</span></p>
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
 
 export function Header() {
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/home';
+  const isSearchPage = pathname === '/search';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
@@ -89,7 +106,7 @@ export function Header() {
         </div>
         
         <div className="relative flex-1">
-          {!isHomePage && (
+          {(!isHomePage && !isSearchPage) && (
               <>
                  <Input
                     type="search"
@@ -165,7 +182,7 @@ export function Header() {
           )}
         </div>
       </div>
-       {isHomePage && (
+       {(isHomePage || isSearchPage) && (
          <div className="container pb-4">
              <div className="relative mt-2">
                  <Input
