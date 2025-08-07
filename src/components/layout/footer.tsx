@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import {
   Heart,
   User,
-  LogIn,
   Home,
   LayoutGrid,
   Sparkles
@@ -41,7 +40,7 @@ export function Footer() {
     {
       name: 'Account',
       href: user ? '/profile' : '/login',
-      icon: user ? User : LogIn,
+      icon: User,
     },
   ];
 
