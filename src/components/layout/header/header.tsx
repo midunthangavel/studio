@@ -33,6 +33,7 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/home';
+  const isExplorePage = pathname === '/search';
   
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
@@ -107,26 +108,9 @@ export function Header() {
           </Link>
           <div className="flex-grow">
              <div className="hidden md:block">
-                {!isHomePage && (
-                     <div className="relative w-full max-w-md">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                        <Input
-                            type="search"
-                            placeholder="Search venues, caterers, and more..."
-                            className="w-full rounded-full bg-muted pl-12 h-10 text-base"
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                            onKeyDown={handleSearchSubmit}
-                        />
-                         {showResults && !isHomePage && (
-                            <SearchResults 
-                                results={searchResults} 
-                                query={searchQuery}
-                                onClose={() => setShowResults(false)} 
-                            />
-                        )}
-                    </div>
-                )}
+                <Link href="/home">
+                    <AppLogo className="text-2xl" />
+                </Link>
              </div>
           </div>
           <div className="flex items-center gap-2">
@@ -186,26 +170,28 @@ export function Header() {
           </div>
         </div>
 
-        {isHomePage && (
+        {(isHomePage || isExplorePage) && (
            <div className="w-full flex flex-col gap-4">
-             <div className={cn(
-                "w-full transition-all duration-300 ease-in-out overflow-hidden",
-                isScrolled ? "h-0 opacity-0" : "h-16 opacity-100"
-              )}>
-                 <div className="flex items-center gap-3">
-                    <Avatar className="h-12 w-12 border">
-                        <AvatarImage src={user?.photoURL ?? undefined} />
-                        <AvatarFallback>{user?.displayName?.[0] || 'G'}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                        <h2 className="font-semibold text-lg">Welcome, {user?.displayName?.split(' ')[0] || 'Guest'}!</h2>
-                        <div className="flex items-center text-muted-foreground text-sm">
-                            <MapPin className="w-4 h-4 mr-1" />
-                            <span>New York, NY (Current)</span>
+             {isHomePage && (
+                <div className={cn(
+                    "w-full transition-all duration-300 ease-in-out overflow-hidden",
+                    isScrolled ? "h-0 opacity-0" : "h-16 opacity-100"
+                )}>
+                    <div className="flex items-center gap-3">
+                        <Avatar className="h-12 w-12 border">
+                            <AvatarImage src={user?.photoURL ?? undefined} />
+                            <AvatarFallback>{user?.displayName?.[0] || 'G'}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <h2 className="font-semibold text-lg">Welcome, {user?.displayName?.split(' ')[0] || 'Guest'}!</h2>
+                            <div className="flex items-center text-muted-foreground text-sm">
+                                <MapPin className="w-4 h-4 mr-1" />
+                                <span>New York, NY (Current)</span>
+                            </div>
                         </div>
                     </div>
-                 </div>
-             </div>
+                </div>
+             )}
              <div className="relative w-full">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
