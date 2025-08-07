@@ -30,7 +30,8 @@ import {
   Sparkles,
   Loader,
 } from 'lucide-react';
-import { suggestEventIdeas, SuggestEventIdeasOutput } from '@/ai/flows/suggest-event-ideas';
+import { suggestEventIdeas } from '@/ai/flows/suggest-event-ideas';
+import type { SuggestEventIdeasOutput } from '@/ai/flows/suggest-event-ideas.types';
 import { Separator } from '@/components/ui/separator';
 import { PageWrapper } from '@/components/shared/page-wrapper';
 import { useToast } from '@/hooks/use-toast';
