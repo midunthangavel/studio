@@ -40,7 +40,7 @@ export function SearchPageClient({ searchResults, hasSearched }: { searchResults
                             </Sheet>
                         </div>
                     </div>
-                    {hasSearched ? (
+                    {searchResults.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {searchResults.map((item) => {
                                 const favorited = isFavorited(item.slug);

@@ -9,8 +9,9 @@ export default function SearchPage({ searchParams }: { searchParams: { [key: str
   const query = searchParams?.q as string | undefined;
 
   let searchResults: (VenueCardProps & { category: string; })[] = [];
+  const hasSearched = !!query;
 
-  if (query) {
+  if (hasSearched) {
     searchResults = allVenues.filter(venue => 
       venue.name.toLowerCase().includes(query.toLowerCase()) ||
       venue.location.toLowerCase().includes(query.toLowerCase()) ||
@@ -18,5 +19,5 @@ export default function SearchPage({ searchParams }: { searchParams: { [key: str
     );
   }
 
-  return <SearchPageClient searchResults={searchResults} hasSearched={!!query} />;
+  return <SearchPageClient searchResults={searchResults} hasSearched={hasSearched} />;
 }

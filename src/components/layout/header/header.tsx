@@ -40,7 +40,7 @@ export function Header() {
     router.push('/login');
   };
 
-  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: React.FormEvent<HTMLInputElement>) => {
     const query = e.currentTarget.value;
     setSearchQuery(query);
 
@@ -96,7 +96,7 @@ export function Header() {
                             placeholder="Search venues, caterers, and more..."
                             className="w-full rounded-full bg-muted pl-12 h-10 text-base"
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onChange={handleSearchChange}
                             onKeyDown={handleSearchSubmit}
                         />
                     </div>
@@ -165,10 +165,10 @@ export function Header() {
             <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12 border">
                     <AvatarImage src={user?.photoURL ?? undefined} />
-                    <AvatarFallback>{user?.displayName?.[0] || user?.email?.[0]}</AvatarFallback>
+                    <AvatarFallback>{user?.displayName?.[0] || 'G'}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <h2 className="font-semibold text-lg">Welcome, {user?.displayName?.split(' ')[0] || 'User'}!</h2>
+                    <h2 className="font-semibold text-lg">Welcome, {user?.displayName?.split(' ')[0] || 'Guest'}!</h2>
                     <div className="flex items-center text-muted-foreground text-sm">
                         <MapPin className="w-4 h-4 mr-1" />
                         <span>New York, NY (Current)</span>
@@ -182,9 +182,9 @@ export function Header() {
                     placeholder="Search venues, caterers, and more..."
                     className="w-full rounded-full bg-muted pl-12 h-14 text-base shadow-sm focus-visible:ring-primary"
                     value={searchQuery}
-                    onChange={handleSearch}
+                    onChange={handleSearchChange}
                     onKeyDown={handleSearchSubmit}
-                    onFocus={handleSearch}
+                    onFocus={handleSearchChange}
                 />
                  {showResults && (
                     <SearchResults 

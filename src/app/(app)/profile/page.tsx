@@ -109,7 +109,7 @@ export default function AccountPage() {
   return (
     <ProtectedRoute>
       <div className="bg-muted/40 pb-20">
-        {user && (
+        {user ? (
           <div className="relative h-40 bg-primary/20 p-4 flex items-end text-primary-foreground">
             <Image 
                 src="https://placehold.co/600x400/7A90E7/FFFFFF"
@@ -125,6 +125,22 @@ export default function AccountPage() {
                 <p className='text-xs mt-1'>Member since Jun 2024</p>
             </div>
           </div>
+        ) : (
+             <div className="relative h-40 bg-primary/20 p-4 flex items-end text-primary-foreground">
+                <Image 
+                    src="https://placehold.co/600x400/7A90E7/FFFFFF"
+                    alt="Profile background"
+                    layout='fill'
+                    objectFit='cover'
+                    className='opacity-20'
+                    data-ai-hint="abstract background"
+                />
+                <div className="relative z-10">
+                    <h2 className="text-2xl font-bold">Guest User</h2>
+                    <p className="text-sm">guest@example.com</p>
+                    <p className='text-xs mt-1'>Not logged in</p>
+                </div>
+            </div>
         )}
         
         <LanguageSwitcher />
