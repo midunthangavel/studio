@@ -39,7 +39,7 @@ export function Footer() {
     },
     {
       name: 'Account',
-      href: user ? '/profile' : '/login',
+      href: '/profile',
       icon: User,
     },
   ];
