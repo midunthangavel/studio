@@ -46,6 +46,9 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = () => {
+    // This is a placeholder for the actual Google Sign-In logic
+    // which would typically involve a popup or redirect.
+    // For this mock, we'll just redirect to home.
     router.push('/home');
   };
 
