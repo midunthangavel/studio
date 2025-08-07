@@ -103,12 +103,12 @@ export function Header() {
         {/* Top: Logo & Actions */}
         <div className="flex items-center gap-4">
            <Link href="/home" className="md:hidden">
-                <AppLogo className="text-2xl" />
+                <AppLogo width={120} height={30} />
           </Link>
           <div className="flex-grow">
              <div className="hidden md:block">
                 <Link href="/home">
-                    <AppLogo className="text-2xl" />
+                    <AppLogo width={120} height={30} />
                 </Link>
              </div>
           </div>

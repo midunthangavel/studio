@@ -1,11 +1,16 @@
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
-export function AppLogo({ className }: { className?: string }) {
+export function AppLogo({ width, height, className }: { width: number; height: number; className?: string }) {
   return (
-    <h1 className={cn("font-bold font-headline", className)}>
-      <span className="text-primary">Fixmy</span>
-      <span className="text-accent">Event</span>
-    </h1>
+    <Image
+        src="/images/logo.png"
+        alt="FixmyEvent Logo"
+        width={width}
+        height={height}
+        className={cn("object-contain", className)}
+        priority
+    />
   );
 }
