@@ -15,29 +15,7 @@ import { chat } from '@/ai/flows/chat-flow';
 import { ProtectedRoute } from '@/components/shared/protected-route';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
-
-interface Message {
-  id: string;
-  text: string;
-  senderId: string;
-  timestamp: Timestamp;
-}
-
-interface Conversation {
-    id: string;
-    participants: {
-        [key: string]: {
-            name: string;
-            avatar: string;
-            isAi?: boolean;
-        }
-    };
-    messages: Message[];
-    lastMessage?: {
-        text: string;
-        timestamp: Timestamp;
-    }
-}
+import type { Conversation, Message } from '@/ai/flows/chat.types';
 
 export default function ChatPage() {
   const { user } = useAuth();
@@ -306,5 +284,3 @@ export default function ChatPage() {
     </ProtectedRoute>
   );
 }
-
-    

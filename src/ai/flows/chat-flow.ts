@@ -4,24 +4,18 @@
  * @fileOverview A conversational AI agent for the chat page.
  * 
  * - chat: A function that responds to user messages, with the ability to use tools.
- * - ChatInput: The input type for the chat function.
- * - ChatOutput: The return type for the chat function.
  */
 
 import { ai } from '@/ai/genkit';
-import { suggestEventIdeas, SuggestEventIdeasInput, SuggestEventIdeasOutput } from './suggest-event-ideas';
+import { suggestEventIdeas } from './suggest-event-ideas';
 import { z } from 'zod';
+import { ChatInput, ChatInputSchema, ChatOutput, ChatOutputSchema, SuggestEventIdeasInputSchema } from './chat.types';
 
 const suggestEventIdeasTool = ai.defineTool(
     {
       name: 'suggestEventIdeas',
       description: 'Suggests creative ideas for an event, including theme, decoration, and activity. Use this when the user is asking for inspiration or help planning an event.',
-      inputSchema: z.object({
-        eventType: z.string().describe('The type of event being planned (e.g., Birthday Party, Corporate Gala).'),
-        guestCount: z.number().describe('The estimated number of guests.'),
-        budget: z.number().describe('The total budget for the event.'),
-        additionalInfo: z.string().optional().describe('Any additional information from the user, like hobbies, desired atmosphere, or favorite colors.'),
-      }),
+      inputSchema: SuggestEventIdeasInputSchema,
       outputSchema: z.string().describe('A summary of the suggested ideas.'),
     },
     async (input) => {
@@ -32,15 +26,6 @@ const suggestEventIdeasTool = ai.defineTool(
         Activity: ${ideas.activity}.`;
     }
   );
-
-const ChatInputSchema = z.object({
-    message: z.string(),
-});
-type ChatInput = z.infer<typeof ChatInputSchema>;
-
-const ChatOutputSchema = z.string();
-type ChatOutput = z.infer<typeof ChatOutputSchema>;
-
 
 const chatFlow = ai.defineFlow(
   {
