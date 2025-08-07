@@ -36,7 +36,6 @@ export function Header() {
   const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
   const [showResults, setShowResults] = useState(false);
   
-  // State for scroll behavior
   const [isScrolled, setIsScrolled] = useState(false);
   const lastScrollY = useRef(0);
 
@@ -71,38 +70,28 @@ export function Header() {
     }
   }
 
-  // Effect to handle scroll detection
   useEffect(() => {
-    if (!isHomePage) return;
+    if (!isHomePage) {
+        setIsScrolled(false);
+        return;
+    };
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const scrollThreshold = 50; // Only trigger after 50px of scrolling
-
-      if (Math.abs(currentScrollY - lastScrollY.current) < scrollThreshold) {
-        return;
-      }
-      
-      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-        setIsScrolled(true); // Scrolling down
+       if (currentScrollY > 100) {
+        setIsScrolled(true); 
       } else {
-        setIsScrolled(false); // Scrolling up
+        setIsScrolled(false); 
       }
-
       lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [isHomePage]);
 
-  // Effect to close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // Check if the click is outside the header
       if ((event.target as Element).closest('header')) return;
       setShowResults(false);
     };
@@ -121,7 +110,6 @@ export function Header() {
           </Link>
           <div className="flex-grow">
              <div className="hidden md:block">
-                {/* Desktop: Show search bar if not home page */}
                 {!isHomePage && (
                      <div className="relative w-full max-w-md">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -133,6 +121,13 @@ export function Header() {
                             onChange={handleSearchChange}
                             onKeyDown={handleSearchSubmit}
                         />
+                         {showResults && !isHomePage && (
+                            <SearchResults 
+                                results={searchResults} 
+                                query={searchQuery}
+                                onClose={() => setShowResults(false)} 
+                            />
+                        )}
                     </div>
                 )}
              </div>
@@ -193,14 +188,13 @@ export function Header() {
           </div>
         </div>
 
-        {/* Home Page Header Content */}
         {isHomePage && (
-           <div className="w-full overflow-hidden">
+           <div className="w-full flex flex-col gap-4">
              <div className={cn(
-                "transition-transform duration-300 ease-in-out",
-                isScrolled ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
+                "w-full transition-all duration-300 ease-in-out overflow-hidden",
+                isScrolled ? "h-0 opacity-0" : "h-16 opacity-100"
               )}>
-                 <div className="flex items-center gap-3 mb-4">
+                 <div className="flex items-center gap-3">
                     <Avatar className="h-12 w-12 border">
                         <AvatarImage src={user?.photoURL ?? undefined} />
                         <AvatarFallback>{user?.displayName?.[0] || 'G'}</AvatarFallback>
