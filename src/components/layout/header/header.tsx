@@ -19,7 +19,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "./theme-toggle";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { allVenues } from "@/lib/venues";
+import type { VenueCardProps } from "@/components/venue-card";
+import { SearchResults } from "@/components/home/search-results";
 
 
 export function Header() {
@@ -27,18 +30,52 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/home';
+  
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
+  const [showResults, setShowResults] = useState(false);
 
   const handleLogout = async () => {
     await auth.signOut();
     router.push('/login');
   };
 
-  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchQuery.trim() !== '') {
-        router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+    const query = e.currentTarget.value;
+    setSearchQuery(query);
+
+    if (query.trim() !== '') {
+        const results = allVenues.filter(venue => 
+            venue.name.toLowerCase().includes(query.toLowerCase()) ||
+            venue.location.toLowerCase().includes(query.toLowerCase()) ||
+            venue.category.toLowerCase().includes(query.toLowerCase())
+        );
+        setSearchResults(results);
+        setShowResults(true);
+    } else {
+        setSearchResults([]);
+        setShowResults(false);
     }
   }
+
+  const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery.trim() !== '') {
+        router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+        setShowResults(false);
+    }
+  }
+
+  // Effect to close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Check if the click is outside the header
+      if ((event.target as Element).closest('header')) return;
+      setShowResults(false);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
@@ -60,7 +97,7 @@ export function Header() {
                             className="w-full rounded-full bg-muted pl-12 h-10 text-base"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={handleSearch}
+                            onKeyDown={handleSearchSubmit}
                         />
                     </div>
                 )}
@@ -145,9 +182,17 @@ export function Header() {
                     placeholder="Search venues, caterers, and more..."
                     className="w-full rounded-full bg-muted pl-12 h-14 text-base shadow-sm focus-visible:ring-primary"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={handleSearch}
+                    onChange={handleSearch}
+                    onKeyDown={handleSearchSubmit}
+                    onFocus={handleSearch}
                 />
+                 {showResults && (
+                    <SearchResults 
+                        results={searchResults} 
+                        query={searchQuery}
+                        onClose={() => setShowResults(false)} 
+                    />
+                )}
             </div>
            </div>
         )}
