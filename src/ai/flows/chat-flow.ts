@@ -33,13 +33,13 @@ const suggestEventIdeasTool = ai.defineTool(
     }
   );
 
-export const ChatInputSchema = z.object({
+const ChatInputSchema = z.object({
     message: z.string(),
 });
-export type ChatInput = z.infer<typeof ChatInputSchema>;
+type ChatInput = z.infer<typeof ChatInputSchema>;
 
-export const ChatOutputSchema = z.string();
-export type ChatOutput = z.infer<typeof ChatOutputSchema>;
+const ChatOutputSchema = z.string();
+type ChatOutput = z.infer<typeof ChatOutputSchema>;
 
 
 const chatFlow = ai.defineFlow(
