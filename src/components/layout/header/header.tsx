@@ -17,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ThemeToggle } from "./theme-toggle";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState, useRef } from "react";
@@ -24,6 +25,7 @@ import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
 import { SearchResults } from "@/components/home/search-results";
 import { cn } from "@/lib/utils";
+import { NotificationsPopover } from "./notifications-popover";
 
 
 export function Header() {
@@ -134,12 +136,17 @@ export function Header() {
                     <span className="sr-only">Messages</span>
                 </Link>
             </Button>
-            <Button size="icon" variant="ghost" asChild>
-                <Link href="/notifications">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button size="icon" variant="ghost">
                     <Bell className="h-5 w-5" />
                     <span className="sr-only">Notifications</span>
-                </Link>
-            </Button>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0" align="end">
+                <NotificationsPopover />
+              </PopoverContent>
+            </Popover>
             <ThemeToggle />
             {user ? (
               <>
