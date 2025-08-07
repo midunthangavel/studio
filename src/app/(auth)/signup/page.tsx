@@ -53,7 +53,7 @@ export default function SignupPage() {
   return (
     <div className="flex flex-col h-screen bg-background p-6">
       <div className="flex items-center mb-8">
-        <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
+        <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.push('/')}>
             <ArrowLeft />
         </Button>
       </div>

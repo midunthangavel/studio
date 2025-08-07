@@ -24,7 +24,7 @@ export function Footer() {
       icon: Home,
     },
     {
-      name: 'Categories',
+      name: 'Explore',
       href: '/search',
       icon: LayoutGrid,
     },
@@ -45,8 +45,13 @@ export function Footer() {
     },
   ];
 
+  // Hide footer on auth pages
+  if (pathname === '/login' || pathname === '/signup' || pathname === '/') {
+    return null;
+  }
+
   return (
-    <footer className="fixed bottom-0 left-0 z-50 w-full h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden">
+    <footer className="fixed bottom-0 left-0 z-50 w-full h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container grid h-full max-w-lg grid-cols-5 items-center justify-around">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);

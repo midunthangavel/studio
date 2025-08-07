@@ -87,11 +87,11 @@ function BookingsPage() {
             {upcomingBookings.length > 0 ? (
                 upcomingBookings.map(booking => (
                     <Card key={booking.id}>
-                        <div className="grid grid-cols-1 md:grid-cols-3">
-                            <div className="md:col-span-1">
-                                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+                        <div className="grid grid-cols-1">
+                            <div>
+                                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg" data-ai-hint={booking.venueHint} />
                             </div>
-                            <div className="md:col-span-2">
+                            <div>
                                 <CardHeader>
                                     <div className="flex justify-between items-start">
                                         <div>
@@ -139,11 +139,11 @@ function BookingsPage() {
             {pastBookings.length > 0 ? (
                 pastBookings.map(booking => (
                     <Card key={booking.id} className="opacity-70">
-                        <div className="grid grid-cols-1 md:grid-cols-3">
-                            <div className="md:col-span-1">
-                                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+                        <div className="grid grid-cols-1">
+                            <div>
+                                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg" data-ai-hint={booking.venueHint} />
                             </div>
-                            <div className="md:col-span-2">
+                            <div>
                                 <CardHeader>
                                     <div className="flex justify-between items-start">
                                         <div>

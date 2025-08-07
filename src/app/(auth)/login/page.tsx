@@ -55,7 +55,7 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col h-screen bg-background">
         <div className="p-6">
-            <Button variant="ghost" size="icon" onClick={() => router.back()}>
+            <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
                 <ArrowLeft />
             </Button>
         </div>

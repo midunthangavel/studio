@@ -4,7 +4,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Bell, LogOut, User, MessageSquare, MapPin, Search } from "lucide-react";
-import { HeaderNavigation } from "./header-navigation";
 import { usePathname, useRouter } from "next/navigation";
 import { AppLogo } from "@/components/shared/app-logo";
 import { useAuth } from "@/context/auth-context";
@@ -38,7 +37,7 @@ export function Header() {
       <div className="container flex h-auto flex-col justify-center gap-4 py-3">
         {/* Top: Search Bar & Actions */}
         <div className="flex items-center gap-4">
-           <Link href="/home" className="hidden md:block">
+           <Link href="/home" className="md:hidden">
                 <AppLogo className="text-2xl" />
           </Link>
           <div className="flex-grow">
@@ -57,9 +56,6 @@ export function Header() {
              </div>
           </div>
           <div className="flex items-center gap-2">
-             <Button variant="ghost" asChild className="hidden md:inline-flex">
-                <Link href="#">Become a host</Link>
-            </Button>
             <ThemeToggle />
             {user ? (
               <>
@@ -141,11 +137,6 @@ export function Header() {
             </div>
            </div>
         )}
-
-        {/* Bottom: Navigation */}
-        <div className="hidden md:flex md:justify-center">
-            <HeaderNavigation />
-        </div>
       </div>
     </header>
   );

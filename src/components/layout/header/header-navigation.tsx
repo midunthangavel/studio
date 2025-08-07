@@ -48,7 +48,7 @@ export function HeaderNavigation() {
     }
 
     return (
-        <nav className="flex justify-center items-center gap-10 text-sm">
+        <nav className="hidden justify-center items-center gap-10 text-sm">
             {categories.map((category) => {
                 const isActive = pathname === category.href;
                 return (

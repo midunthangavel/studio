@@ -3,7 +3,6 @@
 
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { ListFilter, Heart } from "lucide-react";
 import { VenueCard, VenueCardProps } from '@/components/venue-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -16,24 +15,14 @@ export function SearchPageClient({ searchResults }: { searchResults: (VenueCardP
 
     return (
         <div className="container mx-auto px-4 py-12">
-             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                {/* Desktop Filters */}
-                <aside className="hidden lg:block col-span-1">
-                    <Card className="sticky top-24">
-                        <CardContent className="p-6">
-                            <h3 className="text-lg font-semibold mb-4">Filters</h3>
-                             <Filters />
-                        </CardContent>
-                    </Card>
-                </aside>
-                {/* Search Results */}
-                <main className='lg:col-span-3'>
+             <div className="grid grid-cols-1 gap-8">
+                <main>
                     <div className='flex justify-between items-center mb-6'>
                         <div>
                             <h1 className="text-3xl font-bold font-headline">Search Results</h1>
-                            <p className="text-muted-foreground">Showing {searchResults.length} results for your special day.</p>
+                            <p className="text-muted-foreground">Showing {searchResults.length} results.</p>
                         </div>
-                        <div className="lg:hidden">
+                        <div>
                             <Sheet>
                                 <SheetTrigger asChild>
                                     <Button variant="outline" size="icon">
@@ -51,7 +40,7 @@ export function SearchPageClient({ searchResults }: { searchResults: (VenueCardP
                             </Sheet>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         {searchResults.map((item) => {
                             const favorited = isFavorited(item.slug);
                             return (

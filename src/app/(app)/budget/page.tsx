@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Loader, PlusCircle, Trash2, Wallet } from 'lucide-react';
 import { ProtectedRoute } from '@/components/shared/protected-route';
 import { useToast } from '@/hooks/use-toast';
@@ -123,7 +122,7 @@ export default function BudgetPage() {
                                 />
                             </div>
                         </CardHeader>
-                        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <CardContent className="grid grid-cols-2 gap-4">
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="text-lg">Total Spent</CardTitle>
@@ -140,7 +139,7 @@ export default function BudgetPage() {
                                     </CardDescription>
                                 </CardHeader>
                             </Card>
-                            <div className="md:col-span-3">
+                            <div className="col-span-2">
                                 <Progress value={spentPercentage} className="w-full" />
                                 <p className="text-sm text-muted-foreground mt-2 text-center">{spentPercentage.toFixed(0)}% of budget used</p>
                             </div>
@@ -153,54 +152,7 @@ export default function BudgetPage() {
                             <CardDescription>Add and manage your expense items.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {/* Desktop Table View */}
-                            <div className="hidden md:block">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Item</TableHead>
-                                            <TableHead>Category</TableHead>
-                                            <TableHead className="text-right">Amount ($)</TableHead>
-                                            <TableHead className="w-[50px]"></TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {fields.map((field, index) => (
-                                            <TableRow key={field.id}>
-                                                <TableCell>
-                                                    <Input {...form.register(`expenses.${index}.name`)} />
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Select
-                                                        onValueChange={(value) => update(index, { ...field, category: value })}
-                                                        defaultValue={field.category}
-                                                    >
-                                                        <SelectTrigger>
-                                                            <SelectValue placeholder="Category" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {expenseCategories.map(cat => (
-                                                                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Input type="number" {...form.register(`expenses.${index}.amount`)} className="text-right" />
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
-                                                        <Trash2 className="h-4 w-4 text-destructive" />
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </div>
-
-                            {/* Mobile Card View */}
-                            <div className="md:hidden space-y-4">
+                            <div className="space-y-4">
                                 {fields.map((field, index) => (
                                     <Card key={field.id} className="p-4 space-y-4">
                                         <div className="flex justify-between items-start mb-2">
