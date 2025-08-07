@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { ListFilter, Heart, Search, Hotel, PartyPopper, ChefHat, Video, CarFront, ScrollText, Disc3, Mailbox, ClipboardUser } from "lucide-react";
+import { ListFilter, Heart, Search, Hotel, PartyPopper, ChefHat, Video, CarFront, ScrollText, Disc3, Mailbox, ClipboardList } from "lucide-react";
 import { VenueCard, VenueCardProps } from '@/components/venue-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useFavorites } from '@/context/favorites-context';
@@ -20,7 +20,7 @@ const categories = [
     { name: "Legal", icon: ScrollText, query: "legal" },
     { name: "Music/DJ", icon: Disc3, query: "music" },
     { name: "Invitations", icon: Mailbox, query: "invitations" },
-    { name: "Event Planners", icon: ClipboardUser, query: "planner" },
+    { name: "Event Planners", icon: ClipboardList, query: "planner" },
 ];
 
 const CategoryGrid = () => (
