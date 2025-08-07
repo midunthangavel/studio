@@ -1,4 +1,3 @@
-
 # VenueVoyager Application Flowchart
 
 This document outlines the user flow and architecture of the VenueVoyager application.
