@@ -117,7 +117,7 @@ export default function AccountPage() {
                 alt="Profile background"
                 layout='fill'
                 objectFit='cover'
-                className='opacity-20'
+                className='opacity-10'
                 data-ai-hint="mountain landscape"
             />
             <div className="relative z-10">
@@ -133,7 +133,7 @@ export default function AccountPage() {
                     alt="Profile background"
                     layout='fill'
                     objectFit='cover'
-                    className='opacity-20'
+                    className='opacity-10'
                     data-ai-hint="mountain landscape"
                 />
                 <div className="relative z-10">
