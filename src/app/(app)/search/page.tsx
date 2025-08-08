@@ -18,9 +18,12 @@ function SearchFallback() {
 }
 
 function performSearch(searchParams: SearchParams): (VenueCardProps & { category: string; })[] {
-  const { q, location, category, minPrice, maxPrice } = searchParams;
+  const q = searchParams.q;
+  const location = searchParams.location;
+  const category = searchParams.category;
+  const minPrice = searchParams.minPrice;
+  const maxPrice = searchParams.maxPrice;
   
-  // Instead of Object.keys(), check for at least one relevant search parameter.
   const hasSearched = q || location || category || minPrice || maxPrice;
 
   if (!hasSearched) {
