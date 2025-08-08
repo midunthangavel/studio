@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader, ArrowLeft, User, Mail, Lock } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { AppLogo } from '@/components/shared/app-logo';
 
 export default function SignupPage() {
   const [name, setName] = useState('');
@@ -51,18 +52,24 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background p-6">
-      <div className="flex items-center mb-8">
-        <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.push('/')}>
+    <div className="flex flex-col h-screen bg-gradient-to-br from-red-200 via-yellow-200 to-orange-200 p-6">
+      <div className="absolute top-4 left-4 z-10">
+        <Button variant="ghost" size="icon" onClick={() => router.push('/')} className="bg-background/20 hover:bg-background/40">
             <ArrowLeft />
         </Button>
       </div>
 
-      <div className="flex-1 flex flex-col justify-center">
-        <h1 className="text-3xl font-bold font-headline mb-2">First, tell us about you</h1>
-        <p className="text-muted-foreground mb-8">
-            Create an account to get all features
-        </p>
+      <div className="flex-1 flex flex-col justify-center items-center text-center">
+         <AppLogo width={160} height={80} />
+      </div>
+
+      <div className="bg-background/50 backdrop-blur-sm p-6 rounded-2xl space-y-4">
+        <div className='text-left mb-4'>
+            <h1 className="text-2xl font-bold font-headline">Create your Account</h1>
+            <p className="text-muted-foreground">
+                Let's get started with a free account.
+            </p>
+        </div>
         
         <form onSubmit={handleSignUp} className="space-y-4">
            <div className="relative">
@@ -110,16 +117,13 @@ export default function SignupPage() {
                 {loading ? <Loader className="animate-spin" /> : 'Create Account'}
             </Button>
         </form>
-      </div>
-
-       <div className="pt-8">
-            <p className="text-center text-muted-foreground text-sm mt-6">
+         <p className="text-center text-muted-foreground text-sm mt-6">
                 Already have an account?{" "}
                 <Link href="/login" className="underline font-semibold text-primary">
                 Login
                 </Link>
             </p>
-       </div>
+      </div>
     </div>
   );
 }

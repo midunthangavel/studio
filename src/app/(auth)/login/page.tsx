@@ -54,28 +54,30 @@ export default function LoginPage() {
   
   return (
     <>
-      <div className="flex flex-col h-screen bg-background">
-          <div className="p-6">
-              <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
+      <div className="flex flex-col h-screen bg-gradient-to-br from-red-200 via-yellow-200 to-orange-200 p-6">
+          <div className="absolute top-4 left-4 z-10">
+              <Button variant="ghost" size="icon" onClick={() => router.push('/')} className="bg-background/20 hover:bg-background/40">
                   <ArrowLeft />
               </Button>
           </div>
           
-        <div className="flex-1 flex flex-col justify-center p-6">
+        <div className="flex-1 flex flex-col justify-center items-center text-center">
               <div 
                   className="mb-6"
               >
                 <AppLogo width={160} height={80} />
               </div>
-              <h1 className="text-3xl font-bold font-headline mb-2">Welcome Back</h1>
-              <p className="text-muted-foreground mb-8">Login to your account</p>
-
+              <h1 className="text-3xl font-bold font-headline mb-2 text-foreground">Welcome Back</h1>
+              <p className="text-foreground/80 mb-8">Login to your account</p>
+        </div>
+        
+        <div className="bg-background/50 backdrop-blur-sm p-6 rounded-2xl space-y-4">
           <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-2 text-left">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 text-left">
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
@@ -83,10 +85,7 @@ export default function LoginPage() {
               {loading ? <Loader className="animate-spin" /> : 'Sign in'}
             </Button>
           </form>
-        </div>
-        
-        <div className="p-6 pt-8">
-            <div className="flex items-center space-x-2 my-4">
+            <div className="flex items-center space-x-2">
                 <Separator className="flex-grow" />
                 <span className="text-xs text-muted-foreground">OR</span>
                 <Separator className="flex-grow" />
