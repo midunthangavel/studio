@@ -113,12 +113,12 @@ export default function AccountPage() {
         {user ? (
           <div className="relative h-32 bg-primary/20 p-4 flex items-end text-primary-foreground">
             <Image 
-                src="https://placehold.co/600x400/E77A7A/FFFFFF"
+                src="https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=600&fit=crop"
                 alt="Profile background"
                 layout='fill'
                 objectFit='cover'
                 className='opacity-20'
-                data-ai-hint="abstract background"
+                data-ai-hint="mountain landscape"
             />
             <div className="relative z-10">
                 <h2 className="text-xl font-bold">{user.displayName || 'User'}</h2>
@@ -129,12 +129,12 @@ export default function AccountPage() {
         ) : (
              <div className="relative h-32 bg-primary/20 p-4 flex items-end text-primary-foreground">
                 <Image 
-                    src="https://placehold.co/600x400/E77A7A/FFFFFF"
+                    src="https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=600&fit=crop"
                     alt="Profile background"
                     layout='fill'
                     objectFit='cover'
                     className='opacity-20'
-                    data-ai-hint="abstract background"
+                    data-ai-hint="mountain landscape"
                 />
                 <div className="relative z-10">
                     <h2 className="text-xl font-bold">Guest User</h2>
