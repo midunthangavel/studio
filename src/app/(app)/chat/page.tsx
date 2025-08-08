@@ -185,7 +185,7 @@ export default function ChatPage() {
     return (
         <div className="flex flex-col h-screen bg-muted/30">
             <header className="flex-shrink-0 flex items-center gap-4 p-3 border-b bg-background">
-                <Button variant="ghost" size="icon" onClick={() => setActiveConversation(null)}>
+                <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setActiveConversation(null)}>
                     <ArrowLeft />
                 </Button>
                 <div className='flex items-center gap-3'>
@@ -280,7 +280,22 @@ export default function ChatPage() {
 
   return (
     <ProtectedRoute>
-       {activeConversation ? <ActiveConversation /> : <ConversationList />}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 h-screen">
+        <div className={cn("hidden md:block border-r", activeConversation && "hidden lg:block")}>
+           <ConversationList />
+        </div>
+        <div className={cn("md:col-span-2 lg:col-span-3", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
+           {activeConversation ? (
+                <ActiveConversation />
+            ) : (
+                <div className="text-center">
+                    <MessageSquare className="w-16 h-16 mx-auto text-muted-foreground" />
+                    <h2 className="mt-2 text-xl font-semibold">Select a conversation</h2>
+                    <p className="text-muted-foreground">Start chatting with your vendors and our AI assistant.</p>
+                </div>
+            )}
+        </div>
+      </div>
     </ProtectedRoute>
   );
 }
