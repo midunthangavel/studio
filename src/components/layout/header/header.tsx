@@ -98,49 +98,15 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-16 items-center">
         <div className="flex flex-1 items-center justify-start">
-        {isHomePage && user ? (
-            <div className="flex items-center gap-3">
-                <Link href="/profile">
-                    <Avatar className="h-10 w-10">
-                        <AvatarImage src={user?.photoURL ?? undefined} />
-                        <AvatarFallback>{user?.displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                </Link>
-                <div>
-                    <p className="text-muted-foreground text-sm">Welcome back,</p>
-                    <h2 className="font-bold">{user?.displayName || 'User'}!</h2>
-                </div>
-                <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground ml-4">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    <span>New York, NY</span>
-                </div>
-            </div>
-         ) : (
-             <div className="hidden md:flex items-center">
-              <Link href="/" className="mr-6 flex items-center space-x-2">
-                <AppLogo width={120} height={40} />
+            <div className="flex items-center gap-6">
+              <Link href="/" className="flex items-center space-x-2">
+                <AppLogo />
               </Link>
-              <HeaderNavigation />
+              <div className="hidden md:flex">
+                <HeaderNavigation />
+              </div>
             </div>
-         )}
          </div>
-
-        <div className="relative flex-1 hidden md:block mx-4">
-          {!isHomePage && (
-              <>
-                 <Input
-                    type="search"
-                    placeholder="Search..."
-                    className="h-9"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    onKeyDown={handleSearchSubmit}
-                    onFocus={handleSearchChange}
-                />
-                {showResults && <SearchResults results={searchResults} />}
-              </>
-          )}
-        </div>
         
         <div className="flex flex-shrink-0 items-center justify-end space-x-2">
            <Popover>
@@ -173,7 +139,10 @@ export function Header() {
                  </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                    <p>Welcome!</p>
+                    <p className="font-normal text-sm text-muted-foreground">{user.displayName}</p>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => router.push('/profile')}>
                   <User className="mr-2 h-4 w-4" />

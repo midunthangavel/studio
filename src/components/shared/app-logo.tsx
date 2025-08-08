@@ -7,7 +7,7 @@ interface AppLogoProps {
   className?: string;
 }
 
-export function AppLogo({ width = 120, height = 40, className }: AppLogoProps) {
+export function AppLogo({ width = 100, height = 30, className }: AppLogoProps) {
   return (
     <div className={className}>
       <Image
