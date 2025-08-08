@@ -46,7 +46,7 @@ export function VenueCard({
           alt={name}
           width={600}
           height={400}
-          className={cn("w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300", isCard ? "rounded-xl" : "rounded-t-lg", imageClassName)}
+          className={cn("w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 rounded-xl", imageClassName)}
           data-ai-hint={hint}
         />
         {guestFavorite && (
@@ -56,7 +56,7 @@ export function VenueCard({
         )}
         {actionButton}
       </div>
-      <CardContent className={cn("p-4", isCard ? "pt-2" : "")}>
+      <CardContent className={cn("p-4", isCard ? "pt-2 px-1" : "")}>
         <div className="flex items-center justify-between">
             <h3 className={cn("font-semibold truncate", isCard ? "text-base": "text-lg")}>{name}</h3>
             {isCard && (

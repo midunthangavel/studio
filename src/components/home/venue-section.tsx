@@ -27,7 +27,7 @@ export const VenueSection = ({ title, venues, moreLink }: { title: string, venue
                         </Button>
                     )}
                 </div>
-                <div className="-mx-4">
+                <div className="-mx-2">
                      <Carousel opts={{
                         align: "start",
                         loop: false,
@@ -37,8 +37,8 @@ export const VenueSection = ({ title, venues, moreLink }: { title: string, venue
                             {venues.map((venue, index) => {
                                 const favorited = isFavorited(venue.slug);
                                 return (
-                                <CarouselItem key={venue.slug} className="basis-4/5 sm:basis-1/2">
-                                    <div className="p-1">
+                                <CarouselItem key={venue.slug} className="basis-4/5 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                                    <div className="p-2">
                                     <Link href={`/venues/${venue.slug}`} passHref>
                                         <VenueCard
                                             {...venue}

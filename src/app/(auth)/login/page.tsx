@@ -75,13 +75,13 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2 text-left">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" />
             </div>
             <div className="space-y-2 text-left">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-12" />
             </div>
-            <Button type="submit" disabled={loading} className="w-full h-12 text-base">
+            <Button type="submit" disabled={loading} className="w-full h-14 text-base">
               {loading ? <Loader className="animate-spin" /> : 'Sign in'}
             </Button>
           </form>
@@ -92,10 +92,10 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-3">
-              <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12 text-base" disabled={loading}>
+              <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-14 text-base" disabled={loading}>
                   <Chrome className="mr-2" /> Continue with Google
               </Button>
-              <Button variant="outline" className="w-full h-12 text-base" disabled>
+              <Button variant="outline" className="w-full h-14 text-base" disabled>
                   <AppleIcon className="mr-2 w-5 h-5" /> Continue with Apple
               </Button>
             </div>
