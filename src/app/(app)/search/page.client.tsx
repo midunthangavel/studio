@@ -10,8 +10,7 @@ import { useFavorites } from '@/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { Filters } from '@/components/search/filters';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import type { SearchParams } from './page';
 
 const categories = [
     { name: "Venues", icon: Building2, query: "venue" },
@@ -25,15 +24,14 @@ const categories = [
     { name: "Event Planners", icon: UserCheck, query: "planner" },
 ];
 
-export function SearchPageClient({ searchResults: initialResults, hasSearched: initialHasSearched }: { searchResults: (VenueCardProps & { category: string })[], hasSearched: boolean }) {
+export function SearchPageClient({ searchResults, searchParams }: { searchResults: (VenueCardProps & { category: string })[], searchParams: SearchParams }) {
     const { isFavorited, toggleFavorite } = useFavorites();
-    const [searchResults, setSearchResults] = useState(initialResults);
-    const [hasSearched, setHasSearched] = useState(initialHasSearched);
+    const hasSearched = Object.keys(searchParams).length > 0;
 
     const CategoryGrid = () => (
         <div className="grid grid-cols-3 gap-4">
             {categories.map(category => (
-                <Link href={`/search?q=${category.query}`} key={category.name}>
+                <Link href={`/search?category=${category.query}`} key={category.name}>
                     <Card className="flex flex-col items-center justify-center p-4 aspect-square text-center hover:bg-muted transition-colors">
                         <category.icon className="w-8 h-8 mb-2 text-primary" />
                         <p className="text-sm font-semibold">{category.name}</p>
@@ -50,7 +48,7 @@ export function SearchPageClient({ searchResults: initialResults, hasSearched: i
                 <aside className="hidden md:block md:col-span-1">
                     <Card className="p-6 sticky top-24">
                        <h2 className="text-lg font-semibold mb-4">Filters</h2>
-                       <Filters />
+                       <Filters searchParams={searchParams} />
                     </Card>
                 </aside>
 
@@ -73,7 +71,10 @@ export function SearchPageClient({ searchResults: initialResults, hasSearched: i
                                         <SheetTitle>Filters</SheetTitle>
                                     </SheetHeader>
                                     <div className="py-4 overflow-y-auto">
-                                        <Filters />
+                                        <Filters searchParams={searchParams} />
+                                    </div>
+                                    <div className='p-4 border-t'>
+                                        <Button className='w-full' form='filters-form-mobile'>Apply Filters</Button>
                                     </div>
                                 </SheetContent>
                             </Sheet>
@@ -107,7 +108,7 @@ export function SearchPageClient({ searchResults: initialResults, hasSearched: i
                                             </Button>
                                         }
                                         >
-                                            <p className='text-sm text-primary font-semibold my-1'>{item.category}</p>
+                                            <p className='text-sm text-primary font-semibold my-1 capitalize'>{item.category}</p>
                                     </VenueCard>
                                 </Link>
                             )})}
@@ -121,7 +122,7 @@ export function SearchPageClient({ searchResults: initialResults, hasSearched: i
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">No Results Found</h3>
                                 <p className="text-muted-foreground">
-                                We couldn't find anything matching your search. Try a different term.
+                                We couldn't find anything matching your search. Try adjusting your filters.
                                 </p>
                             </div>
                         </div>

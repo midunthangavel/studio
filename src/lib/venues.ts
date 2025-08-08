@@ -1,7 +1,7 @@
 
 import { VenueCardProps } from "@/components/venue-card";
 
-export const allVenues: (VenueCardProps & { category: string })[] = [
+export const allVenues: (VenueCardProps & { category: string; priceValue: number; })[] = [
     // Catering Services
     {
         name: "Gourmet Delights Catering",
@@ -10,6 +10,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 150,
         price: "$120/person",
+        priceValue: 120,
         image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "catering food"
@@ -21,6 +22,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 110,
         price: "$150/person",
+        priceValue: 150,
         image: "https://images.unsplash.com/photo-1621996346565-e326e22e3920?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "fine dining"
@@ -32,6 +34,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 200,
         price: "$135/person",
+        priceValue: 135,
         image: "https://images.unsplash.com/photo-1565299543923-37dd37887f2b?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "wedding buffet"
@@ -43,6 +46,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.7,
         reviewCount: 95,
         price: "$110/person",
+        priceValue: 110,
         image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "gourmet salad"
@@ -54,6 +58,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 130,
         price: "$180/person",
+        priceValue: 180,
         image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "restaurant table"
@@ -65,6 +70,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 125,
         price: "$160/person",
+        priceValue: 160,
         image: "https://images.unsplash.com/photo-1517042078839-86a640141639?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "seafood platter"
@@ -76,6 +82,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.6,
         reviewCount: 80,
         price: "$100/person",
+        priceValue: 100,
         image: "https://images.unsplash.com/photo-1506354666786-959d6d497f1a?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "pizza sharing"
@@ -87,6 +94,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 180,
         price: "$140/person",
+        priceValue: 140,
         image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "vegan salad"
@@ -98,6 +106,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 220,
         price: "$50/person",
+        priceValue: 50,
         image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "dessert table"
@@ -109,6 +118,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.7,
         reviewCount: 140,
         price: "$130/person",
+        priceValue: 130,
         image: "https://images.unsplash.com/photo-1559847844-5315695d0464?q=80&w=600&h=400&fit=crop",
         category: "Catering",
         hint: "sushi platter"
@@ -122,6 +132,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 180,
         price: "Starts from $500",
+        priceValue: 500,
         image: "https://images.unsplash.com/photo-1618951012351-38a6a79b21e8?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "luxury car"
@@ -133,6 +144,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 210,
         price: "Starts from $800",
+        priceValue: 800,
         image: "https://images.unsplash.com/photo-1553552575-b4b73b6441d6?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "vintage car"
@@ -144,6 +156,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 150,
         price: "Starts from $350",
+        priceValue: 350,
         image: "https://images.unsplash.com/photo-1527018601622-c43a0a1d4012?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "limousine"
@@ -155,6 +168,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 130,
         price: "Starts from $600",
+        priceValue: 600,
         image: "https://images.unsplash.com/photo-1541443131-27635c6fb584?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "classic car"
@@ -166,6 +180,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.7,
         reviewCount: 90,
         price: "Starts from $450",
+        priceValue: 450,
         image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "party bus"
@@ -177,6 +192,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 115,
         price: "Starts from $550",
+        priceValue: 550,
         image: "https://images.unsplash.com/photo-1599198664923-8636186a8779?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "white car"
@@ -188,6 +204,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.6,
         reviewCount: 75,
         price: "Starts from $400",
+        priceValue: 400,
         image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "sports car"
@@ -199,6 +216,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 190,
         price: "Starts from $700",
+        priceValue: 700,
         image: "https://images.unsplash.com/photo-1532517834468-523e3a478363?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "horse carriage"
@@ -210,6 +228,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.7,
         reviewCount: 100,
         price: "Starts from $300",
+        priceValue: 300,
         image: "https://images.unsplash.com/photo-1570125909232-eb263c186923?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "shuttle bus"
@@ -221,6 +240,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 140,
         price: "Starts from $650",
+        priceValue: 650,
         image: "https://images.unsplash.com/photo-1629822434086-291705b79373?q=80&w=600&h=400&fit=crop",
         category: "Transport",
         hint: "black car"
@@ -234,6 +254,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 220,
         price: "Packages from $2,000",
+        priceValue: 2000,
         image: "https://images.unsplash.com/photo-1579683348053-14b1c5a942ce?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "flower arch"
@@ -245,6 +266,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 250,
         price: "Packages from $3,500",
+        priceValue: 3500,
         image: "https://images.unsplash.com/photo-1520854221256-17452cc6da82?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "wedding table"
@@ -256,6 +278,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 180,
         price: "Packages from $1,800",
+        priceValue: 1800,
         image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "event lighting"
@@ -267,6 +290,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 190,
         price: "Packages from $2,200",
+        priceValue: 2200,
         image: "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "table setting"
@@ -278,6 +302,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.7,
         reviewCount: 140,
         price: "Packages from $1,500",
+        priceValue: 1500,
         image: "https://images.unsplash.com/photo-1550081693-490354b6f585?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "rustic decor"
@@ -289,6 +314,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 280,
         price: "Packages from $3,000",
+        priceValue: 3000,
         image: "https://images.unsplash.com/photo-1554224324-4b51a7e4d583?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "flower arrangement"
@@ -300,6 +326,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 160,
         price: "Packages from $2,800",
+        priceValue: 2800,
         image: "https://images.unsplash.com/photo-1523438885278-83b9e5f935b7?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "wedding decorations"
@@ -311,6 +338,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 210,
         price: "Packages from $4,000",
+        priceValue: 4000,
         image: "https://images.unsplash.com/photo-1567475854498-7a58f4a15a8e?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "wedding centerpiece"
@@ -322,6 +350,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 170,
         price: "Packages from $3,200",
+        priceValue: 3200,
         image: "https://images.unsplash.com/photo-1628198942363-a20a4b4a1f5d?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "wedding mandap"
@@ -333,6 +362,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 195,
         price: "Packages from $2,500",
+        priceValue: 2500,
         image: "https://images.unsplash.com/photo-1519688034509-3f5f3ab4349e?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
         hint: "banquet hall"
@@ -346,6 +376,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 350,
         price: "$4,500",
+        priceValue: 4500,
         image: "https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "wedding photography"
@@ -357,6 +388,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 280,
         price: "$5,000",
+        priceValue: 5000,
         image: "https://images.unsplash.com/photo-1519415943484-2fa1873496d7?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "couple portrait"
@@ -368,6 +400,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 310,
         price: "$6,000",
+        priceValue: 6000,
         image: "https://images.unsplash.com/photo-1515942352-7164a2c35583?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "beach wedding"
@@ -379,6 +412,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 240,
         price: "$4,200",
+        priceValue: 4200,
         image: "https://images.unsplash.com/photo-1545939227-6df15743c498?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "city couple"
@@ -390,6 +424,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 290,
         price: "$4,800",
+        priceValue: 4800,
         image: "https://images.unsplash.com/photo-1523438885278-83b9e5f935b7?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "wedding couple"
@@ -401,6 +436,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.7,
         reviewCount: 200,
         price: "$3,800",
+        priceValue: 3800,
         image: "https://images.unsplash.com/photo-1455853659723-3b0d5ee08c16?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "wedding kiss"
@@ -412,6 +448,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 260,
         price: "$4,400",
+        priceValue: 4400,
         image: "https://images.unsplash.com/photo-1510629763133-13431b5c9247?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "wedding rings"
@@ -423,6 +460,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 220,
         price: "$5,500",
+        priceValue: 5500,
         image: "https://images.unsplash.com/photo-1500051638674-ff996a0ec29e?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "mountain wedding"
@@ -434,6 +472,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.8,
         reviewCount: 230,
         price: "$4,600",
+        priceValue: 4600,
         image: "https://images.unsplash.com/photo-1541258692634-f655e0324823?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "beach couple"
@@ -445,6 +484,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 270,
         price: "$5,200",
+        priceValue: 5200,
         image: "https://images.unsplash.com/photo-1511285560921-5ae97c6abc59?q=80&w=600&h=400&fit=crop",
         category: "Photography",
         hint: "wedding details"
@@ -457,6 +497,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 4.9,
         reviewCount: 180,
         price: "$35/hour per staff",
+        priceValue: 35,
         image: "https://images.unsplash.com/photo-1579782194332-f3a2d83a1f94?q=80&w=600&h=400&fit=crop",
         category: "Event Staff",
         hint: "event staff"
@@ -468,6 +509,7 @@ export const allVenues: (VenueCardProps & { category: string })[] = [
         rating: 5.0,
         reviewCount: 250,
         price: "$50/hour per bartender",
+        priceValue: 50,
         image: "https://images.unsplash.com/photo-1588899756938-a2ea46633ea8?q=80&w=600&h=400&fit=crop",
         category: "Event Staff",
         hint: "bartender"
