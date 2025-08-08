@@ -59,7 +59,7 @@ export default function LoginPage() {
               <div 
                   className="mb-6"
               >
-                <AppLogo width={120} height={60} />
+                <AppLogo width={120} height={30} />
               </div>
               <h1 className="text-2xl font-bold font-headline mb-2 text-foreground">Welcome Back</h1>
               <p className="text-foreground/80 mb-6 max-w-xs text-sm">Enter your credentials to access your account.</p>
@@ -69,13 +69,13 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-3">
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 pl-9" />
+              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-10 pl-9" />
             </div>
              <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 pl-9" placeholder="Password" />
+                <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-10 pl-9" placeholder="Password" />
             </div>
-            <Button type="submit" disabled={loading} className="w-full h-12">
+            <Button type="submit" disabled={loading} className="w-full h-10">
               {loading ? <Loader className="animate-spin" /> : 'Sign in'}
             </Button>
           </form>
@@ -86,11 +86,11 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-3">
-              <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12" disabled={loading}>
+              <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-10" disabled={loading}>
                   <Chrome className="mr-2" /> Continue with Google
               </Button>
             </div>
-            <p className="text-center text-muted-foreground text-sm pt-2">
+            <p className="text-center text-muted-foreground text-xs pt-2">
               Don&apos;t have an account?{" "}
               <Link href="/signup" className="underline font-semibold text-primary">
                 Sign up

@@ -69,7 +69,7 @@ export default function SignupPage() {
 
       <div className="flex-1 flex flex-col justify-center items-center text-center">
          <div className='mb-6'>
-            <AppLogo width={120} height={60} />
+            <AppLogo width={120} height={30} />
          </div>
          <h1 className="text-2xl font-bold font-headline">Create your Account</h1>
          <p className="text-muted-foreground max-w-xs mt-1 text-sm">
@@ -88,7 +88,7 @@ export default function SignupPage() {
                 required 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
-                className="h-12 pl-9"
+                className="h-10 pl-9"
               />
             </div>
           <div className="relative">
@@ -100,7 +100,7 @@ export default function SignupPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12 pl-9"
+              className="h-10 pl-9"
             />
           </div>
           <div className="relative">
@@ -110,7 +110,7 @@ export default function SignupPage() {
                 type="password" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                className="h-12 pl-9"
+                className="h-10 pl-9"
                 placeholder='Password'
                 required
             />
@@ -121,11 +121,11 @@ export default function SignupPage() {
                    By signing up you agree to the <Link href="#" className="font-semibold text-primary">terms of service</Link> and <Link href="#" className="font-semibold text-primary">privacy policy</Link>.
                 </Label>
             </div>
-             <Button type="submit" disabled={loading} className="w-full h-12 !mt-4">
+             <Button type="submit" disabled={loading} className="w-full h-10 !mt-4">
                 {loading ? <Loader className="animate-spin" /> : 'Create Account'}
             </Button>
         </form>
-         <p className="text-center text-muted-foreground text-sm pt-2">
+         <p className="text-center text-muted-foreground text-xs pt-2">
                 Already have an account?{" "}
                 <Link href="/login" className="underline font-semibold text-primary">
                 Login

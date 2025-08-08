@@ -85,8 +85,8 @@ export function Header() {
   }
 
    const handleResultClick = () => {
-    setShowResults(false);
     setSearchQuery('');
+    setShowResults(false);
   };
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export function Header() {
       <div className="container flex h-14 items-center">
         <div className="flex flex-1 items-center justify-start gap-4">
             <Link href="/" className="flex items-center space-x-2">
-                <AppLogo width={80} height={24} />
+                <AppLogo height={20} />
             </Link>
             {!isHomePage && (
                 <div className="relative hidden md:block w-full max-w-xs">

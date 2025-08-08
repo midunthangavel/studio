@@ -24,7 +24,7 @@ export default function WelcomePage() {
         <div 
             className="mb-6" 
         >
-          <AppLogo width={160} height={80} />
+          <AppLogo width={160} height={40} />
         </div>
         
         <h1 className="text-4xl md:text-5xl font-bold font-headline mb-3 text-foreground">
@@ -40,15 +40,15 @@ export default function WelcomePage() {
       </div>
       
       <div className="space-y-3 bg-card/50 backdrop-blur-sm p-3 rounded-xl border">
-        <Button variant="outline" className="w-full h-12" onClick={handleGoogleSignIn}>
+        <Button variant="outline" className="w-full h-10" onClick={handleGoogleSignIn}>
           <Chrome className="mr-2" /> Continue with Google
         </Button>
-         <Button className="w-full h-12" asChild>
+         <Button className="w-full h-10" asChild>
           <Link href="/signup">
             Create an Account
           </Link>
         </Button>
-        <p className="text-center text-muted-foreground text-sm pt-2">
+        <p className="text-center text-muted-foreground text-xs pt-2">
           Already have an account? <Link href="/login" className="font-semibold text-primary">Login</Link>
         </p>
       </div>
