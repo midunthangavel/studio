@@ -8,7 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Search } from "lucide-react";
+import { Search, User, Wifi, UtensilsCrossed, Car } from "lucide-react";
+import { Checkbox } from '../ui/checkbox';
+import { allVenues } from '@/lib/venues';
+
+const allAmenities = [...new Set(allVenues.flatMap(v => v.amenities))];
 
 export const Filters = ({ id }: { id?: string }) => {
     const router = useRouter();
@@ -18,6 +22,9 @@ export const Filters = ({ id }: { id?: string }) => {
     const [location, setLocation] = useState('');
     const [category, setCategory] = useState('');
     const [priceRange, setPriceRange] = useState([0, 30000]);
+    const [guestCapacity, setGuestCapacity] = useState('');
+    const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+
 
     useEffect(() => {
         setKeyword(searchParams.get('q') || '');
@@ -27,7 +34,18 @@ export const Filters = ({ id }: { id?: string }) => {
             Number(searchParams.get('minPrice')) || 0,
             Number(searchParams.get('maxPrice')) || 30000
         ]);
+        setGuestCapacity(searchParams.get('guestCapacity') || '');
+        setSelectedAmenities(searchParams.getAll('amenities'));
+
     }, [searchParams]);
+
+    const handleAmenityChange = (amenity: string) => {
+        setSelectedAmenities(prev => 
+            prev.includes(amenity) 
+                ? prev.filter(a => a !== amenity)
+                : [...prev, amenity]
+        );
+    }
 
     const handleFilterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -37,6 +55,10 @@ export const Filters = ({ id }: { id?: string }) => {
         if (category) params.set('category', category); else params.delete('category');
         if (priceRange[0] > 0) params.set('minPrice', String(priceRange[0])); else params.delete('minPrice');
         if (priceRange[1] < 30000) params.set('maxPrice', String(priceRange[1])); else params.delete('maxPrice');
+        if (guestCapacity) params.set('guestCapacity', guestCapacity); else params.delete('guestCapacity');
+        
+        params.delete('amenities');
+        selectedAmenities.forEach(a => params.append('amenities', a));
         
         router.push(`/search?${params.toString()}`);
     }
@@ -52,6 +74,10 @@ export const Filters = ({ id }: { id?: string }) => {
                 <Input id="location" placeholder="e.g., New York" value={location} onChange={e => setLocation(e.target.value)} />
             </div>
             <div>
+                <Label htmlFor="guestCapacity" className='text-xs'>Guest Capacity</Label>
+                <Input id="guestCapacity" type="number" placeholder="e.g., 50" value={guestCapacity} onChange={e => setGuestCapacity(e.target.value)} />
+            </div>
+            <div>
                 <Label htmlFor="category" className='text-xs'>Service Type</Label>
                 <Select value={category} onValueChange={setCategory}>
                     <SelectTrigger id="category">
@@ -65,6 +91,23 @@ export const Filters = ({ id }: { id?: string }) => {
                         <SelectItem value="event staff">Event Staff</SelectItem>
                     </SelectContent>
                 </Select>
+            </div>
+             <div>
+                <Label className='text-xs mb-2 block'>Amenities</Label>
+                <div className='space-y-2'>
+                    {allAmenities.map(amenity => (
+                         <div key={amenity} className="flex items-center space-x-2">
+                            <Checkbox 
+                                id={`amenity-${amenity}`} 
+                                checked={selectedAmenities.includes(amenity)}
+                                onCheckedChange={() => handleAmenityChange(amenity)}
+                            />
+                            <Label htmlFor={`amenity-${amenity}`} className="text-sm font-normal">
+                                {amenity}
+                            </Label>
+                        </div>
+                    ))}
+                </div>
             </div>
             <div>
                 <Label className='text-xs'>Price Range</Label>

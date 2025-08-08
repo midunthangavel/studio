@@ -3,9 +3,10 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Star, MapPin, Wifi, ParkingSquare, Utensils, Wind, Calendar as CalendarIcon, Heart, Loader, MessageSquare } from 'lucide-react';
-import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/auth-context';
+import { addDays } from 'date-fns';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,40 +18,25 @@ import { Label } from '@/components/ui/label';
 import { useFavorites } from '@/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import type { VenueCardProps } from './venue-card';
-
-const amenities = [
-    { icon: Wifi, text: 'Free Wi-Fi' },
-    { icon: ParkingSquare, text: 'On-site Parking' },
-    { icon: Utensils, text: 'In-house Catering' },
-    { icon: Wind, text: 'Air Conditioning' },
-];
-
-const reviews = [
-    {
-        author: 'Alice Johnson',
-        avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-        rating: 5,
-        comment: 'Absolutely stunning venue! The staff were incredibly helpful, and everything went perfectly for our wedding. Highly recommended!',
-    },
-    {
-        author: 'Michael Smith',
-        avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-        rating: 4,
-        comment: 'Great location and beautiful decor. The catering was delicious, although the music system could be a bit better. Overall, a fantastic experience.',
-    },
-];
 
 const galleryImages = [
     "https://images.unsplash.com/photo-1519688034509-3f5f3ab4349e?q=80&w=400&h=300&fit=crop",
     "https://images.unsplash.com/photo-1520854221256-17452cc6da82?q=80&w=400&h=300&fit=crop",
     "https://images.unsplash.com/photo-1579683348053-14b1c5a942ce?q=80&w=400&h=300&fit=crop",
     "https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=400&h=300&fit=crop",
-]
+    "https://images.unsplash.com/photo-1550081693-490354b6f585?q=80&w=600&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?q=80&w=600&h=400&fit=crop"
+];
 
-export function VenueDetailClient({ venue }: { venue: VenueCardProps & { category: string } }) {
+// Mock booked dates
+const bookedDates = [addDays(new Date(), 5), addDays(new Date(), 6), addDays(new Date(), 15), addDays(new Date(), 16)];
+const pendingDates = [addDays(new Date(), 10), addDays(new Date(), 11)];
+
+
+export function VenueDetailClient({ venue }: { venue: VenueCardProps & { category: string, amenities: string[], reviews: any[] } }) {
   const { isFavorited, toggleFavorite } = useFavorites();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -60,6 +46,12 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
   const [guests, setGuests] = useState(50);
   const [loading, setLoading] = useState(false);
   const [contactLoading, setContactLoading] = useState(false);
+  const [currentReviews, setCurrentReviews] = useState(venue.reviews || []);
+
+  useEffect(() => {
+    setCurrentReviews(venue.reviews || [])
+  }, [venue.reviews])
+
 
   const favorited = isFavorited(venue.slug);
 
@@ -86,6 +78,7 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
             guestCount: guests,
             status: 'Confirmed', // Defaulting to confirmed for demo
             createdAt: serverTimestamp(),
+            review: null,
         });
         toast({
             title: "Booking Request Sent!",
@@ -116,10 +109,8 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
     }
     setContactLoading(true);
     try {
-        // Mock provider ID - in a real app, this would be on the venue object
         const providerId = `provider_${venue.slug}`; 
         
-        // Create a unique conversation ID
         const conversationId = [user.uid, providerId].sort().join('_');
         const conversationRef = doc(db, 'conversations', conversationId);
         
@@ -156,6 +147,10 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
     }
   }
 
+  const averageRating = currentReviews.length > 0
+    ? (currentReviews.reduce((acc, review) => acc + review.rating, 0) / currentReviews.length).toFixed(1)
+    : venue.rating.toFixed(1);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
@@ -165,8 +160,8 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
                 <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-muted-foreground mt-1 text-sm">
                     <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-primary fill-current" />
-                        <span className="font-semibold text-foreground">{venue.rating}</span>
-                        <span>({venue.reviewCount} reviews)</span>
+                        <span className="font-semibold text-foreground">{averageRating}</span>
+                        <span>({currentReviews.length || venue.reviewCount} reviews)</span>
                     </div>
                     <div className="flex items-center gap-1">
                         <MapPin className="w-4 h-4 text-primary" />
@@ -200,8 +195,8 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
                     <Image src={venue.image} alt={venue.name} width={800} height={500} className="object-cover w-full h-80 rounded-lg" data-ai-hint={venue.hint} />
                 </CarouselItem>
                     {galleryImages.map((src, index) => (
-                    <CarouselItem key={index}>
-                        <Image src={src} alt={`Venue detail ${index + 1}`} width={800} height={500} className="object-cover w-full h-80 rounded-lg" data-ai-hint="banquet hall" />
+                    <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                        <Image src={src} alt={`Venue detail ${index + 1}`} width={400} height={300} className="object-cover w-full h-80 rounded-lg" data-ai-hint="banquet hall" />
                     </CarouselItem>
                     ))}
             </CarouselContent>
@@ -216,7 +211,7 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
         <div className="lg:col-span-2">
             <h2 className="text-xl font-bold mb-3">About this {venue.category}</h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
-                {venue.name} is a premier provider of {venue.category.toLowerCase()} services, located in the heart of {venue.location}. With a stellar rating of {venue.rating} from over {venue.reviewCount} clients, we pride ourselves on delivering exceptional experiences. Our space is perfect for weddings, corporate events, and private parties, offering a blend of elegance and modern amenities.
+                {venue.name} is a premier provider of {venue.category.toLowerCase()} services, located in the heart of {venue.location}. With a stellar rating of {averageRating} from over {currentReviews.length || venue.reviewCount} clients, we pride ourselves on delivering exceptional experiences. Our space is perfect for weddings, corporate events, and private parties, offering a blend of elegance and modern amenities.
                 <br/><br/>
                 Our dedicated team works tirelessly to ensure every detail is perfect, from the initial planning stages to the final execution. We offer a range of packages to suit different needs and budgets, all designed to make your special day unforgettable.
             </p>
@@ -225,10 +220,10 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
 
             <h2 className="text-xl font-bold mb-4">What this place offers</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                {amenities.map(amenity => (
-                    <div key={amenity.text} className="flex items-center gap-3">
-                        <amenity.icon className="w-5 h-5 text-primary" />
-                        <span>{amenity.text}</span>
+                {venue.amenities.map(amenity => (
+                    <div key={amenity} className="flex items-center gap-3">
+                        <Star className="w-5 h-5 text-primary" />
+                        <span>{amenity}</span>
                     </div>
                 ))}
             </div>
@@ -236,17 +231,17 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
             <Separator className="my-6" />
 
             {/* Reviews Section */}
-            <h2 className="text-xl font-bold mb-4">Reviews</h2>
+            <h2 className="text-xl font-bold mb-4">Reviews ({currentReviews.length})</h2>
             <div className="space-y-6">
-                {reviews.map(review => (
-                    <div key={review.author} className="flex gap-4">
+                {currentReviews.map((review, index) => (
+                    <div key={index} className="flex gap-4">
                         <Avatar className='h-9 w-9'>
-                            <AvatarImage src={review.avatar} alt={review.author} />
-                            <AvatarFallback>{review.author.charAt(0)}</AvatarFallback>
+                            <AvatarImage src={review.avatar} alt={review.authorName} />
+                            <AvatarFallback>{review.authorName?.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
                             <div className="flex items-center gap-2 mb-0.5">
-                                <h4 className="font-semibold text-sm">{review.author}</h4>
+                                <h4 className="font-semibold text-sm">{review.authorName}</h4>
                                 <div className="flex items-center">
                                     {[...Array(review.rating)].map((_, i) => (
                                         <Star key={i} className="w-3.5 h-3.5 fill-primary text-primary" />
@@ -277,6 +272,26 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
                                 selected={date}
                                 onSelect={setDate}
                                 className="rounded-md border p-0"
+                                disabled={[
+                                    ...bookedDates,
+                                    ...pendingDates,
+                                    { before: new Date() }
+                                ]}
+                                modifiers={{
+                                    booked: bookedDates,
+                                    pending: pendingDates,
+                                }}
+                                modifiersStyles={{
+                                    booked: { 
+                                        color: 'hsl(var(--destructive-foreground))',
+                                        backgroundColor: 'hsl(var(--destructive-foreground) / 0.2)',
+                                        textDecoration: 'line-through',
+                                        opacity: 0.6,
+                                     },
+                                    pending: { 
+                                        backgroundColor: 'hsl(var(--primary) / 0.1)',
+                                    }
+                                }}
                             />
                         </div>
                          <div>

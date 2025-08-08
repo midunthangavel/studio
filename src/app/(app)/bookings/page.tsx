@@ -5,14 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, CheckCircle, Clock, Loader, MapPin } from "lucide-react";
+import { Calendar, CheckCircle, Clock, Loader, MapPin, Star, Edit } from "lucide-react";
 import Image from "next/image";
 import { PageWrapper } from "@/components/shared/page-wrapper";
 import { ProtectedRoute } from "@/components/shared/protected-route";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth-context";
-import { collection, query, where, getDocs, Timestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 interface Booking {
     id: string;
@@ -22,6 +26,116 @@ interface Booking {
     venueHint: string;
     bookingDate: Timestamp;
     status: string;
+    venueId: string;
+    review?: {
+        rating: number;
+        comment: string;
+    } | null;
+}
+
+function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewSubmit: (bookingId: string, review: any) => void }) {
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState("");
+    const [open, setOpen] = useState(false);
+    const { user } = useAuth();
+    const { toast } = useToast();
+
+    const handleSubmit = async () => {
+        if (rating === 0 || !comment || !user) {
+            toast({
+                variant: 'destructive',
+                title: 'Incomplete Review',
+                description: 'Please provide a rating and a comment.',
+            });
+            return;
+        }
+
+        const reviewData = {
+            rating,
+            comment,
+            authorName: user.displayName || "Anonymous",
+            authorAvatar: user.photoURL || null,
+            createdAt: serverTimestamp(),
+        }
+
+        try {
+            // Update booking document with review
+            const bookingRef = doc(db, "bookings", booking.id);
+            await updateDoc(bookingRef, { review: reviewData });
+
+            // Add review to the venue's reviews subcollection (or array)
+            const venueRef = doc(db, "venues", booking.venueId); // Assuming you have a 'venues' collection
+            await updateDoc(venueRef, {
+                reviews: arrayUnion(reviewData)
+            });
+
+            onReviewSubmit(booking.id, reviewData);
+            toast({
+                title: 'Review Submitted',
+                description: 'Thank you for your feedback!',
+            });
+            setOpen(false);
+
+        } catch (error) {
+            console.error("Error submitting review:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Submission Failed',
+                description: 'There was an error submitting your review.',
+            });
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                {booking.review ? (
+                    <Button size="sm" variant="outline" disabled>
+                        <CheckCircle className="w-4 h-4 mr-2" /> Reviewed
+                    </Button>
+                ) : (
+                    <Button size="sm" variant="outline">
+                        <Edit className="w-4 h-4 mr-2" /> Leave a Review
+                    </Button>
+                )}
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Leave a review for {booking.venueName}</DialogTitle>
+                    <DialogDescription>
+                        Share your experience to help others make better decisions.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                    <div>
+                        <Label>Your Rating</Label>
+                        <div className="flex items-center gap-1 mt-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                    key={star}
+                                    className={`w-6 h-6 cursor-pointer ${rating >= star ? 'text-primary fill-primary' : 'text-muted-foreground'}`}
+                                    onClick={() => setRating(star)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <Label htmlFor="comment">Your Comment</Label>
+                        <Textarea
+                            id="comment"
+                            placeholder="Tell us about your experience..."
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            className="mt-2"
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button onClick={handleSubmit}>Submit Review</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
 }
 
 function BookingsPage() {
@@ -29,6 +143,14 @@ function BookingsPage() {
   const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([]);
   const [pastBookings, setPastBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleReviewUpdate = (bookingId: string, review: any) => {
+    setPastBookings(currentBookings => 
+        currentBookings.map(b => 
+            b.id === bookingId ? { ...b, review } : b
+        )
+    );
+  };
 
   useEffect(() => {
     async function fetchBookings() {
@@ -131,7 +253,7 @@ function BookingsPage() {
                         {booking.venueLocation}
                     </div>
                     <div className="flex gap-2 pt-1">
-                        <Button size="sm" variant="outline">Leave a Review</Button>
+                        <ReviewDialog booking={booking} onReviewSubmit={handleReviewUpdate} />
                         <Button size="sm" variant="outline">View Receipt</Button>
                     </div>
                 </CardContent>

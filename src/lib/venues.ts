@@ -1,7 +1,7 @@
 
 import { VenueCardProps } from "@/components/venue-card";
 
-export const allVenues: (VenueCardProps & { category: string; priceValue: number; })[] = [
+export const allVenues: (VenueCardProps & { category: string; priceValue: number; guestCapacity: number, amenities: string[], reviews: any[] })[] = [
     // Catering Services
     {
         name: "Gourmet Delights Catering",
@@ -13,7 +13,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 120,
         image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "catering food"
+        hint: "catering food",
+        guestCapacity: 200,
+        amenities: ["In-house Catering", "Vegan Options"],
+        reviews: [],
     },
     {
         name: "Exquisite Eats",
@@ -25,7 +28,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 150,
         image: "https://images.unsplash.com/photo-1621996346565-e326e22e3920?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "fine dining"
+        hint: "fine dining",
+        guestCapacity: 150,
+        amenities: ["In-house Catering", "Custom Menus"],
+        reviews: [],
     },
     {
         name: "The Wedding Feast",
@@ -37,7 +43,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 135,
         image: "https://images.unsplash.com/photo-1565299543923-37dd37887f2b?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "wedding buffet"
+        hint: "wedding buffet",
+        guestCapacity: 300,
+        amenities: ["In-house Catering", "Buffet Style"],
+        reviews: [],
     },
     {
         name: "Saffron & Spice",
@@ -49,7 +58,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 110,
         image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "gourmet salad"
+        hint: "gourmet salad",
+        guestCapacity: 100,
+        amenities: ["In-house Catering", "Halal Options"],
+        reviews: [],
     },
     {
         name: "Farm to Table Creations",
@@ -61,7 +73,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 180,
         image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "restaurant table"
+        hint: "restaurant table",
+        guestCapacity: 80,
+        amenities: ["In-house Catering", "Organic Ingredients"],
+        reviews: [],
     },
     {
         name: "Coastal Cuisine",
@@ -73,7 +88,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 160,
         image: "https://images.unsplash.com/photo-1517042078839-86a640141639?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "seafood platter"
+        hint: "seafood platter",
+        guestCapacity: 120,
+        amenities: ["In-house Catering", "Seafood Specialities"],
+        reviews: [],
     },
     {
         name: "The Rustic Platter",
@@ -85,7 +103,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 100,
         image: "https://images.unsplash.com/photo-1506354666786-959d6d497f1a?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "pizza sharing"
+        hint: "pizza sharing",
+        guestCapacity: 250,
+        amenities: ["In-house Catering", "Family Style"],
+        reviews: [],
     },
     {
         name: "Vegan Vogue Events",
@@ -97,7 +118,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 140,
         image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "vegan salad"
+        hint: "vegan salad",
+        guestCapacity: 100,
+        amenities: ["In-house Catering", "Vegan Options"],
+        reviews: [],
     },
     {
         name: "Decadent Desserts Bar",
@@ -109,7 +133,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 50,
         image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "dessert table"
+        hint: "dessert table",
+        guestCapacity: 500,
+        amenities: ["In-house Catering", "Dessert Stations"],
+        reviews: [],
     },
     {
         name: "International Flavors Co.",
@@ -121,7 +148,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 130,
         image: "https://images.unsplash.com/photo-1559847844-5315695d0464?q=80&w=600&h=400&fit=crop",
         category: "Catering",
-        hint: "sushi platter"
+        hint: "sushi platter",
+        guestCapacity: 180,
+        amenities: ["In-house Catering", "Sushi Bar"],
+        reviews: [],
     },
 
     // Transport Services
@@ -135,7 +165,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 500,
         image: "https://images.unsplash.com/photo-1618951012351-38a6a79b21e8?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "luxury car"
+        hint: "luxury car",
+        guestCapacity: 4,
+        amenities: ["Air Conditioning"],
+        reviews: [],
     },
     {
         name: "Royal Rolls Royce",
@@ -147,7 +180,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 800,
         image: "https://images.unsplash.com/photo-1553552575-b4b73b6441d6?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "vintage car"
+        hint: "vintage car",
+        guestCapacity: 4,
+        amenities: ["Air Conditioning"],
+        reviews: [],
     },
     {
         name: "Classic Limo Service",
@@ -159,7 +195,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 350,
         image: "https://images.unsplash.com/photo-1527018601622-c43a0a1d4012?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "limousine"
+        hint: "limousine",
+        guestCapacity: 10,
+        amenities: ["Air Conditioning", "Sound System"],
+        reviews: [],
     },
     {
         name: "Wedding Wheels Vintage",
@@ -171,7 +210,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 600,
         image: "https://images.unsplash.com/photo-1541443131-27635c6fb584?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "classic car"
+        hint: "classic car",
+        guestCapacity: 3,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Citywide Party Bus",
@@ -183,7 +225,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 450,
         image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "party bus"
+        hint: "party bus",
+        guestCapacity: 30,
+        amenities: ["Air Conditioning", "Sound System"],
+        reviews: [],
     },
      {
         name: "Elegant Excursions",
@@ -195,7 +240,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 550,
         image: "https://images.unsplash.com/photo-1599198664923-8636186a8779?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "white car"
+        hint: "white car",
+        guestCapacity: 4,
+        amenities: ["Air Conditioning"],
+        reviews: [],
     },
     {
         name: "Getaway Car Rentals",
@@ -207,7 +255,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 400,
         image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "sports car"
+        hint: "sports car",
+        guestCapacity: 2,
+        amenities: ["Air Conditioning", "Sound System"],
+        reviews: [],
     },
     {
         name: "Enchanted Carriages",
@@ -219,7 +270,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 700,
         image: "https://images.unsplash.com/photo-1532517834468-523e3a478363?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "horse carriage"
+        hint: "horse carriage",
+        guestCapacity: 6,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Metro Lux Shuttles",
@@ -231,7 +285,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 300,
         image: "https://images.unsplash.com/photo-1570125909232-eb263c186923?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "shuttle bus"
+        hint: "shuttle bus",
+        guestCapacity: 20,
+        amenities: ["Air Conditioning"],
+        reviews: [],
     },
     {
         name: "Regal Auto Group",
@@ -243,7 +300,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 650,
         image: "https://images.unsplash.com/photo-1629822434086-291705b79373?q=80&w=600&h=400&fit=crop",
         category: "Transport",
-        hint: "black car"
+        hint: "black car",
+        guestCapacity: 4,
+        amenities: ["Air Conditioning", "Sound System"],
+        reviews: [],
     },
 
     // Decoration Vendors
@@ -257,7 +317,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 2000,
         image: "https://images.unsplash.com/photo-1579683348053-14b1c5a942ce?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "flower arch"
+        hint: "flower arch",
+        guestCapacity: 300,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Enchanted Events Decor",
@@ -269,7 +332,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 3500,
         image: "https://images.unsplash.com/photo-1520854221256-17452cc6da82?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "wedding table"
+        hint: "wedding table",
+        guestCapacity: 400,
+        amenities: ["Full Service Setup"],
+        reviews: [],
     },
     {
         name: "Luxe Lighting & Draping",
@@ -281,7 +347,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 1800,
         image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "event lighting"
+        hint: "event lighting",
+        guestCapacity: 500,
+        amenities: ["Full Service Setup", "Custom Lighting"],
+        reviews: [],
     },
     {
         name: "The Perfect Arrangement",
@@ -293,7 +362,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 2200,
         image: "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "table setting"
+        hint: "table setting",
+        guestCapacity: 200,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Rustic Charm Rentals",
@@ -305,7 +377,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 1500,
         image: "https://images.unsplash.com/photo-1550081693-490354b6f585?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "rustic decor"
+        hint: "rustic decor",
+        guestCapacity: 150,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Elegant Petals",
@@ -317,7 +392,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 3000,
         image: "https://images.unsplash.com/photo-1554224324-4b51a7e4d583?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "flower arrangement"
+        hint: "flower arrangement",
+        guestCapacity: 250,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Dreamy Designs Co.",
@@ -329,7 +407,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 2800,
         image: "https://images.unsplash.com/photo-1523438885278-83b9e5f935b7?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "wedding decorations"
+        hint: "wedding decorations",
+        guestCapacity: 300,
+        amenities: ["Full Service Setup"],
+        reviews: [],
     },
     {
         name: "Fantasy Floral Creations",
@@ -341,7 +422,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 4000,
         image: "https://images.unsplash.com/photo-1567475854498-7a58f4a15a8e?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "wedding centerpiece"
+        hint: "wedding centerpiece",
+        guestCapacity: 400,
+        amenities: ["Custom Lighting"],
+        reviews: [],
     },
     {
         name: "Modern Mandaps",
@@ -353,7 +437,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 3200,
         image: "https://images.unsplash.com/photo-1628198942363-a20a4b4a1f5d?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "wedding mandap"
+        hint: "wedding mandap",
+        guestCapacity: 500,
+        amenities: ["Full Service Setup"],
+        reviews: [],
     },
     {
         name: "Ivy & Gold Events",
@@ -365,7 +452,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 2500,
         image: "https://images.unsplash.com/photo-1519688034509-3f5f3ab4349e?q=80&w=600&h=400&fit=crop",
         category: "Decorations",
-        hint: "banquet hall"
+        hint: "banquet hall",
+        guestCapacity: 200,
+        amenities: ["Full Service Setup"],
+        reviews: [],
     },
 
     // Photography Agencies
@@ -379,7 +469,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 4500,
         image: "https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "wedding photography"
+        hint: "wedding photography",
+        guestCapacity: 0,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Captured by Light",
@@ -391,7 +484,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 5000,
         image: "https://images.unsplash.com/photo-1519415943484-2fa1873496d7?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "couple portrait"
+        hint: "couple portrait",
+        guestCapacity: 0,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Golden Hour Films",
@@ -403,7 +499,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 6000,
         image: "https://images.unsplash.com/photo-1515942352-7164a2c35583?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "beach wedding"
+        hint: "beach wedding",
+        guestCapacity: 0,
+        amenities: ["Videography"],
+        reviews: [],
     },
     {
         name: "Windy City Weddings",
@@ -415,7 +514,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 4200,
         image: "https://images.unsplash.com/photo-1545939227-6df15743c498?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "city couple"
+        hint: "city couple",
+        guestCapacity: 0,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Love Story Studios",
@@ -427,7 +529,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 4800,
         image: "https://images.unsplash.com/photo-1523438885278-83b9e5f935b7?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "wedding couple"
+        hint: "wedding couple",
+        guestCapacity: 0,
+        amenities: ["Videography"],
+        reviews: [],
     },
     {
         name: "Candid Captures",
@@ -439,7 +544,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 3800,
         image: "https://images.unsplash.com/photo-1455853659723-3b0d5ee08c16?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "wedding kiss"
+        hint: "wedding kiss",
+        guestCapacity: 0,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Forever & Always Photo",
@@ -451,7 +559,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 4400,
         image: "https://images.unsplash.com/photo-1510629763133-13431b5c9247?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "wedding rings"
+        hint: "wedding rings",
+        guestCapacity: 0,
+        amenities: ["Drone Photography"],
+        reviews: [],
     },
     {
         name: "Mountainscape Media",
@@ -463,7 +574,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 5500,
         image: "https://images.unsplash.com/photo-1500051638674-ff996a0ec29e?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "mountain wedding"
+        hint: "mountain wedding",
+        guestCapacity: 0,
+        amenities: ["Drone Photography", "Videography"],
+        reviews: [],
     },
     {
         name: "Coastal Clicks",
@@ -475,7 +589,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 4600,
         image: "https://images.unsplash.com/photo-1541258692634-f655e0324823?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "beach couple"
+        hint: "beach couple",
+        guestCapacity: 0,
+        amenities: [],
+        reviews: [],
     },
     {
         name: "Artistic Angles",
@@ -487,7 +604,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 5200,
         image: "https://images.unsplash.com/photo-1511285560921-5ae97c6abc59?q=80&w=600&h=400&fit=crop",
         category: "Photography",
-        hint: "wedding details"
+        hint: "wedding details",
+        guestCapacity: 0,
+        amenities: [],
+        reviews: [],
     },
     // Event Staff
     {
@@ -500,7 +620,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 35,
         image: "https://images.unsplash.com/photo-1579782194332-f3a2d83a1f94?q=80&w=600&h=400&fit=crop",
         category: "Event Staff",
-        hint: "event staff"
+        hint: "event staff",
+        guestCapacity: 0,
+        amenities: ["Waitstaff", "Bartenders", "Security"],
+        reviews: [],
     },
     {
         name: "LA Elite Bartenders",
@@ -512,6 +635,9 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         priceValue: 50,
         image: "https://images.unsplash.com/photo-1588899756938-a2ea46633ea8?q=80&w=600&h=400&fit=crop",
         category: "Event Staff",
-        hint: "bartender"
+        hint: "bartender",
+        guestCapacity: 0,
+        amenities: ["Mixologists", "Barbacks"],
+        reviews: [],
     }
 ];
