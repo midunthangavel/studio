@@ -105,8 +105,8 @@ export default function PlannerPage() {
         description="Describe your function, and let our AI assistant spark your imagination!"
     >
       <div className="mx-auto max-w-4xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          <Card className="sticky top-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          <Card className="sticky top-20">
             <CardHeader>
               <CardTitle>Tell us about your function</CardTitle>
               <CardDescription>
@@ -117,7 +117,7 @@ export default function PlannerPage() {
               <FormProvider {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-6"
+                  className="space-y-4"
                 >
                   <FormField
                     control={form.control}
@@ -203,8 +203,8 @@ export default function PlannerPage() {
             {loading && (
               <Card>
                 <CardContent className="p-6 text-center">
-                  <Loader className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-                  <p className="text-muted-foreground">Generating creative ideas for you...</p>
+                  <Loader className="h-6 w-6 animate-spin text-primary mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">Generating creative ideas for you...</p>
                 </CardContent>
               </Card>
             )}
@@ -213,33 +213,33 @@ export default function PlannerPage() {
                 <CardHeader>
                   <CardTitle>Here are some ideas!</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4">
                   <div>
-                    <h3 className="flex items-center font-semibold mb-2">
-                      <PartyPopper className="w-5 h-5 mr-2 text-primary" />
+                    <h3 className="flex items-center font-semibold mb-1 text-base">
+                      <PartyPopper className="w-4 h-4 mr-2 text-primary" />
                       Theme Suggestions
                     </h3>
-                    <p className="text-muted-foreground">{ideas.theme}</p>
+                    <p className="text-muted-foreground text-sm">{ideas.theme}</p>
                   </div>
                   <Separator />
                   <div>
-                    <h3 className="flex items-center font-semibold mb-2">
-                      <Paintbrush className="w-5 h-5 mr-2 text-primary" />
+                    <h3 className="flex items-center font-semibold mb-1 text-base">
+                      <Paintbrush className="w-4 h-4 mr-2 text-primary" />
                       Decoration Ideas
                     </h3>
-                    <p className="text-muted-foreground">{ideas.decoration}</p>
+                    <p className="text-muted-foreground text-sm">{ideas.decoration}</p>
                   </div>
                   <Separator />
                   <div>
-                    <h3 className="flex items-center font-semibold mb-2">
-                      <Sparkles className="w-5 h-5 mr-2 text-primary" />
+                    <h3 className="flex items-center font-semibold mb-1 text-base">
+                      <Sparkles className="w-4 h-4 mr-2 text-primary" />
                       Activity Suggestions
                     </h3>
-                    <p className="text-muted-foreground">{ideas.activity}</p>
+                    <p className="text-muted-foreground text-sm">{ideas.activity}</p>
                   </div>
                 </CardContent>
-                <CardFooter className='flex-col gap-4 items-stretch'>
-                   <Button onClick={handleGenerateMoodboard} disabled={isMoodBoardLoading}>
+                <CardFooter className='flex-col gap-3 items-stretch'>
+                   <Button onClick={handleGenerateMoodboard} disabled={isMoodBoardLoading} size="sm">
                     {isMoodBoardLoading ? (
                         <>
                             <Loader className="mr-2 h-4 w-4 animate-spin" />
@@ -262,8 +262,8 @@ export default function PlannerPage() {
             {isMoodBoardLoading && (
                  <Card>
                     <CardContent className="p-6 text-center">
-                        <Loader className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-                        <p className="text-muted-foreground">Creating your mood board...</p>
+                        <Loader className="h-6 w-6 animate-spin text-primary mx-auto mb-3" />
+                        <p className="text-muted-foreground text-sm">Creating your mood board...</p>
                     </CardContent>
                 </Card>
             )}
@@ -288,11 +288,11 @@ export default function PlannerPage() {
             
             {!loading && !ideas && (
               <Card className="border-dashed">
-                <CardContent className="p-10 text-center">
-                   <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
-                     <Sparkles className="w-8 h-8 text-muted-foreground" />
+                <CardContent className="p-8 text-center">
+                   <div className="mx-auto w-fit bg-secondary p-3 rounded-full mb-3">
+                     <Sparkles className="w-7 h-7 text-muted-foreground" />
                    </div>
-                  <p className="text-muted-foreground">Your function ideas will appear here.</p>
+                  <p className="text-muted-foreground text-sm">Your function ideas will appear here.</p>
                 </CardContent>
               </Card>
             )}

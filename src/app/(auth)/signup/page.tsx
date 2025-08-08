@@ -60,7 +60,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background p-6">
+    <div className="flex flex-col h-screen bg-background p-4">
       <div className="absolute top-4 left-4 z-10">
         <Button variant="ghost" size="icon" onClick={() => router.push('/')} className="bg-muted hover:bg-muted/80">
             <ArrowLeft />
@@ -69,30 +69,30 @@ export default function SignupPage() {
 
       <div className="flex-1 flex flex-col justify-center items-center text-center">
          <div className='mb-6'>
-            <AppLogo width={192} height={96} />
+            <AppLogo width={120} height={60} />
          </div>
-         <h1 className="text-3xl font-bold font-headline">Create your Account</h1>
-         <p className="text-muted-foreground max-w-xs mt-2">
-            Let's get you started with a free account to plan your perfect event.
+         <h1 className="text-2xl font-bold font-headline">Create your Account</h1>
+         <p className="text-muted-foreground max-w-xs mt-1 text-sm">
+            Let's get you started with a free account.
         </p>
       </div>
 
-      <div className="bg-card border p-6 rounded-2xl space-y-4 shadow-lg">
+      <div className="bg-card border p-4 rounded-xl space-y-3 shadow-lg">
         
-        <form onSubmit={handleSignUp} className="space-y-4">
+        <form onSubmit={handleSignUp} className="space-y-3">
            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 id="name" 
                 placeholder="Full Name" 
                 required 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
-                className="h-14 pl-10"
+                className="h-12 pl-9"
               />
             </div>
           <div className="relative">
-             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               id="email"
               type="email"
@@ -100,32 +100,32 @@ export default function SignupPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-14 pl-10"
+              className="h-12 pl-9"
             />
           </div>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input 
                 id="password" 
                 type="password" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                className="h-14 pl-10"
+                className="h-12 pl-9"
                 placeholder='Password'
                 required
             />
           </div>
-            <div className="flex items-start space-x-3 pt-4">
-                <Checkbox id="terms" checked={agreed} onCheckedChange={(checked) => setAgreed(!!checked)} className="mt-1" />
-                <Label htmlFor="terms" className="text-sm text-muted-foreground font-normal">
+            <div className="flex items-start space-x-2 pt-2">
+                <Checkbox id="terms" checked={agreed} onCheckedChange={(checked) => setAgreed(!!checked)} className="mt-0.5" />
+                <Label htmlFor="terms" className="text-xs text-muted-foreground font-normal">
                    By signing up you agree to the <Link href="#" className="font-semibold text-primary">terms of service</Link> and <Link href="#" className="font-semibold text-primary">privacy policy</Link>.
                 </Label>
             </div>
-             <Button type="submit" disabled={loading} className="w-full h-14 text-base !mt-8">
+             <Button type="submit" disabled={loading} className="w-full h-12 !mt-4">
                 {loading ? <Loader className="animate-spin" /> : 'Create Account'}
             </Button>
         </form>
-         <p className="text-center text-muted-foreground text-sm mt-6">
+         <p className="text-center text-muted-foreground text-sm pt-2">
                 Already have an account?{" "}
                 <Link href="/login" className="underline font-semibold text-primary">
                 Login

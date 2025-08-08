@@ -51,29 +51,29 @@ export function VenueCard({
           data-ai-hint={hint}
         />
         {guestFavorite && (
-          <div className="absolute top-2 left-2 bg-background/90 text-foreground text-xs font-bold py-1 px-3 rounded-full">
+          <div className="absolute top-2 left-2 bg-background/90 text-foreground text-xs font-bold py-1 px-2 rounded-full">
             Guest favorite
           </div>
         )}
         {actionButton}
       </div>
-      <CardContent className={cn(isCard ? "pt-2 px-1" : "p-4")}>
+      <CardContent className={cn(isCard ? "pt-2 px-1" : "p-3")}>
         <div className="flex items-center justify-between">
-            <h3 className={cn("font-semibold truncate", isCard ? "text-base": "text-lg")}>{name}</h3>
+            <h3 className={cn("font-semibold truncate", isCard ? "text-sm": "text-base")}>{name}</h3>
             {rating > 0 && (
-                 <div className="flex items-center text-foreground font-medium shrink-0">
-                    <Star className="w-4 h-4 mr-1 text-primary fill-current" />
+                 <div className="flex items-center text-foreground font-medium text-sm shrink-0">
+                    <Star className="w-3.5 h-3.5 mr-1 text-primary fill-current" />
                     {rating}
                 </div>
             )}
         </div>
 
-        <div className="flex items-center text-muted-foreground text-sm mt-1">
+        <div className="flex items-center text-muted-foreground text-xs mt-1">
             <p>{location}</p>
         </div>
 
          {!isCard && reviewCount && (
-            <div className="flex items-center text-sm mt-2">
+            <div className="flex items-center text-xs mt-1">
                 <span className="text-muted-foreground">
                     ({reviewCount} reviews)
                 </span>
@@ -82,7 +82,7 @@ export function VenueCard({
         
         {children}
 
-        <p className="text-foreground font-semibold mt-2">
+        <p className="text-foreground font-semibold mt-1.5 text-sm">
             {price}
         </p>
       </CardContent>

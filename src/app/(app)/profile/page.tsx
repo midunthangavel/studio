@@ -51,15 +51,16 @@ const helpAndSupport = [
 
 
 const LanguageSwitcher = () => (
-  <div className="p-4 bg-background">
-    <h3 className="text-sm font-semibold mb-3 text-muted-foreground">
+  <div className="p-3 bg-background">
+    <h3 className="text-xs font-semibold mb-2 text-muted-foreground">
       Try FixmyEvent in your language
     </h3>
-    <div className="flex gap-2 overflow-x-auto pb-2">
+    <div className="flex gap-2 overflow-x-auto pb-1">
       {['English', 'Español', 'Français', 'Deutsch', 'Hindi'].map(
         (lang, index) => (
           <Button
             key={lang}
+            size="sm"
             variant={index === 0 ? 'default' : 'outline'}
             className="rounded-full"
           >
@@ -79,15 +80,15 @@ const Section = ({
   items: { icon: React.ElementType; text: string; href: string }[];
 }) => (
   <div className="bg-background">
-    <div className="p-4">
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+    <div className="p-3">
+      <h3 className="text-base font-semibold mb-2">{title}</h3>
       <div className="flex flex-col bg-card border rounded-lg">
         {items.map((item, index) => (
           <Link href={item.href} key={item.text}>
-           <div className="flex items-center p-4">
-              <item.icon className="w-6 h-6 mr-4 text-primary" />
-              <span className="flex-grow">{item.text}</span>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+           <div className="flex items-center p-3">
+              <item.icon className="w-5 h-5 mr-3 text-primary" />
+              <span className="flex-grow text-sm">{item.text}</span>
+              <ChevronRight className="w-4 h-4 text-muted-foreground" />
             </div>
             {index < items.length - 1 && <Separator />}
           </Link>
@@ -110,7 +111,7 @@ export default function AccountPage() {
     <ProtectedRoute>
       <div className="bg-muted/40 pb-20">
         {user ? (
-          <div className="relative h-40 bg-primary/20 p-4 flex items-end text-primary-foreground">
+          <div className="relative h-32 bg-primary/20 p-4 flex items-end text-primary-foreground">
             <Image 
                 src="https://placehold.co/600x400/E77A7A/FFFFFF"
                 alt="Profile background"
@@ -120,13 +121,13 @@ export default function AccountPage() {
                 data-ai-hint="abstract background"
             />
             <div className="relative z-10">
-                <h2 className="text-2xl font-bold">{user.displayName || 'User'}</h2>
+                <h2 className="text-xl font-bold">{user.displayName || 'User'}</h2>
                 <p className="text-sm">{user.email}</p>
                 <p className='text-xs mt-1'>Member since Jun 2024</p>
             </div>
           </div>
         ) : (
-             <div className="relative h-40 bg-primary/20 p-4 flex items-end text-primary-foreground">
+             <div className="relative h-32 bg-primary/20 p-4 flex items-end text-primary-foreground">
                 <Image 
                     src="https://placehold.co/600x400/E77A7A/FFFFFF"
                     alt="Profile background"
@@ -136,7 +137,7 @@ export default function AccountPage() {
                     data-ai-hint="abstract background"
                 />
                 <div className="relative z-10">
-                    <h2 className="text-2xl font-bold">Guest User</h2>
+                    <h2 className="text-xl font-bold">Guest User</h2>
                     <p className="text-sm">guest@example.com</p>
                     <p className='text-xs mt-1'>Not logged in</p>
                 </div>
@@ -149,7 +150,7 @@ export default function AccountPage() {
         <Section title="Settings" items={settingsItems} />
         <Section title="Help & Support" items={helpAndSupport} />
 
-        <div className="p-4 mt-4">
+        <div className="p-3 mt-2">
           <Button
             variant="outline"
             className="w-full bg-card"

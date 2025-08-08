@@ -15,7 +15,7 @@ export default function AppLayout({
       <>
         <div className="relative flex min-h-screen flex-col bg-background">
           <Header />
-          <main className="flex-1 pb-20">{children}</main>
+          <main className="flex-1 pb-16">{children}</main>
           <Footer />
         </div>
         <Toaster />

@@ -157,19 +157,19 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="mb-8">
-        <div className="flex justify-between items-start flex-wrap gap-4">
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-6">
+        <div className="flex justify-between items-start flex-wrap gap-2">
             <div>
-                <h1 className="text-3xl font-bold font-headline">{venue.name}</h1>
-                <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-muted-foreground mt-2">
+                <h1 className="text-2xl font-bold font-headline">{venue.name}</h1>
+                <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-muted-foreground mt-1 text-sm">
                     <div className="flex items-center gap-1">
-                        <Star className="w-5 h-5 text-primary fill-current" />
+                        <Star className="w-4 h-4 text-primary fill-current" />
                         <span className="font-semibold text-foreground">{venue.rating}</span>
                         <span>({venue.reviewCount} reviews)</span>
                     </div>
                     <div className="flex items-center gap-1">
-                        <MapPin className="w-5 h-5 text-primary" />
+                        <MapPin className="w-4 h-4 text-primary" />
                         <span>{venue.location}</span>
                     </div>
                 </div>
@@ -181,11 +181,11 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
                     onClick={() => toggleFavorite(venue)}
                     aria-label='Favorite'
                 >
-                    <Heart className={cn("w-4 h-4 mr-2", favorited && "fill-primary text-primary" )} />
+                    <Heart className={cn("w-3.5 h-3.5 mr-1.5", favorited && "fill-primary text-primary" )} />
                     {favorited ? "Favorited" : "Favorite"}
                 </Button>
                 <Button variant="outline" size="sm" onClick={handleContactProvider} disabled={contactLoading}>
-                    {contactLoading ? <Loader className="animate-spin mr-2" /> : <MessageSquare className="mr-2 h-4 w-4" />}
+                    {contactLoading ? <Loader className="animate-spin mr-1.5" /> : <MessageSquare className="mr-1.5 h-3.5 w-3.5" />}
                     Contact
                 </Button>
             </div>
@@ -193,15 +193,15 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
       </div>
 
       {/* Image Gallery */}
-      <div className="mb-12 -mx-4 md:mx-0">
+      <div className="mb-8 -mx-4 md:mx-0">
         <Carousel>
             <CarouselContent>
                 <CarouselItem>
-                    <Image src={venue.image} alt={venue.name} width={800} height={600} className="object-cover w-full h-96 rounded-lg" data-ai-hint={venue.hint} />
+                    <Image src={venue.image} alt={venue.name} width={800} height={500} className="object-cover w-full h-80 rounded-lg" data-ai-hint={venue.hint} />
                 </CarouselItem>
                     {galleryImages.map((src, index) => (
                     <CarouselItem key={index}>
-                        <Image src={src} alt={`Venue detail ${index + 1}`} width={800} height={600} className="object-cover w-full h-96 rounded-lg" data-ai-hint="banquet hall" />
+                        <Image src={src} alt={`Venue detail ${index + 1}`} width={800} height={500} className="object-cover w-full h-80 rounded-lg" data-ai-hint="banquet hall" />
                     </CarouselItem>
                     ))}
             </CarouselContent>
@@ -211,45 +211,45 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
       </div>
 
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-10 gap-y-8">
         {/* Main Content */}
         <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold mb-4">About this {venue.category}</h2>
-            <p className="text-muted-foreground leading-relaxed">
+            <h2 className="text-xl font-bold mb-3">About this {venue.category}</h2>
+            <p className="text-muted-foreground leading-relaxed text-sm">
                 {venue.name} is a premier provider of {venue.category.toLowerCase()} services, located in the heart of {venue.location}. With a stellar rating of {venue.rating} from over {venue.reviewCount} clients, we pride ourselves on delivering exceptional experiences. Our space is perfect for weddings, corporate events, and private parties, offering a blend of elegance and modern amenities.
                 <br/><br/>
                 Our dedicated team works tirelessly to ensure every detail is perfect, from the initial planning stages to the final execution. We offer a range of packages to suit different needs and budgets, all designed to make your special day unforgettable.
             </p>
 
-            <Separator className="my-8" />
+            <Separator className="my-6" />
 
-            <h2 className="text-2xl font-bold mb-4">What this place offers</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <h2 className="text-xl font-bold mb-4">What this place offers</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 {amenities.map(amenity => (
                     <div key={amenity.text} className="flex items-center gap-3">
-                        <amenity.icon className="w-6 h-6 text-primary" />
+                        <amenity.icon className="w-5 h-5 text-primary" />
                         <span>{amenity.text}</span>
                     </div>
                 ))}
             </div>
 
-            <Separator className="my-8" />
+            <Separator className="my-6" />
 
             {/* Reviews Section */}
-            <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+            <h2 className="text-xl font-bold mb-4">Reviews</h2>
             <div className="space-y-6">
                 {reviews.map(review => (
                     <div key={review.author} className="flex gap-4">
-                        <Avatar>
+                        <Avatar className='h-9 w-9'>
                             <AvatarImage src={review.avatar} alt={review.author} />
                             <AvatarFallback>{review.author.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <h4 className="font-semibold">{review.author}</h4>
+                            <div className="flex items-center gap-2 mb-0.5">
+                                <h4 className="font-semibold text-sm">{review.author}</h4>
                                 <div className="flex items-center">
                                     {[...Array(review.rating)].map((_, i) => (
-                                        <Star key={i} className="w-4 h-4 fill-primary text-primary" />
+                                        <Star key={i} className="w-3.5 h-3.5 fill-primary text-primary" />
                                     ))}
                                 </div>
                             </div>
@@ -262,12 +262,12 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
 
         {/* Booking Card */}
         <div className="lg:col-span-1">
-            <Card className="sticky top-24 shadow-lg">
+            <Card className="sticky top-20 shadow-lg">
                 <CardHeader>
-                    <CardTitle className='text-xl'>Request to Book</CardTitle>
+                    <CardTitle className='text-lg'>Request to Book</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p className="text-2xl font-bold">{venue.price}</p>
+                    <p className="text-xl font-bold">{venue.price}</p>
                     <div className="grid grid-cols-1 gap-4">
                         <div>
                             <Label htmlFor="date">Date</Label>
@@ -284,11 +284,11 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
                             <Input id="guests" type="number" placeholder="50" value={guests} onChange={(e) => setGuests(Number(e.target.value))} />
                         </div>
                     </div>
-                    <Button size="lg" className="w-full mt-4" onClick={handleRequestBooking} disabled={loading}>
+                    <Button className="w-full mt-2" onClick={handleRequestBooking} disabled={loading}>
                         {loading ? <Loader className="animate-spin mr-2" /> : null}
                         Request to Book
                     </Button>
-                    <p className="text-center text-sm text-muted-foreground">You won&apos;t be charged yet</p>
+                    <p className="text-center text-xs text-muted-foreground">You won&apos;t be charged yet</p>
                 </CardContent>
             </Card>
         </div>

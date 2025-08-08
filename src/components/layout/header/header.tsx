@@ -29,13 +29,13 @@ import { NotificationsPopover } from "./notifications-popover";
 function SearchResults({ results, onResultClick }: { results: (VenueCardProps & { category: string; })[], onResultClick: () => void }) {
     if (results.length === 0) return null;
     return (
-        <div className="absolute top-full left-0 w-full bg-background border rounded-lg mt-2 shadow-lg z-50 max-h-96 overflow-y-auto">
+        <div className="absolute top-full left-0 w-full bg-background border rounded-lg mt-1 shadow-lg z-50 max-h-80 overflow-y-auto">
             <ul className="divide-y">
                 {results.map(item => (
                     <li key={item.slug}>
-                        <Link href={`/venues/${item.slug}`} className="block p-4 hover:bg-muted" onClick={onResultClick}>
-                            <h4 className="font-semibold">{item.name}</h4>
-                            <p className="text-sm text-muted-foreground">{item.location} - <span className="text-primary">{item.category}</span></p>
+                        <Link href={`/venues/${item.slug}`} className="block p-3 hover:bg-muted" onClick={onResultClick}>
+                            <h4 className="font-semibold text-sm">{item.name}</h4>
+                            <p className="text-xs text-muted-foreground">{item.location} - <span className="text-primary">{item.category}</span></p>
                         </Link>
                     </li>
                 ))}
@@ -101,17 +101,17 @@ export function Header() {
   
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="container flex h-16 items-center">
-        <div className="flex flex-1 items-center justify-start gap-6">
+      <div className="container flex h-14 items-center">
+        <div className="flex flex-1 items-center justify-start gap-4">
             <Link href="/" className="flex items-center space-x-2">
-                <AppLogo />
+                <AppLogo width={80} height={24} />
             </Link>
             {!isHomePage && (
-                <div className="relative hidden md:block w-full max-w-sm">
+                <div className="relative hidden md:block w-full max-w-xs">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                         placeholder="Search..."
-                        className="pl-9"
+                        className="pl-9 h-9"
                         value={searchQuery}
                         onChange={handleSearchChange}
                         onKeyDown={handleSearchSubmit}
@@ -122,11 +122,11 @@ export function Header() {
             )}
          </div>
         
-        <div className="flex flex-shrink-0 items-center justify-end space-x-2">
+        <div className="flex flex-shrink-0 items-center justify-end space-x-1">
            <Popover>
             <PopoverTrigger asChild>
               <Button size="icon" variant="ghost">
-                  <Bell className="h-5 w-5" />
+                  <Bell className="h-4 w-4" />
                   <span className="sr-only">Notifications</span>
               </Button>
             </PopoverTrigger>
@@ -136,7 +136,7 @@ export function Header() {
            </Popover>
           <Button size="icon" variant="ghost" asChild>
             <Link href="/chat">
-                <MessageSquare className="h-5 w-5" />
+                <MessageSquare className="h-4 w-4" />
                 <span className="sr-only">Messages</span>
             </Link>
           </Button>
@@ -154,8 +154,8 @@ export function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>
-                    <p>Welcome!</p>
-                    <p className="font-normal text-sm text-muted-foreground">{user.displayName}</p>
+                    <p className='text-sm'>Welcome!</p>
+                    <p className="font-normal text-xs text-muted-foreground">{user.displayName}</p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => router.push('/profile')}>
@@ -179,7 +179,7 @@ export function Header() {
             </DropdownMenu>
             </>
           ) : (
-            <Button asChild>
+            <Button asChild size="sm">
               <Link href="/login">Login</Link>
             </Button>
           )}

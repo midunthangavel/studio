@@ -65,34 +65,34 @@ export default function EditProfilePage() {
         title="Edit Profile"
         description="Update your personal information."
     >
-      <Card className="max-w-3xl mx-auto">
+      <Card className="max-w-2xl mx-auto">
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardHeader>
                 <CardTitle>Personal Information</CardTitle>
                 <CardDescription>Make sure your details are up to date.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="space-y-2">
+            <CardContent className="space-y-4">
+                <div className="space-y-1.5">
                     <Label htmlFor="displayName">Full Name</Label>
                     <div className='relative'>
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                        <Input id="displayName" {...form.register('displayName')} className="pl-10" />
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input id="displayName" {...form.register('displayName')} className="pl-9" />
                     </div>
                     {form.formState.errors.displayName && <p className="text-sm text-destructive">{form.formState.errors.displayName.message}</p>}
                 </div>
-                 <div className="space-y-2">
+                 <div className="space-y-1.5">
                     <Label htmlFor="email">Email Address</Label>
                     <div className='relative'>
-                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                        <Input id="email" {...form.register('email')} disabled className="pl-10" />
+                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input id="email" {...form.register('email')} disabled className="pl-9" />
                     </div>
                      <p className='text-xs text-muted-foreground'>Email cannot be changed.</p>
                 </div>
-                 <div className="space-y-2">
+                 <div className="space-y-1.5">
                     <Label htmlFor="phoneNumber">Phone Number</Label>
                     <div className='relative'>
-                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                        <Input id="phoneNumber" {...form.register('phoneNumber')} className="pl-10" placeholder='Add your phone number' />
+                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input id="phoneNumber" {...form.register('phoneNumber')} className="pl-9" placeholder='Add your phone number' />
                     </div>
                 </div>
             </CardContent>

@@ -65,7 +65,7 @@ function BookingsPage() {
   if (loading) {
     return (
         <div className="flex items-center justify-center h-screen">
-            <Loader className="h-8 w-8 animate-spin" />
+            <Loader className="h-6 w-6 animate-spin" />
         </div>
     )
   }
@@ -74,7 +74,7 @@ function BookingsPage() {
     <Card>
         <div className="grid grid-cols-1 md:grid-cols-3">
             <div className="md:col-span-1">
-                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+                <Image src={booking.venueImage} alt={booking.venueName} width={400} height={200} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
             </div>
             <div className="md:col-span-2">
                 <CardHeader>
@@ -86,7 +86,7 @@ function BookingsPage() {
                         <Badge variant={booking.status === 'Confirmed' ? 'default' : 'secondary'}>{booking.status}</Badge>
                     </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3">
                     <div className="flex items-center text-sm text-muted-foreground">
                         <Clock className="w-4 h-4 mr-2" />
                         {booking.bookingDate?.toDate().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) || 'Date not set'}
@@ -95,7 +95,7 @@ function BookingsPage() {
                         <MapPin className="w-4 h-4 mr-2" />
                         {booking.venueLocation}
                     </div>
-                    <div className="flex gap-2 pt-2">
+                    <div className="flex gap-2 pt-1">
                         <Button size="sm">View Details</Button>
                         <Button size="sm" variant="outline">Contact Provider</Button>
                     </div>
@@ -109,7 +109,7 @@ function BookingsPage() {
      <Card className="opacity-70">
         <div className="grid grid-cols-1 md:grid-cols-3">
             <div className="md:col-span-1">
-                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+                <Image src={booking.venueImage} alt={booking.venueName} width={400} height={200} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
             </div>
             <div className="md:col-span-2">
                 <CardHeader>
@@ -121,7 +121,7 @@ function BookingsPage() {
                         <Badge variant="secondary">Completed</Badge>
                     </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3">
                         <div className="flex items-center text-sm text-muted-foreground">
                         <CheckCircle className="w-4 h-4 mr-2" />
                         {booking.bookingDate?.toDate().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) || 'Date not set'}
@@ -130,7 +130,7 @@ function BookingsPage() {
                         <MapPin className="w-4 h-4 mr-2" />
                         {booking.venueLocation}
                     </div>
-                    <div className="flex gap-2 pt-2">
+                    <div className="flex gap-2 pt-1">
                         <Button size="sm" variant="outline">Leave a Review</Button>
                         <Button size="sm" variant="outline">View Receipt</Button>
                     </div>
@@ -142,12 +142,12 @@ function BookingsPage() {
 
   const EmptyState = ({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) => (
      <div className="border-dashed border rounded-lg">
-        <div className="p-10 text-center">
-            <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
-            <Icon className="w-8 h-8 text-muted-foreground" />
+        <div className="p-8 text-center">
+            <div className="mx-auto w-fit bg-secondary p-3 rounded-full mb-3">
+            <Icon className="w-7 h-7 text-muted-foreground" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">{title}</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-lg font-semibold mb-1">{title}</h3>
+            <p className="text-muted-foreground text-sm">
             {description}
             </p>
         </div>
@@ -167,7 +167,7 @@ function BookingsPage() {
           <TabsTrigger value="past">Past</TabsTrigger>
         </TabsList>
         <TabsContent value="upcoming">
-          <div className="space-y-6 mt-6">
+          <div className="space-y-4 mt-4">
             {upcomingBookings.length > 0 ? (
                 upcomingBookings.map(booking => (
                    <BookingCard key={booking.id} booking={booking} />
@@ -182,7 +182,7 @@ function BookingsPage() {
             </div>
         </TabsContent>
         <TabsContent value="past">
-            <div className="space-y-6 mt-6">
+            <div className="space-y-4 mt-4">
             {pastBookings.length > 0 ? (
                 pastBookings.map(booking => (
                    <PastBookingCard key={booking.id} booking={booking} />

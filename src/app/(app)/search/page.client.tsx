@@ -31,12 +31,12 @@ export function SearchPageClient({ searchResults }: { searchResults: (VenueCardP
     const hasSearched = searchParams && searchParams.toString().length > 0;
 
     const CategoryGrid = () => (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-3">
             {categories.map(category => (
                 <Link href={`/search?category=${category.query}`} key={category.name}>
-                    <Card className="flex flex-col items-center justify-center p-4 aspect-square text-center hover:bg-muted transition-colors">
-                        <category.icon className="w-8 h-8 mb-2 text-primary" />
-                        <p className="text-sm font-semibold">{category.name}</p>
+                    <Card className="flex flex-col items-center justify-center p-2 aspect-square text-center hover:bg-muted transition-colors">
+                        <category.icon className="w-6 h-6 mb-1 text-primary" />
+                        <p className="text-xs font-semibold">{category.name}</p>
                     </Card>
                 </Link>
             ))}
@@ -44,22 +44,22 @@ export function SearchPageClient({ searchResults }: { searchResults: (VenueCardP
     );
 
     return (
-        <div className="container mx-auto px-4 py-12">
-             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="container mx-auto px-4 py-6">
+             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {/* Filters Sidebar */}
                 <aside className="hidden md:block md:col-span-1">
-                    <Card className="p-6 sticky top-24">
-                       <h2 className="text-lg font-semibold mb-4">Filters</h2>
+                    <Card className="p-4 sticky top-20">
+                       <h2 className="text-base font-semibold mb-4">Filters</h2>
                        <Filters />
                     </Card>
                 </aside>
 
                 {/* Main Content */}
                 <main className="md:col-span-3">
-                    <div className='flex justify-between items-center mb-6'>
+                    <div className='flex justify-between items-center mb-4'>
                          <div>
-                            <h1 className="text-3xl font-bold font-headline">{hasSearched ? "Search Results" : "Explore Categories"}</h1>
-                             {hasSearched && <p className="text-muted-foreground">Showing {searchResults.length} results.</p>}
+                            <h1 className="text-2xl font-bold font-headline">{hasSearched ? "Search Results" : "Explore Categories"}</h1>
+                             {hasSearched && <p className="text-muted-foreground text-sm">Showing {searchResults.length} results.</p>}
                         </div>
                         <div className="md:hidden">
                             <Sheet>
@@ -86,7 +86,7 @@ export function SearchPageClient({ searchResults }: { searchResults: (VenueCardP
                     {!hasSearched && <CategoryGrid />}
                     
                     {hasSearched && searchResults.length > 0 && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {searchResults.map((item) => {
                                 const favorited = isFavorited(item.slug);
                                 return (
@@ -94,23 +94,23 @@ export function SearchPageClient({ searchResults }: { searchResults: (VenueCardP
                                     <VenueCard 
                                         {...item}
                                         isCard
-                                        imageClassName="h-64"
+                                        imageClassName="h-48"
                                         actionButton={
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full"
+                                                className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full h-8 w-8"
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     e.stopPropagation();
                                                     toggleFavorite(item)
                                                 }}
                                             >
-                                                <Heart className={cn("w-5 h-5", favorited && "fill-primary text-primary")} />
+                                                <Heart className={cn("w-4 h-4", favorited && "fill-primary text-primary")} />
                                             </Button>
                                         }
                                         >
-                                            <p className='text-sm text-primary font-semibold my-1 capitalize'>{item.category}</p>
+                                            <p className='text-xs text-primary font-semibold my-1 capitalize'>{item.category}</p>
                                     </VenueCard>
                                 </Link>
                             )})}
@@ -118,12 +118,12 @@ export function SearchPageClient({ searchResults }: { searchResults: (VenueCardP
                     )}
                     {hasSearched && searchResults.length === 0 && (
                          <div className="border-dashed border rounded-lg">
-                            <div className="p-10 text-center">
-                                <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
-                                <Search className="w-8 h-8 text-muted-foreground" />
+                            <div className="p-8 text-center">
+                                <div className="mx-auto w-fit bg-secondary p-3 rounded-full mb-3">
+                                <Search className="w-7 h-7 text-muted-foreground" />
                                 </div>
-                                <h3 className="text-xl font-semibold mb-2">No Results Found</h3>
-                                <p className="text-muted-foreground">
+                                <h3 className="text-lg font-semibold mb-1">No Results Found</h3>
+                                <p className="text-muted-foreground text-sm">
                                 We couldn't find anything matching your search. Try adjusting your filters.
                                 </p>
                             </div>

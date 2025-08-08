@@ -155,14 +155,14 @@ export default function ChatPage() {
 
   const ConversationList = () => (
     <div className='bg-background h-full flex flex-col'>
-        <div className='p-4 flex justify-between items-center border-b shrink-0'>
-            <h1 className='text-2xl font-bold'>Messages</h1>
+        <div className='p-3 flex justify-between items-center border-b shrink-0'>
+            <h1 className='text-xl font-bold'>Messages</h1>
             <Button variant='ghost' size='icon'>
-                <Info className='w-5 h-5' />
+                <Info className='w-4 h-4' />
             </Button>
         </div>
-        <div className='p-4 space-y-4 overflow-y-auto flex-1'>
-             <h2 className='text-sm font-semibold text-muted-foreground'>Friends</h2>
+        <div className='p-2 space-y-2 overflow-y-auto flex-1'>
+             <h2 className='text-xs font-semibold text-muted-foreground px-2'>Friends</h2>
             {conversations.map((convo) => {
                 const otherParticipant = getOtherParticipant(convo);
                 if (!otherParticipant) return null;
@@ -176,13 +176,13 @@ export default function ChatPage() {
                     )}
                     onClick={() => setActiveConversation(convo)}
                 >
-                    <Avatar className='h-12 w-12'>
+                    <Avatar className='h-10 w-10'>
                         <AvatarImage src={otherParticipant.avatar} alt={otherParticipant.name} data-ai-hint="logo" />
                         <AvatarFallback>{otherParticipant.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 overflow-hidden">
                         <div className='flex justify-between items-center'>
-                            <p className="font-semibold truncate">{otherParticipant.name}</p>
+                            <p className="font-semibold truncate text-sm">{otherParticipant.name}</p>
                             <p className="text-xs text-muted-foreground whitespace-nowrap">{lastMessageTime}</p>
                         </div>
                         <p className="text-sm text-muted-foreground truncate">{convo.lastMessage?.text}</p>
@@ -200,27 +200,27 @@ export default function ChatPage() {
 
     return (
         <div className="flex flex-col h-full bg-muted/30">
-            <header className="flex-shrink-0 flex items-center gap-4 p-3 border-b bg-background">
+            <header className="flex-shrink-0 flex items-center gap-3 p-2 border-b bg-background">
                 <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setActiveConversation(null)}>
                     <ArrowLeft />
                 </Button>
-                <div className='flex items-center gap-3'>
-                    <Avatar className='h-10 w-10'>
+                <div className='flex items-center gap-2'>
+                    <Avatar className='h-9 w-9'>
                         <AvatarImage src={otherParticipant?.avatar} alt={otherParticipant?.name} data-ai-hint="logo" />
                         <AvatarFallback>{otherParticipant?.name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <h2 className='text-lg font-semibold'>{otherParticipant?.name}</h2>
+                    <h2 className='text-base font-semibold'>{otherParticipant?.name}</h2>
                 </div>
-                <div className='ml-auto flex items-center gap-2'>
+                <div className='ml-auto flex items-center gap-1'>
                     <Button variant='ghost' size='icon'>
-                        <Phone className='w-5 h-5' />
+                        <Phone className='w-4 h-4' />
                     </Button>
                      <Button variant='ghost' size='icon'>
-                        <MoreVertical className='w-5 h-5' />
+                        <MoreVertical className='w-4 h-4' />
                     </Button>
                 </div>
             </header>
-            <main className="flex-grow p-4 space-y-6">
+            <main className="flex-1 p-4 space-y-4">
                 {activeConversation.messages.map((message) => {
                 const fromMe = message.senderId === 'user-123'; // Using mock user ID
                 return (
@@ -236,7 +236,7 @@ export default function ChatPage() {
                         )}
                         <div
                         className={cn(
-                            'max-w-md p-3 rounded-2xl',
+                            'max-w-md p-2 px-3 rounded-2xl',
                             fromMe
                             ? 'bg-primary text-primary-foreground rounded-br-none'
                             : 'bg-background rounded-bl-none'
@@ -260,8 +260,8 @@ export default function ChatPage() {
                 )}
                 <div ref={messagesEndRef} />
             </main>
-            <footer className="p-4 border-t bg-background flex-shrink-0">
-                <div className="flex w-full items-center space-x-2 bg-muted rounded-full px-2">
+            <footer className="p-2 border-t bg-background flex-shrink-0">
+                <div className="flex w-full items-center space-x-2 bg-muted rounded-full pl-2 pr-1">
                  <Button variant="ghost" size="icon" className="text-muted-foreground">
                     <Smile className="w-5 h-5" />
                 </Button>
@@ -272,13 +272,13 @@ export default function ChatPage() {
                     onChange={e => setNewMessage(e.target.value)}
                     onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
                     disabled={loading}
-                    className="flex-1 bg-transparent border-none focus-visible:ring-0 shadow-none text-base h-12"
+                    className="flex-1 bg-transparent border-none focus-visible:ring-0 shadow-none text-sm h-10"
                 />
                  <Button variant="ghost" size="icon" className="text-muted-foreground">
                     <Paperclip className="w-5 h-5" />
                 </Button>
-                <Button onClick={handleSendMessage} disabled={loading || !newMessage.trim()} size='icon' className='rounded-full h-10 w-10'>
-                    <Send className="w-5 h-5" />
+                <Button onClick={handleSendMessage} disabled={loading || !newMessage.trim()} size='icon' className='rounded-full h-8 w-8'>
+                    <Send className="w-4 h-4" />
                 </Button>
                 </div>
             </footer>
@@ -288,7 +288,7 @@ export default function ChatPage() {
 
   return (
     <ProtectedRoute>
-      <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[350px_1fr] h-[calc(100vh-4rem)]">
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-[calc(100vh-3.5rem)]">
         <div className={cn("hidden md:block border-r h-full", activeConversation && "hidden md:block")}>
            <ConversationList />
         </div>
@@ -296,10 +296,10 @@ export default function ChatPage() {
            {activeConversation ? (
                 <ActiveConversation />
             ) : (
-                <div className="text-center">
-                    <MessageSquare className="w-16 h-16 mx-auto text-muted-foreground" />
-                    <h2 className="mt-2 text-xl font-semibold">Select a conversation</h2>
-                    <p className="text-muted-foreground">Start chatting with your vendors and our AI assistant.</p>
+                <div className="text-center p-4">
+                    <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground" />
+                    <h2 className="mt-2 text-lg font-semibold">Select a conversation</h2>
+                    <p className="text-muted-foreground text-sm">Start chatting with your vendors and our AI assistant.</p>
                 </div>
             )}
         </div>

@@ -48,7 +48,7 @@ export default function LoginPage() {
   
   return (
     <>
-      <div className="flex flex-col h-screen bg-background p-6">
+      <div className="flex flex-col h-screen bg-background p-4">
           <div className="absolute top-4 left-4 z-10">
               <Button variant="ghost" size="icon" onClick={() => router.push('/')} className="bg-muted hover:bg-muted/80">
                   <ArrowLeft />
@@ -59,23 +59,23 @@ export default function LoginPage() {
               <div 
                   className="mb-6"
               >
-                <AppLogo width={160} height={80} />
+                <AppLogo width={120} height={60} />
               </div>
-              <h1 className="text-3xl font-bold font-headline mb-2 text-foreground">Welcome Back</h1>
-              <p className="text-foreground/80 mb-8 max-w-xs">Enter your credentials to access your account and plan your next masterpiece.</p>
+              <h1 className="text-2xl font-bold font-headline mb-2 text-foreground">Welcome Back</h1>
+              <p className="text-foreground/80 mb-6 max-w-xs text-sm">Enter your credentials to access your account.</p>
         </div>
         
-        <div className="bg-card border p-6 rounded-2xl space-y-4 shadow-lg">
-          <form onSubmit={handleLogin} className="space-y-4">
+        <div className="bg-card border p-4 rounded-xl space-y-4 shadow-lg">
+          <form onSubmit={handleLogin} className="space-y-3">
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 pl-10" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 pl-9" />
             </div>
              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-14 pl-10" placeholder="Password" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 pl-9" placeholder="Password" />
             </div>
-            <Button type="submit" disabled={loading} className="w-full h-14 text-base">
+            <Button type="submit" disabled={loading} className="w-full h-12">
               {loading ? <Loader className="animate-spin" /> : 'Sign in'}
             </Button>
           </form>
@@ -86,11 +86,11 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-3">
-              <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-14 text-base" disabled={loading}>
+              <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-12" disabled={loading}>
                   <Chrome className="mr-2" /> Continue with Google
               </Button>
             </div>
-            <p className="text-center text-muted-foreground text-sm mt-6">
+            <p className="text-center text-muted-foreground text-sm pt-2">
               Don&apos;t have an account?{" "}
               <Link href="/signup" className="underline font-semibold text-primary">
                 Sign up

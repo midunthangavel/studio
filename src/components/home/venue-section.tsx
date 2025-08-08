@@ -13,16 +13,16 @@ export const VenueSection = ({ title, venues, moreLink }: { title: string, venue
     const { isFavorited, toggleFavorite } = useFavorites();
 
     return (
-        <section className="py-6">
+        <section className="py-4">
             <div className="container mx-auto px-4">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold font-headline">
+                <div className="flex justify-between items-center mb-3">
+                    <h2 className="text-xl font-bold font-headline">
                         {title}
                     </h2>
                     {moreLink && (
-                        <Button variant="link" asChild className="text-primary">
+                        <Button variant="link" asChild className="text-primary text-sm">
                             <Link href={moreLink}>
-                                See all <ArrowRight className="ml-2 h-4 w-4" />
+                                See all <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                             </Link>
                         </Button>
                     )}
@@ -43,19 +43,19 @@ export const VenueSection = ({ title, venues, moreLink }: { title: string, venue
                                         <VenueCard
                                             {...venue}
                                             isCard
-                                            imageClassName="h-48"
+                                            imageClassName="h-40"
                                             actionButton={
                                                 <Button 
                                                     variant="ghost" 
                                                     size="icon" 
-                                                    className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full h-8 w-8"
+                                                    className="absolute top-2 right-2 bg-black/30 text-white hover:bg-black/50 hover:text-white rounded-full h-7 w-7"
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         e.stopPropagation();
                                                         toggleFavorite(venue)
                                                     }}
                                                 >
-                                                    <Heart className={cn("w-4 h-4", favorited && "fill-primary text-primary")} />
+                                                    <Heart className={cn("w-3.5 h-3.5", favorited && "fill-primary text-primary")} />
                                                 </Button>
                                             }
                                         />

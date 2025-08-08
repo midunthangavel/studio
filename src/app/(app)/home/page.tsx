@@ -30,20 +30,20 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col">
-       <div className="container mx-auto px-4 py-6">
+       <div className="container mx-auto px-4 py-4">
         <form onSubmit={handleSearchSubmit} className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
                 type="search"
                 placeholder="Search for venues, catering, and more..."
-                className="w-full h-14 rounded-full bg-muted pl-12 text-base"
+                className="w-full h-12 rounded-full bg-muted pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
         </form>
        </div>
       
-      <div className="py-6">
+      <div className="py-4">
         <VenueSection title="Popular venues" venues={popularVenues} moreLink="/search" />
         <VenueSection title="Available next month" venues={availableNextMonth} moreLink="/search" />
       </div>

@@ -42,17 +42,17 @@ export const Filters = ({ id }: { id?: string }) => {
     }
 
     return (
-        <form id={id} onSubmit={handleFilterSubmit} className="space-y-6">
+        <form id={id} onSubmit={handleFilterSubmit} className="space-y-4">
             <div>
-                <Label htmlFor="keyword">Keyword or Name</Label>
-                <Input id="keyword" placeholder="e.g., Lakeside, Royal" value={keyword} onChange={e => setKeyword(e.target.value)} />
+                <Label htmlFor="keyword" className='text-xs'>Keyword or Name</Label>
+                <Input id="keyword" placeholder="e.g., Lakeside" value={keyword} onChange={e => setKeyword(e.target.value)} />
             </div>
             <div>
-                <Label htmlFor="location">Location</Label>
-                <Input id="location" placeholder="e.g., New York, NY" value={location} onChange={e => setLocation(e.target.value)} />
+                <Label htmlFor="location" className='text-xs'>Location</Label>
+                <Input id="location" placeholder="e.g., New York" value={location} onChange={e => setLocation(e.target.value)} />
             </div>
             <div>
-                <Label htmlFor="category">Service Type</Label>
+                <Label htmlFor="category" className='text-xs'>Service Type</Label>
                 <Select value={category} onValueChange={setCategory}>
                     <SelectTrigger id="category">
                         <SelectValue placeholder="All Services" />
@@ -67,15 +67,16 @@ export const Filters = ({ id }: { id?: string }) => {
                 </Select>
             </div>
             <div>
-                <Label>Price Range</Label>
+                <Label className='text-xs'>Price Range</Label>
                 <Slider
                     min={0}
                     max={30000}
                     step={100}
                     value={priceRange}
                     onValueChange={(value) => setPriceRange(value as [number, number])}
+                    className='h-3'
                 />
-                <div className="flex justify-between text-sm text-muted-foreground mt-2">
+                <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
                     <span>${priceRange[0]}</span>
                     <span>${priceRange[1]}</span>
                 </div>

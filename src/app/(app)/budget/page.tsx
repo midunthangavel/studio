@@ -131,7 +131,7 @@ export default function BudgetPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen">
-                <Loader className="h-8 w-8 animate-spin" />
+                <Loader className="h-6 w-6 animate-spin" />
             </div>
         );
     }
@@ -143,40 +143,40 @@ export default function BudgetPage() {
                 title="Budget"
                 description="Manage your event expenses and stay on top of your budget."
             >
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-5xl mx-auto">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-4xl mx-auto">
                     <Card>
                         <CardHeader>
                             <CardTitle>Budget Overview</CardTitle>
                              <div className="flex items-center gap-4 pt-2">
-                                <Label htmlFor="total-budget" className="whitespace-nowrap">Total Budget ($)</Label>
+                                <Label htmlFor="total-budget" className="whitespace-nowrap text-sm">Total Budget ($)</Label>
                                 <Input
                                     id="total-budget"
                                     type="number"
-                                    className="max-w-xs"
+                                    className="max-w-xs h-9"
                                     {...form.register('totalBudget')}
                                 />
                             </div>
                         </CardHeader>
                         <CardContent className="grid grid-cols-2 gap-4">
                             <Card>
-                                <CardHeader>
-                                    <CardTitle className="text-lg">Total Spent</CardTitle>
+                                <CardHeader className='p-4'>
+                                    <CardTitle className="text-base">Total Spent</CardTitle>
                                     <CardDescription>${totalSpent.toFixed(2)}</CardDescription>
                                 </CardHeader>
                             </Card>
                             <Card>
-                                <CardHeader>
-                                    <CardTitle className="text-lg">Remaining</CardTitle>
+                                <CardHeader className='p-4'>
+                                    <CardTitle className="text-base">Remaining</CardTitle>
                                     <CardDescription 
-                                        className={cn(remaining < 0 && "text-destructive")}
+                                        className={cn("text-base", remaining < 0 && "text-destructive")}
                                     >
                                         ${remaining.toFixed(2)}
                                     </CardDescription>
                                 </CardHeader>
                             </Card>
                             <div className="col-span-2">
-                                <Progress value={spentPercentage} className="w-full" />
-                                <p className="text-sm text-muted-foreground mt-2 text-center">{spentPercentage.toFixed(0)}% of budget used</p>
+                                <Progress value={spentPercentage} className="w-full h-2" />
+                                <p className="text-xs text-muted-foreground mt-2 text-center">{spentPercentage.toFixed(0)}% of budget used</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -193,7 +193,7 @@ export default function BudgetPage() {
                              onChange={(e) => setAiPrompt(e.target.value)}
                              disabled={aiLoading}
                            />
-                           <Button type="button" onClick={handleAiAdd} disabled={aiLoading || !aiPrompt}>
+                           <Button type="button" onClick={handleAiAdd} disabled={aiLoading || !aiPrompt} size="sm">
                                {aiLoading ? <Loader className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
                                Add with AI
                            </Button>
@@ -212,10 +212,10 @@ export default function BudgetPage() {
                                         <div className="flex justify-between items-start mb-2">
                                             <Input 
                                                 placeholder="Expense Name"
-                                                className="text-lg font-semibold border-none shadow-none p-0 focus-visible:ring-0"
+                                                className="text-base font-semibold border-none shadow-none p-0 focus-visible:ring-0 h-auto"
                                                 {...form.register(`expenses.${index}.name`)} 
                                             />
-                                            <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                                            <Button type="button" variant="ghost" size="icon" className='h-7 w-7' onClick={() => remove(index)}>
                                                 <Trash2 className="h-4 w-4 text-destructive" />
                                             </Button>
                                         </div>
@@ -244,6 +244,7 @@ export default function BudgetPage() {
                                 type="button"
                                 variant="outline"
                                 className="mt-4"
+                                size="sm"
                                 onClick={() => append({ name: '', category: 'Other', amount: 0 })}
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" /> Add Expense Manually

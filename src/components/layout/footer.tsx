@@ -50,7 +50,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="fixed bottom-0 left-0 z-50 w-full h-16 border-t bg-background">
+    <footer className="fixed bottom-0 left-0 z-50 w-full h-14 border-t bg-background">
       <div className="container grid h-full max-w-lg grid-cols-5 items-center justify-around">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
@@ -59,12 +59,12 @@ export function Footer() {
               key={item.name}
               href={item.href}
               className={cn(
-                'flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors',
+                'flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors',
                 isActive ? 'text-primary' : 'text-muted-foreground hover:text-primary'
               )}
             >
-              <item.icon className={cn("h-5 w-5")} />
-              <span className="truncate">{item.name}</span>
+              <item.icon className={cn("h-4 w-4")} />
+              <span className="truncate text-[10px]">{item.name}</span>
             </Link>
           );
         })}

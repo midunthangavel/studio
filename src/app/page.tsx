@@ -19,31 +19,31 @@ export default function WelcomePage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-primary/20 via-background to-background p-8">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-primary/20 via-background to-background p-6">
       <div className="flex-1 flex flex-col justify-center items-center text-center">
         <div 
-            className="mb-8" 
+            className="mb-6" 
         >
-          <AppLogo width={192} height={96} />
+          <AppLogo width={160} height={80} />
         </div>
         
-        <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4 text-foreground">
+        <h1 className="text-4xl md:text-5xl font-bold font-headline mb-3 text-foreground">
           Explore,
           <br />
           Book,
           <br />
           Enjoy
         </h1>
-        <p className="max-w-md text-muted-foreground">
+        <p className="max-w-md text-muted-foreground text-sm">
             The best way to find and book venues for your next event.
         </p>
       </div>
       
-      <div className="space-y-4 bg-card/50 backdrop-blur-sm p-4 rounded-xl border">
-        <Button variant="outline" className="w-full h-14 text-base" onClick={handleGoogleSignIn}>
+      <div className="space-y-3 bg-card/50 backdrop-blur-sm p-3 rounded-xl border">
+        <Button variant="outline" className="w-full h-12" onClick={handleGoogleSignIn}>
           <Chrome className="mr-2" /> Continue with Google
         </Button>
-         <Button className="w-full h-14 text-base" asChild>
+         <Button className="w-full h-12" asChild>
           <Link href="/signup">
             Create an Account
           </Link>
