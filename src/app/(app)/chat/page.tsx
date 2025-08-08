@@ -39,7 +39,7 @@ export default function ChatPage() {
 
     const q = query(
         collection(db, "conversations"), 
-        where(`participants.${user.uid}`, '!=', null)
+        where(`participants.${user.uid}.name`, '!=', null)
     );
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -66,7 +66,7 @@ export default function ChatPage() {
   }, [user]);
 
    useEffect(() => {
-    if (activeConversation) {
+    if (activeConversation?.id) {
         const unsub = onSnapshot(doc(db, 'conversations', activeConversation.id), (doc) => {
             if (doc.exists()) {
                  const data = doc.data();
@@ -77,7 +77,8 @@ export default function ChatPage() {
                       lastMessage: {
                         text: lastMessage?.text || "No messages yet",
                         timestamp: lastMessage?.timestamp || data.createdAt
-                     }
+                     },
+                     messages: data.messages || [],
                  }));
             }
         });
@@ -281,7 +282,7 @@ export default function ChatPage() {
   return (
     <ProtectedRoute>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 h-screen">
-        <div className={cn("hidden md:block border-r", activeConversation && "hidden lg:block")}>
+        <div className={cn("hidden md:block border-r", activeConversation && "hidden md:hidden lg:block")}>
            <ConversationList />
         </div>
         <div className={cn("md:col-span-2 lg:col-span-3", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
