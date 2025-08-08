@@ -142,14 +142,14 @@ export default function ChatPage() {
   }
 
   const ConversationList = () => (
-    <div className='bg-background h-screen'>
-        <div className='p-4 flex justify-between items-center border-b'>
+    <div className='bg-background h-full flex flex-col'>
+        <div className='p-4 flex justify-between items-center border-b shrink-0'>
             <h1 className='text-2xl font-bold'>Messages</h1>
             <Button variant='ghost' size='icon'>
                 <Info className='w-5 h-5' />
             </Button>
         </div>
-        <div className='p-4 space-y-4'>
+        <div className='p-4 space-y-4 overflow-y-auto flex-1'>
              <h2 className='text-sm font-semibold text-muted-foreground'>Friends</h2>
             {conversations.map((convo) => {
                 const otherParticipant = getOtherParticipant(convo);
@@ -184,7 +184,7 @@ export default function ChatPage() {
     const otherParticipant = getOtherParticipant(activeConversation);
 
     return (
-        <div className="flex flex-col h-screen bg-muted/30">
+        <div className="flex flex-col h-full bg-muted/30">
             <header className="flex-shrink-0 flex items-center gap-4 p-3 border-b bg-background">
                 <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setActiveConversation(null)}>
                     <ArrowLeft />
@@ -281,11 +281,11 @@ export default function ChatPage() {
 
   return (
     <ProtectedRoute>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 h-screen">
-        <div className={cn("hidden md:block border-r", activeConversation && "hidden md:hidden lg:block")}>
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 h-[calc(100vh-4rem)]">
+        <div className={cn("hidden md:block border-r h-full", activeConversation && "hidden md:hidden lg:block")}>
            <ConversationList />
         </div>
-        <div className={cn("md:col-span-2 lg:col-span-3", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
+        <div className={cn("md:col-span-2 lg:col-span-3 h-full", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
            {activeConversation ? (
                 <ActiveConversation />
             ) : (
