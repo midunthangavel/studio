@@ -97,16 +97,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-16 items-center">
-        {!isHomePage && (
-             <div className="mr-4 hidden md:flex">
-              <Link href="/" className="mr-6 flex items-center space-x-2">
-                <AppLogo width={120} height={40} />
-              </Link>
-              <HeaderNavigation />
-            </div>
-        )}
-        
-         {isHomePage && user ? (
+        <div className="flex flex-1 items-center justify-start">
+        {isHomePage && user ? (
             <div className="flex items-center gap-3">
                 <Link href="/profile">
                     <Avatar className="h-10 w-10">
@@ -123,9 +115,17 @@ export function Header() {
                     <span>New York, NY</span>
                 </div>
             </div>
-         ) : null}
+         ) : (
+             <div className="hidden md:flex items-center">
+              <Link href="/" className="mr-6 flex items-center space-x-2">
+                <AppLogo width={120} height={40} />
+              </Link>
+              <HeaderNavigation />
+            </div>
+         )}
+         </div>
 
-        <div className="relative flex-1 hidden md:block">
+        <div className="relative flex-1 hidden md:block mx-4">
           {!isHomePage && (
               <>
                  <Input
@@ -142,7 +142,7 @@ export function Header() {
           )}
         </div>
         
-        <div className="flex flex-1 items-center justify-end space-x-2">
+        <div className="flex flex-shrink-0 items-center justify-end space-x-2">
            <Popover>
             <PopoverTrigger asChild>
               <Button size="icon" variant="ghost">
