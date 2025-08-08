@@ -12,6 +12,7 @@ import { MapPin, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { InstallPWA } from "@/components/shared/install-pwa";
 
 const popularVenues: VenueCardProps[] = allVenues.slice(0, 4);
 const availableNextMonth: VenueCardProps[] = allVenues.slice(5, 8);
@@ -47,6 +48,7 @@ export default function HomePage() {
         <VenueSection title="Popular venues" venues={popularVenues} moreLink="/search" />
         <VenueSection title="Available next month" venues={availableNextMonth} moreLink="/search" />
       </div>
+      <InstallPWA />
     </div>
   );
 }
