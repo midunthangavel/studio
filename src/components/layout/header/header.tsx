@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Bell, LogOut, User, MessageSquare } from "lucide-react";
+import { Bell, LogOut, User, MessageSquare, MapPin } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { AppLogo } from "@/components/shared/app-logo";
 import { useAuth } from "@/context/auth-context";
@@ -97,14 +97,35 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-16 items-center">
-        <div className="mr-4 hidden md:flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <AppLogo width={120} height={40} />
-          </Link>
-           {!isHomePage && <HeaderNavigation />}
-        </div>
+        {!isHomePage && (
+             <div className="mr-4 hidden md:flex">
+              <Link href="/" className="mr-6 flex items-center space-x-2">
+                <AppLogo width={120} height={40} />
+              </Link>
+              <HeaderNavigation />
+            </div>
+        )}
         
-        <div className="relative flex-1">
+         {isHomePage && user ? (
+            <div className="flex items-center gap-3">
+                <Link href="/profile">
+                    <Avatar className="h-10 w-10">
+                        <AvatarImage src={user?.photoURL ?? undefined} />
+                        <AvatarFallback>{user?.displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                </Link>
+                <div>
+                    <p className="text-muted-foreground text-sm">Welcome back,</p>
+                    <h2 className="font-bold">{user?.displayName || 'User'}!</h2>
+                </div>
+                <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground ml-4">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    <span>New York, NY</span>
+                </div>
+            </div>
+         ) : null}
+
+        <div className="relative flex-1 hidden md:block">
           {!isHomePage && (
               <>
                  <Input

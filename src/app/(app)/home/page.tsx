@@ -20,22 +20,6 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
        <div className="container mx-auto px-4 py-6">
-        <div className="flex items-center gap-3 mb-4">
-            <Link href="/profile">
-                <Avatar className="h-12 w-12">
-                     <AvatarImage src={user?.photoURL ?? undefined} />
-                     <AvatarFallback>{user?.displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}</AvatarFallback>
-                </Avatar>
-            </Link>
-            <div>
-                <p className="text-muted-foreground text-sm">Welcome back,</p>
-                <h2 className="text-lg font-bold">{user?.displayName || 'User'}!</h2>
-            </div>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-            <MapPin className="w-4 h-4 text-primary" />
-            <span>New York, NY</span>
-        </div>
         <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
