@@ -17,13 +17,7 @@ function SearchFallback() {
   )
 }
 
-function performSearch(searchParams: SearchParams): (VenueCardProps & { category: string; })[] {
-  const q = searchParams.q;
-  const location = searchParams.location;
-  const category = searchParams.category;
-  const minPrice = searchParams.minPrice;
-  const maxPrice = searchParams.maxPrice;
-  
+function performSearch({ q, location, category, minPrice, maxPrice }: SearchParams): (VenueCardProps & { category: string; })[] {
   const hasSearched = q || location || category || minPrice || maxPrice;
 
   if (!hasSearched) {
@@ -54,3 +48,4 @@ export default function SearchPage({ searchParams }: { searchParams: SearchParam
     </Suspense>
   );
 }
+
