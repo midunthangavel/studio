@@ -20,17 +20,17 @@ export default function WelcomePage() {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-primary/20 via-background to-background p-6">
-      <div className="flex-1 flex flex-col justify-center items-center text-center">
+      <div className="flex-1 flex flex-col justify-center items-center">
         <AppLogo width={160} height={40} className="mb-6" />
         
-        <h1 className="text-4xl md:text-5xl font-bold font-headline mb-3 text-foreground">
+        <h1 className="text-4xl md:text-5xl font-bold font-headline mb-3 text-foreground text-center">
           Explore,
           <br />
           Book,
           <br />
           Enjoy
         </h1>
-        <p className="max-w-md text-muted-foreground text-sm">
+        <p className="max-w-md text-muted-foreground text-sm text-center">
             The best way to find and book venues for your next event.
         </p>
       </div>
