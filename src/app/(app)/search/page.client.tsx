@@ -31,7 +31,7 @@ export function SearchPageClient({ searchResults }: { searchResults: (VenueCardP
     const hasSearched = searchParams && searchParams.toString().length > 0;
 
     const CategoryGrid = () => (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4">
             {categories.map(category => (
                 <Link href={`/search?category=${category.query}`} key={category.name}>
                     <Card className="flex flex-col items-center justify-center p-4 aspect-square text-center hover:bg-muted transition-colors">
