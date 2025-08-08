@@ -21,8 +21,8 @@ export interface VenueCardProps {
     actionButton?: React.ReactNode;
     children?: React.ReactNode;
     guestCapacity?: number;
-    amenities?: string[];
-    reviews?: any[];
+    amenities: string[];
+    reviews: any[];
 }
 
 export function VenueCard({
