@@ -44,7 +44,7 @@ export default function SignupPage() {
       toast({
         variant: 'destructive',
         title: 'Sign-up Failed',
-        description: 'Sign-up failed; auth config not found',
+        description: error.message || 'An unexpected error occurred.',
       });
     } finally {
       setLoading(false);
@@ -60,7 +60,7 @@ export default function SignupPage() {
       </div>
 
       <div className="flex-1 flex flex-col justify-center items-center text-center">
-         <AppLogo width={160} height={80} />
+         <AppLogo width={192} height={96} />
       </div>
 
       <div className="bg-background/50 backdrop-blur-sm p-6 rounded-2xl space-y-4">
@@ -80,7 +80,7 @@ export default function SignupPage() {
                 required 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
-                className="h-12 pl-10"
+                className="h-14 pl-10"
               />
             </div>
           <div className="relative">
@@ -92,7 +92,7 @@ export default function SignupPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12 pl-10"
+              className="h-14 pl-10"
             />
           </div>
           <div className="relative">
@@ -102,7 +102,7 @@ export default function SignupPage() {
                 type="password" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                className="h-12 pl-10"
+                className="h-14 pl-10"
                 placeholder='Password'
                 required
             />

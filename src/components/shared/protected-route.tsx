@@ -11,12 +11,12 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // if (!loading && !user) {
-    //   router.push('/login');
-    // }
+    if (!loading && !user) {
+      router.push('/login');
+    }
   }, [user, loading, router]);
 
-  if (loading) {
+  if (loading || !user) {
      return (
         <div className="flex items-center justify-center h-screen">
             <Loader className="h-8 w-8 animate-spin" />
