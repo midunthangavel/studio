@@ -58,7 +58,6 @@ export const Filters = ({ id }: { id?: string }) => {
                         <SelectValue placeholder="All Services" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="">All Services</SelectItem>
                         <SelectItem value="catering">Catering</SelectItem>
                         <SelectItem value="transport">Transport</SelectItem>
                         <SelectItem value="decorations">Decorations</SelectItem>
