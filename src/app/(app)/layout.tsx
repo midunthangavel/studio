@@ -13,7 +13,7 @@ export default function AppLayout({
 }>) {
   return (
       <>
-        <div className="relative flex min-h-screen flex-col bg-background">
+        <div className="relative flex min-h-screen flex-col bg-background max-w-7xl mx-auto w-full">
           <Header />
           <main className="flex-1 pb-16">{children}</main>
           <Footer />

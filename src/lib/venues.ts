@@ -15,8 +15,11 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Catering",
         hint: "catering food",
         guestCapacity: 200,
-        amenities: ["In-house Catering", "Vegan Options"],
-        reviews: [],
+        amenities: ["In-house Catering", "Vegan Options", "Custom Menus", "Buffet Style"],
+        reviews: [
+            { rating: 5, authorName: 'John Doe', comment: 'Absolutely amazing food and service!' },
+            { rating: 4, authorName: 'Jane Smith', comment: 'Great variety and delicious options.' },
+        ],
     },
     {
         name: "Exquisite Eats",
@@ -30,8 +33,10 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Catering",
         hint: "fine dining",
         guestCapacity: 150,
-        amenities: ["In-house Catering", "Custom Menus"],
-        reviews: [],
+        amenities: ["In-house Catering", "Custom Menus", "Seafood Specialities"],
+        reviews: [
+            { rating: 5, authorName: 'Alice Johnson', comment: 'The presentation was as good as the taste. Highly recommend.' },
+        ],
     },
     {
         name: "The Wedding Feast",
@@ -45,7 +50,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Catering",
         hint: "wedding buffet",
         guestCapacity: 300,
-        amenities: ["In-house Catering", "Buffet Style"],
+        amenities: ["In-house Catering", "Buffet Style", "Dessert Stations"],
         reviews: [],
     },
     {
@@ -60,7 +65,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Catering",
         hint: "gourmet salad",
         guestCapacity: 100,
-        amenities: ["In-house Catering", "Halal Options"],
+        amenities: ["In-house Catering", "Halal Options", "Family Style"],
         reviews: [],
     },
     {
@@ -75,7 +80,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Catering",
         hint: "restaurant table",
         guestCapacity: 80,
-        amenities: ["In-house Catering", "Organic Ingredients"],
+        amenities: ["In-house Catering", "Organic Ingredients", "Vegan Options"],
         reviews: [],
     },
     {
@@ -90,7 +95,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Catering",
         hint: "seafood platter",
         guestCapacity: 120,
-        amenities: ["In-house Catering", "Seafood Specialities"],
+        amenities: ["In-house Catering", "Seafood Specialities", "Sushi Bar"],
         reviews: [],
     },
     {
@@ -120,7 +125,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Catering",
         hint: "vegan salad",
         guestCapacity: 100,
-        amenities: ["In-house Catering", "Vegan Options"],
+        amenities: ["In-house Catering", "Vegan Options", "Organic Ingredients"],
         reviews: [],
     },
     {
@@ -150,7 +155,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Catering",
         hint: "sushi platter",
         guestCapacity: 180,
-        amenities: ["In-house Catering", "Sushi Bar"],
+        amenities: ["In-house Catering", "Sushi Bar", "Custom Menus"],
         reviews: [],
     },
 
@@ -167,7 +172,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Transport",
         hint: "luxury car",
         guestCapacity: 4,
-        amenities: ["Air Conditioning"],
+        amenities: ["Air Conditioning", "Sound System"],
         reviews: [],
     },
     {
@@ -319,7 +324,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Decorations",
         hint: "flower arch",
         guestCapacity: 300,
-        amenities: [],
+        amenities: ["Full Service Setup"],
         reviews: [],
     },
     {
@@ -334,7 +339,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Decorations",
         hint: "wedding table",
         guestCapacity: 400,
-        amenities: ["Full Service Setup"],
+        amenities: ["Full Service Setup", "Custom Lighting"],
         reviews: [],
     },
     {
@@ -471,7 +476,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Photography",
         hint: "wedding photography",
         guestCapacity: 0,
-        amenities: [],
+        amenities: ["Videography", "Drone Photography"],
         reviews: [],
     },
     {
@@ -486,7 +491,7 @@ export const allVenues: (VenueCardProps & { category: string; priceValue: number
         category: "Photography",
         hint: "couple portrait",
         guestCapacity: 0,
-        amenities: [],
+        amenities: ["Videography"],
         reviews: [],
     },
     {
