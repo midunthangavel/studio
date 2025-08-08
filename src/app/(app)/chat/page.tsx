@@ -220,7 +220,7 @@ export default function ChatPage() {
                     </Button>
                 </div>
             </header>
-            <main className="flex-grow overflow-y-auto p-4 space-y-6">
+            <main className="flex-grow p-4 space-y-6">
                 {activeConversation.messages.map((message) => {
                 const fromMe = message.senderId === 'user-123'; // Using mock user ID
                 return (
