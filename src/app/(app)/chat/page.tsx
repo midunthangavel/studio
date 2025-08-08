@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/auth-context';
 import { db } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, doc, addDoc, updateDoc, arrayUnion, getDoc, serverTimestamp, orderBy, Timestamp } from 'firebase/firestore';
+import { collection, query, onSnapshot, doc, updateDoc, arrayUnion, serverTimestamp, orderBy } from 'firebase/firestore';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,30 +35,36 @@ export default function ChatPage() {
   }, [activeConversation?.messages, loading]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+        setConversationsLoading(false);
+        return;
+    };
 
-    const q = query(
-        collection(db, "conversations"), 
-        where(`participants.${user.uid}.name`, '!=', null)
-    );
+    const q = query(collection(db, "conversations"));
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const convos: Conversation[] = [];
+        const userConvos: Conversation[] = [];
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            const lastMessage = data.messages?.[data.messages.length - 1];
-            convos.push({
-                 id: doc.id,
-                 ...data,
-                 lastMessage: {
-                     text: lastMessage?.text || "No messages yet",
-                     timestamp: lastMessage?.timestamp || data.createdAt
-                 }
-            } as Conversation);
+            // Check if user is a participant
+            if (data.participants && data.participants[user.uid]) {
+                const lastMessage = data.messages?.[data.messages.length - 1];
+                userConvos.push({
+                    id: doc.id,
+                    ...data,
+                    lastMessage: {
+                        text: lastMessage?.text || "No messages yet",
+                        timestamp: lastMessage?.timestamp || data.createdAt
+                    }
+                } as Conversation);
+            }
         });
        
-        convos.sort((a, b) => (b.lastMessage?.timestamp?.toMillis() || 0) - (a.lastMessage?.timestamp?.toMillis() || 0));
-        setConversations(convos);
+        userConvos.sort((a, b) => (b.lastMessage?.timestamp?.toMillis() || 0) - (a.lastMessage?.timestamp?.toMillis() || 0));
+        setConversations(userConvos);
+        setConversationsLoading(false);
+    }, (error) => {
+        console.error("Error fetching conversations: ", error);
         setConversationsLoading(false);
     });
 
@@ -123,7 +129,7 @@ export default function ChatPage() {
             console.error("Error fetching AI suggestion:", error);
             const errorMessage = { 
                 senderId: 'ai-assistant',
-                text: 'Sorry, I had trouble coming up with ideas right now. Please try again.',
+                text: 'Sorry, I had trouble coming with a response right now. Please try again.',
                 timestamp: serverTimestamp()
              };
             await updateDoc(conversationRef, {
@@ -158,7 +164,10 @@ export default function ChatPage() {
                 return (
                 <button
                     key={convo.id}
-                    className="w-full flex items-center gap-3 text-left p-2 rounded-lg hover:bg-muted"
+                    className={cn(
+                        "w-full flex items-center gap-3 text-left p-2 rounded-lg hover:bg-muted",
+                        activeConversation?.id === convo.id && 'bg-muted'
+                    )}
                     onClick={() => setActiveConversation(convo)}
                 >
                     <Avatar className='h-12 w-12'>
@@ -281,11 +290,11 @@ export default function ChatPage() {
 
   return (
     <ProtectedRoute>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 h-[calc(100vh-4rem)]">
-        <div className={cn("hidden md:block border-r h-full", activeConversation && "hidden md:hidden lg:block")}>
+      <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[350px_1fr] h-[calc(100vh-4rem)]">
+        <div className={cn("hidden md:block border-r h-full", activeConversation && "hidden md:block")}>
            <ConversationList />
         </div>
-        <div className={cn("md:col-span-2 lg:col-span-3 h-full", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
+        <div className={cn("md:col-start-2 h-full", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
            {activeConversation ? (
                 <ActiveConversation />
             ) : (
@@ -300,3 +309,5 @@ export default function ChatPage() {
     </ProtectedRoute>
   );
 }
+
+    
