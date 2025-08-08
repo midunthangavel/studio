@@ -98,14 +98,11 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-16 items-center">
         <div className="flex flex-1 items-center justify-start">
-            <div className="flex items-center gap-6">
-              <Link href="/" className="flex items-center space-x-2">
-                <AppLogo />
-              </Link>
-              <div className="hidden md:flex">
-                <HeaderNavigation />
-              </div>
-            </div>
+             <div className="flex items-center gap-6">
+                <Link href="/" className="flex items-center space-x-2">
+                  <AppLogo />
+                </Link>
+             </div>
          </div>
         
         <div className="flex flex-shrink-0 items-center justify-end space-x-2">
