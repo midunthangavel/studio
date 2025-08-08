@@ -21,11 +21,7 @@ export default function WelcomePage() {
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-primary/20 via-background to-background p-6">
       <div className="flex-1 flex flex-col justify-center items-center text-center">
-        <div 
-            className="mb-6 flex justify-center" 
-        >
-          <AppLogo width={160} height={40} />
-        </div>
+        <AppLogo width={160} height={40} className="mb-6" />
         
         <h1 className="text-4xl md:text-5xl font-bold font-headline mb-3 text-foreground">
           Explore,
