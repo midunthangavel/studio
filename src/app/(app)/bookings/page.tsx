@@ -11,7 +11,7 @@ import { PageWrapper } from "@/components/shared/page-wrapper";
 import { ProtectedRoute } from "@/components/shared/protected-route";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth-context";
-import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
