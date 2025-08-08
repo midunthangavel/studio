@@ -15,10 +15,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import { Loader, PlusCircle, Trash2, Wallet } from 'lucide-react';
+import { Loader, PlusCircle, Trash2, Wallet, Sparkles } from 'lucide-react';
 import { ProtectedRoute } from '@/components/shared/protected-route';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { addExpensesToBudget, AddExpensesToBudgetOutput } from '@/ai/flows/budget-assistant';
+import { Textarea } from '@/components/ui/textarea';
 
 const expenseSchema = z.object({
     id: z.string().optional(),
@@ -40,6 +42,8 @@ export default function BudgetPage() {
     const { user } = useAuth();
     const { toast } = useToast();
     const [loading, setLoading] = useState(true);
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiPrompt, setAiPrompt] = useState('');
 
     const form = useForm<BudgetFormValues>({
         resolver: zodResolver(budgetSchema),
@@ -72,6 +76,36 @@ export default function BudgetPage() {
         });
         return () => unsubscribe();
     }, [user, form]);
+
+    const handleAiAdd = async () => {
+        if (!aiPrompt) return;
+        setAiLoading(true);
+        try {
+            const result: AddExpensesToBudgetOutput = await addExpensesToBudget({ prompt: aiPrompt });
+            if (result.expenses && result.expenses.length > 0) {
+                append(result.expenses);
+                toast({
+                    title: 'Expenses Added',
+                    description: `Successfully added ${result.expenses.length} item(s) to your budget.`,
+                });
+                setAiPrompt('');
+            } else {
+                 toast({
+                    variant: 'destructive',
+                    title: 'No Expenses Found',
+                    description: 'The AI could not identify any expenses in your request. Please try rephrasing.',
+                });
+            }
+        } catch (error) {
+            toast({
+                variant: 'destructive',
+                title: 'AI Error',
+                description: 'Failed to process your request with AI.',
+            });
+        } finally {
+            setAiLoading(false);
+        }
+    };
     
     const onSubmit = async (data: BudgetFormValues) => {
         if (!user) return;
@@ -148,8 +182,27 @@ export default function BudgetPage() {
 
                     <Card>
                         <CardHeader>
+                            <CardTitle>AI Expense Assistant</CardTitle>
+                            <CardDescription>Quickly add expenses using natural language. Try &quot;Add $500 for catering and $200 for a DJ.&quot;</CardDescription>
+                        </CardHeader>
+                        <CardContent className='space-y-2'>
+                           <Textarea 
+                             placeholder="e.g., Add $1500 for venue, $500 for flowers, and $300 for the cake"
+                             value={aiPrompt}
+                             onChange={(e) => setAiPrompt(e.target.value)}
+                             disabled={aiLoading}
+                           />
+                           <Button type="button" onClick={handleAiAdd} disabled={aiLoading || !aiPrompt}>
+                               {aiLoading ? <Loader className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
+                               Add with AI
+                           </Button>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
                             <CardTitle>Expenses</CardTitle>
-                            <CardDescription>Add and manage your expense items.</CardDescription>
+                            <CardDescription>Add and manage your expense items manually.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
@@ -166,7 +219,7 @@ export default function BudgetPage() {
                                             </Button>
                                         </div>
                                          <Select
-                                            onValueChange={(value) => update(index, { ...field, category: value })}
+                                            onValueChange={(value) => form.setValue(`expenses.${index}.category`, value)}
                                             defaultValue={field.category}
                                         >
                                             <SelectTrigger>
@@ -190,9 +243,9 @@ export default function BudgetPage() {
                                 type="button"
                                 variant="outline"
                                 className="mt-4"
-                                onClick={() => append({ name: '', category: '', amount: 0 })}
+                                onClick={() => append({ name: '', category: 'Other', amount: 0 })}
                             >
-                                <PlusCircle className="mr-2 h-4 w-4" /> Add Expense
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add Expense Manually
                             </Button>
                         </CardContent>
                     </Card>

@@ -11,6 +11,7 @@ import { suggestEventIdeas } from './suggest-event-ideas';
 import { SuggestEventIdeasInputSchema } from './suggest-event-ideas.types';
 import { z } from 'zod';
 import { ChatInput, ChatInputSchema, ChatOutput, ChatOutputSchema } from './chat.types';
+import { addExpensesToBudget, AddExpensesToBudgetInputSchema } from './budget-assistant';
 
 const suggestEventIdeasTool = ai.defineTool(
     {
@@ -28,6 +29,21 @@ const suggestEventIdeasTool = ai.defineTool(
     }
   );
 
+  const addExpensesToBudgetTool = ai.defineTool(
+    {
+        name: 'addExpensesToBudget',
+        description: 'Adds one or more expense items to the user\'s event budget. Use this when the user asks to add, track, or manage expenses.',
+        inputSchema: AddExpensesToBudgetInputSchema,
+        outputSchema: z.string().describe('A confirmation message summarizing the expenses that were added.'),
+    },
+    async (input) => {
+        // In a real app, you would save this to the database here.
+        // For this example, we assume the tool's purpose is to structure the data.
+        const expenseSummary = input.expenses.map(e => `${e.name} ($${e.amount})`).join(', ');
+        return `I have added the following expenses to your budget: ${expenseSummary}.`;
+    }
+);
+
 const chatFlow = ai.defineFlow(
   {
     name: 'chatFlow',
@@ -37,7 +53,7 @@ const chatFlow = ai.defineFlow(
   async (input) => {
     const llmResponse = await ai.generate({
       prompt: input.message,
-      tools: [suggestEventIdeasTool],
+      tools: [suggestEventIdeasTool, addExpensesToBudgetTool],
       model: 'googleai/gemini-2.0-flash',
     });
 
@@ -46,7 +62,7 @@ const chatFlow = ai.defineFlow(
     if (toolResponse) {
         const toolResult = await toolResponse.execute();
         const secondResponse = await ai.generate({
-            prompt: `You are an expert event planner. A user asked for event ideas, and you have used a tool to generate them. Now, present these ideas to the user in a friendly and conversational way based on the tool's output. The user's original query was: '${input.message}'. The tool output is: '${toolResult}'.`,
+            prompt: `You are an expert event planner. A user made a request, and you have used a tool to fulfill it. Now, present the result to the user in a friendly and conversational way based on the tool's output. The user's original query was: '${input.message}'. The tool output is: '${toolResult}'.`,
             model: 'googleai/gemini-2.0-flash',
         });
         return secondResponse.text;
