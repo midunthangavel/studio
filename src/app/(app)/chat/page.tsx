@@ -11,72 +11,116 @@ import { ProtectedRoute } from '@/components/shared/protected-route';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { Conversation, Message } from '@/ai/flows/chat.types';
-import type { Timestamp } from 'firebase/firestore';
 import { chat } from '@/ai/flows/chat-flow';
+import { useToast } from '@/hooks/use-toast';
+import { db } from '@/lib/firebase';
+import { collection, query, where, onSnapshot, doc, addDoc, serverTimestamp, orderBy, limit, setDoc } from 'firebase/firestore';
 
 
-// --- Mock Data ---
+function useConversations(userId: string | null) {
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const mockTimestamp = (date: Date): Timestamp => ({
-  toDate: () => date,
-  toMillis: () => date.getTime(),
-  seconds: Math.floor(date.getTime() / 1000),
-  nanoseconds: (date.getTime() % 1000) * 1e6,
-  isEqual: () => false,
-  valueOf: () => '',
-  toJSON: () => ({ seconds: 0, nanoseconds: 0 }),
-  toString: () => '',
-  _compareTo: () => 0,
-  _isEqual: () => false,
-  _toMillis: () => 0,
-});
-
-
-const MOCK_CONVERSATIONS: Conversation[] = [
-  {
-    id: 'convo_1',
-    participants: {
-      'user-123': { name: 'You', avatar: '' },
-      'ai-assistant': { name: 'AI Planner', avatar: '/logo.png', isAi: true },
-    },
-    messages: [
-      { id: '1', senderId: 'ai-assistant', text: "Hello! I'm your AI event planner. How can I help you brainstorm for your next event?", timestamp: mockTimestamp(new Date(Date.now() - 1000 * 60 * 60 * 24)) },
-      { id: '2', senderId: 'user-123', text: "I'm planning a birthday party for my friend who loves hiking.", timestamp: mockTimestamp(new Date(Date.now() - 1000 * 60 * 50)) },
-      { id: '3', senderId: 'ai-assistant', text: "That sounds fun! How about a 'Woodland Adventure' theme? Decorations could include faux moss, lanterns, and wooden signs. For an activity, you could set up a mini 'trail mix' bar.", timestamp: mockTimestamp(new Date(Date.now() - 1000 * 60 * 48)) },
-    ],
-  },
-  {
-    id: 'convo_2',
-    participants: {
-      'user-123': { name: 'You', avatar: '' },
-      'provider_gourmet-delights-catering': { name: 'Gourmet Delights', avatar: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=100&h=100&fit=crop' },
-    },
-    messages: [
-      { id: '4', senderId: 'provider_gourmet-delights-catering', text: 'Hi there! Thanks for your interest in our catering services. Do you have a date in mind?', timestamp: mockTimestamp(new Date(Date.now() - 1000 * 60 * 60 * 48)) },
-    ],
-  },
-];
-
-MOCK_CONVERSATIONS.forEach(convo => {
-    const lastMessage = convo.messages[convo.messages.length - 1];
-    if(lastMessage) {
-        convo.lastMessage = {
-            text: lastMessage.text,
-            timestamp: lastMessage.timestamp
-        };
+  useEffect(() => {
+    if (!userId) {
+      setLoading(false);
+      return;
     }
-});
 
-// --- End Mock Data ---
+    const q = query(
+      collection(db, 'conversations'),
+      where(`participants.${userId}.name`, '!=', null)
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const convos: Conversation[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const lastMessage = data.messages?.[data.messages.length - 1] || null;
+        convos.push({ 
+            id: doc.id,
+            ...data,
+            lastMessage
+        } as Conversation);
+      });
+
+      // Add a default AI conversation if it doesn't exist
+      const hasAiConvo = convos.some(c => c.participants['ai-assistant']);
+      if (!hasAiConvo) {
+        const aiConvo: Conversation = {
+            id: [userId, 'ai-assistant'].sort().join('_'),
+            participants: {
+              [userId]: { name: 'You', avatar: '' },
+              'ai-assistant': { name: 'AI Planner', avatar: '/logo.png', isAi: true },
+            },
+            messages: [
+              { id: 'initial', senderId: 'ai-assistant', text: "Hello! I'm your AI event planner. How can I help you brainstorm for your next event?", timestamp: new Date() as any },
+            ],
+        };
+        aiConvo.lastMessage = aiConvo.messages[0];
+        convos.unshift(aiConvo);
+      }
+      
+      setConversations(convos.sort((a,b) => (b.lastMessage?.timestamp?.toDate() || 0) - (a.lastMessage?.timestamp?.toDate() || 0)));
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching conversations: ", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [userId]);
+
+  return { conversations, loading };
+}
 
 
 export default function ChatPage() {
   const { user } = useAuth();
-  const [conversations, setConversations] = useState<Conversation[]>(MOCK_CONVERSATIONS);
-  const [activeConversation, setActiveConversation] = useState<Conversation | null>(MOCK_CONVERSATIONS[0]);
+  const { conversations, loading: conversationsLoading } = useConversations(user?.uid || null);
+  const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [messagesLoading, setMessagesLoading] = useState(false);
   const [newMessage, setNewMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [aiTyping, setAiTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (!activeConversation && conversations.length > 0) {
+        setActiveConversation(conversations[0]);
+    } else if (activeConversation) {
+        // If active convo changes, find its latest version from the conversations list
+        const updatedConvo = conversations.find(c => c.id === activeConversation.id);
+        if (updatedConvo) {
+            setActiveConversation(updatedConvo);
+        }
+    }
+  }, [conversations, activeConversation]);
+
+
+  useEffect(() => {
+    if (!activeConversation) return;
+
+    setMessagesLoading(true);
+    const messagesRef = collection(db, 'conversations', activeConversation.id, 'messages');
+    const q = query(messagesRef, orderBy('timestamp', 'asc'), limit(50));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const msgs: Message[] = [];
+      querySnapshot.forEach((doc) => {
+        msgs.push({ id: doc.id, ...doc.data() } as Message);
+      });
+      setMessages(msgs);
+      setMessagesLoading(false);
+    }, (error) => {
+      console.error("Error fetching messages:", error);
+      setMessagesLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [activeConversation?.id]);
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -84,72 +128,65 @@ export default function ChatPage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [activeConversation?.messages, loading]);
+  }, [messages, aiTyping]);
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === '' || !activeConversation || !user) return;
 
-    const myUserId = 'user-123'; // Using mock user ID
-
-    const userMessage: Message = {
-      id: String(Date.now()),
-      senderId: myUserId,
-      text: newMessage,
-      timestamp: mockTimestamp(new Date()),
-    };
-    
     const currentMessageText = newMessage;
     setNewMessage('');
 
-    const updatedConversation = {
-        ...activeConversation,
-        messages: [...activeConversation.messages, userMessage]
+    const conversationRef = doc(db, 'conversations', activeConversation.id);
+    const messagesRef = collection(conversationRef, 'messages');
+
+    const userMessage: Omit<Message, 'id' | 'timestamp'> = {
+      senderId: user.uid,
+      text: currentMessageText,
     };
-    setActiveConversation(updatedConversation);
+    
+    // Optimistically update UI
+    const tempMessage: Message = { ...userMessage, id: Date.now().toString(), timestamp: new Date() as any };
+    setMessages(prev => [...prev, tempMessage]);
 
-    const otherParticipant = Object.values(activeConversation.participants).find(p => p.isAi);
+    await addDoc(messagesRef, { ...userMessage, timestamp: serverTimestamp() });
+    
+    // Update last message on conversation
+    const lastMessageData = { text: currentMessageText, timestamp: serverTimestamp() };
+    if((await doc(conversationRef).get()).exists()) {
+        await setDoc(conversationRef, { lastMessage: lastMessageData, updatedAt: serverTimestamp() }, { merge: true });
+    } else {
+        await setDoc(conversationRef, { ...activeConversation, lastMessage: lastMessageData, createdAt: serverTimestamp() });
+    }
 
-    if (otherParticipant?.isAi) {
-        setLoading(true);
+
+    const otherParticipant = Object.keys(activeConversation.participants).find(id => id !== user.uid);
+    if (otherParticipant === 'ai-assistant') {
+        setAiTyping(true);
         try {
             const aiResponse = await chat({ message: currentMessageText });
-            const aiMessage: Message = {
-                id: String(Date.now() + 1),
+            const aiMessage: Omit<Message, 'id' | 'timestamp'> = {
                 senderId: 'ai-assistant',
                 text: aiResponse,
-                timestamp: mockTimestamp(new Date())
             };
-            
-             const finalConversation = {
-                ...updatedConversation,
-                messages: [...updatedConversation.messages, aiMessage]
-            };
-            setActiveConversation(finalConversation);
-            setConversations(prevConvos => prevConvos.map(c => 
-                c.id === finalConversation.id ? finalConversation : c
-            ));
+            await addDoc(messagesRef, { ...aiMessage, timestamp: serverTimestamp() });
+             await setDoc(conversationRef, { lastMessage: {text: aiResponse, timestamp: serverTimestamp()}, updatedAt: serverTimestamp() }, { merge: true });
+
         } catch(e) {
             console.error(e);
-            const aiMessage: Message = {
-                id: String(Date.now() + 1),
-                senderId: 'ai-assistant',
-                text: "Sorry, I'm having trouble connecting right now.",
-                timestamp: mockTimestamp(new Date())
-            };
-            const finalConversation = {
-                ...updatedConversation,
-                messages: [...updatedConversation.messages, aiMessage]
-            };
-            setActiveConversation(finalConversation);
+            toast({
+                variant: 'destructive',
+                title: 'AI Error',
+                description: "Sorry, I'm having trouble connecting right now."
+            });
         } finally {
-            setLoading(false);
+            setAiTyping(false);
         }
     }
   };
 
   const getOtherParticipant = (convo: Conversation) => {
-      // Using mock user ID
-      const otherParticipantId = Object.keys(convo.participants).find(id => id !== 'user-123');
+      if (!user) return null;
+      const otherParticipantId = Object.keys(convo.participants).find(id => id !== user.uid);
       return otherParticipantId ? convo.participants[otherParticipantId] : null;
   }
 
@@ -162,40 +199,48 @@ export default function ChatPage() {
             </Button>
         </div>
         <div className='p-2 space-y-2 overflow-y-auto flex-1'>
-             <h2 className='text-xs font-semibold text-muted-foreground px-2'>Friends</h2>
-            {conversations.map((convo) => {
-                const otherParticipant = getOtherParticipant(convo);
-                if (!otherParticipant) return null;
-                const lastMessageTime = convo.lastMessage?.timestamp ? formatDistanceToNow(convo.lastMessage.timestamp.toDate(), { addSuffix: true }) : '';
-                return (
-                <button
-                    key={convo.id}
-                    className={cn(
-                        "w-full flex items-center gap-3 text-left p-2 rounded-lg hover:bg-muted",
-                        activeConversation?.id === convo.id && 'bg-muted'
-                    )}
-                    onClick={() => setActiveConversation(convo)}
-                >
-                    <Avatar className='h-10 w-10'>
-                        <AvatarImage src={otherParticipant.avatar} alt={otherParticipant.name} data-ai-hint="logo" />
-                        <AvatarFallback>{otherParticipant.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 overflow-hidden">
-                        <div className='flex justify-between items-center'>
-                            <p className="font-semibold truncate text-sm">{otherParticipant.name}</p>
-                            <p className="text-xs text-muted-foreground whitespace-nowrap">{lastMessageTime}</p>
+            {conversationsLoading ? (
+                <div className='flex justify-center items-center h-full'>
+                    <Loader className="w-5 h-5 animate-spin" />
+                </div>
+            ) : (
+                <>
+                <h2 className='text-xs font-semibold text-muted-foreground px-2'>Chats</h2>
+                {conversations.map((convo) => {
+                    const otherParticipant = getOtherParticipant(convo);
+                    if (!otherParticipant) return null;
+                    const lastMessageTime = convo.lastMessage?.timestamp?.toDate ? formatDistanceToNow(convo.lastMessage.timestamp.toDate(), { addSuffix: true }) : '';
+                    return (
+                    <button
+                        key={convo.id}
+                        className={cn(
+                            "w-full flex items-center gap-3 text-left p-2 rounded-lg hover:bg-muted",
+                            activeConversation?.id === convo.id && 'bg-muted'
+                        )}
+                        onClick={() => setActiveConversation(convo)}
+                    >
+                        <Avatar className='h-10 w-10'>
+                            <AvatarImage src={otherParticipant.avatar} alt={otherParticipant.name} data-ai-hint="logo" />
+                            <AvatarFallback>{otherParticipant.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 overflow-hidden">
+                            <div className='flex justify-between items-center'>
+                                <p className="font-semibold truncate text-sm">{otherParticipant.name}</p>
+                                <p className="text-xs text-muted-foreground whitespace-nowrap">{lastMessageTime}</p>
+                            </div>
+                            <p className="text-sm text-muted-foreground truncate">{convo.lastMessage?.text}</p>
                         </div>
-                        <p className="text-sm text-muted-foreground truncate">{convo.lastMessage?.text}</p>
-                    </div>
-                </button>
-                )
-            })}
+                    </button>
+                    )
+                })}
+                </>
+            )}
         </div>
     </div>
   )
 
   const ActiveConversation = () => {
-    if (!activeConversation) return null;
+    if (!activeConversation || !user) return null;
     const otherParticipant = getOtherParticipant(activeConversation);
 
     return (
@@ -220,45 +265,53 @@ export default function ChatPage() {
                     </Button>
                 </div>
             </header>
-            <main className="flex-1 p-4 space-y-4">
-                {activeConversation.messages.map((message) => {
-                const fromMe = message.senderId === 'user-123'; // Using mock user ID
-                return (
-                    <div
-                        key={message.id}
-                        className={cn('flex items-end gap-2', fromMe ? 'justify-end' : 'justify-start')}
-                    >
-                        {!fromMe && (
-                        <Avatar className="h-8 w-8">
-                            <AvatarImage src={otherParticipant?.avatar} data-ai-hint="logo" />
-                            <AvatarFallback>{otherParticipant?.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        )}
+            <main className="flex-1 p-4 space-y-4 overflow-y-auto">
+                {messagesLoading ? (
+                    <div className='flex justify-center items-center h-full'>
+                        <Loader className="w-5 h-5 animate-spin" />
+                    </div>
+                ) : (
+                    <>
+                    {messages.map((message) => {
+                    const fromMe = message.senderId === user.uid;
+                    return (
                         <div
-                        className={cn(
-                            'max-w-md p-2 px-3 rounded-2xl',
-                            fromMe
-                            ? 'bg-primary text-primary-foreground rounded-br-none'
-                            : 'bg-background rounded-bl-none'
-                        )}
+                            key={message.id}
+                            className={cn('flex items-end gap-2', fromMe ? 'justify-end' : 'justify-start')}
                         >
-                            <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                            {!fromMe && (
+                            <Avatar className="h-8 w-8">
+                                <AvatarImage src={otherParticipant?.avatar} data-ai-hint="logo" />
+                                <AvatarFallback>{otherParticipant?.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            )}
+                            <div
+                            className={cn(
+                                'max-w-md p-2 px-3 rounded-2xl',
+                                fromMe
+                                ? 'bg-primary text-primary-foreground rounded-br-none'
+                                : 'bg-background rounded-bl-none'
+                            )}
+                            >
+                                <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                            </div>
                         </div>
-                    </div>
-                )
-                })}
-                {loading && (
-                    <div className="flex items-end gap-2 justify-start">
-                        <Avatar className="h-8 w-8">
-                            <AvatarImage src={otherParticipant?.avatar} data-ai-hint="logo" />
-                            <AvatarFallback>{otherParticipant?.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="max-w-xs p-3 rounded-lg bg-background">
-                            <Loader className="h-5 w-5 animate-spin" />
+                    )
+                    })}
+                    {aiTyping && (
+                        <div className="flex items-end gap-2 justify-start">
+                            <Avatar className="h-8 w-8">
+                                <AvatarImage src={otherParticipant?.avatar} data-ai-hint="logo" />
+                                <AvatarFallback>{otherParticipant?.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div className="max-w-xs p-3 rounded-lg bg-background">
+                                <Loader className="h-5 w-5 animate-spin" />
+                            </div>
                         </div>
-                    </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                    </>
                 )}
-                <div ref={messagesEndRef} />
             </main>
             <footer className="p-2 border-t bg-background flex-shrink-0">
                 <div className="flex w-full items-center space-x-2 bg-muted rounded-full pl-2 pr-1">
@@ -271,13 +324,13 @@ export default function ChatPage() {
                     value={newMessage}
                     onChange={e => setNewMessage(e.target.value)}
                     onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
-                    disabled={loading}
+                    disabled={aiTyping}
                     className="flex-1 bg-transparent border-none focus-visible:ring-0 shadow-none text-sm h-10"
                 />
                  <Button variant="ghost" size="icon" className="text-muted-foreground">
                     <Paperclip className="w-5 h-5" />
                 </Button>
-                <Button onClick={handleSendMessage} disabled={loading || !newMessage.trim()} size='icon' className='rounded-full h-8 w-8'>
+                <Button onClick={handleSendMessage} disabled={aiTyping || !newMessage.trim()} size='icon' className='rounded-full h-8 w-8'>
                     <Send className="w-4 h-4" />
                 </Button>
                 </div>
@@ -297,9 +350,15 @@ export default function ChatPage() {
                 <ActiveConversation />
             ) : (
                 <div className="text-center p-4">
+                     {conversationsLoading ? (
+                        <Loader className="w-8 h-8 mx-auto animate-spin text-muted-foreground" />
+                    ) : (
+                    <>
                     <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground" />
                     <h2 className="mt-2 text-lg font-semibold">Select a conversation</h2>
                     <p className="text-muted-foreground text-sm">Start chatting with your vendors and our AI assistant.</p>
+                    </>
+                    )}
                 </div>
             )}
         </div>
