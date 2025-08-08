@@ -49,7 +49,6 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/home';
-  const isSearchPage = pathname === '/search';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
@@ -102,11 +101,11 @@ export function Header() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <AppLogo width={120} height={40} />
           </Link>
-          <HeaderNavigation />
+           {!isHomePage && <HeaderNavigation />}
         </div>
         
         <div className="relative flex-1">
-          {(!isHomePage && !isSearchPage) && (
+          {!isHomePage && (
               <>
                  <Input
                     type="search"
@@ -182,22 +181,6 @@ export function Header() {
           )}
         </div>
       </div>
-       {(isHomePage || isSearchPage) && (
-         <div className="container pb-4">
-             <div className="relative mt-2">
-                 <Input
-                    type="search"
-                    placeholder="Search for venues, catering, and more..."
-                    className="w-full h-12 rounded-full bg-muted pl-10"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    onKeyDown={handleSearchSubmit}
-                    onFocus={handleSearchChange}
-                />
-                {showResults && <SearchResults results={searchResults} />}
-             </div>
-        </div>
-      )}
     </header>
   );
 }
