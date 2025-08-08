@@ -59,18 +59,21 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
         }
 
         try {
-            // Update booking document with review
             const bookingRef = doc(db, "bookings", booking.id);
             await updateDoc(bookingRef, { review: reviewData });
-
-            // Add review to the venue's reviews array
+            
+            // NOTE: In a real-world application, you would likely want to trigger
+            // a Cloud Function here to update the average rating on the venue document
+            // to avoid clients having to write to two collections.
+            // For this demo, we will optimistically update the client state and
+            // also try to update the venue document directly.
             const venueRef = doc(db, "venues", booking.venueId);
              try {
                 await updateDoc(venueRef, {
                     reviews: arrayUnion(reviewData)
                 });
             } catch (e) {
-                // Venue doc might not exist, that's okay for this demo.
+                // This might fail if the venue doc doesn't exist, which is okay for the demo.
                 console.warn("Venue document not found for review update, skipping.", e)
             }
 

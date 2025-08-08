@@ -152,7 +152,7 @@ export default function ChatPage() {
     
     // Update last message on conversation
     const lastMessageData = { text: currentMessageText, timestamp: serverTimestamp() };
-    if((await doc(conversationRef).get()).exists()) {
+    if((await getDoc(conversationRef)).exists()) {
         await setDoc(conversationRef, { lastMessage: lastMessageData, updatedAt: serverTimestamp() }, { merge: true });
     } else {
         await setDoc(conversationRef, { ...activeConversation, lastMessage: lastMessageData, createdAt: serverTimestamp() });
