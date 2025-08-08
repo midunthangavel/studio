@@ -147,7 +147,7 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
     }
   }
 
-  const averageRating = currentReviews.length > 0
+  const averageRating = currentReviews && currentReviews.length > 0
     ? (currentReviews.reduce((acc, review) => acc + review.rating, 0) / currentReviews.length).toFixed(1)
     : venue.rating.toFixed(1);
 
