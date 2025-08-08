@@ -3,27 +3,76 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/auth-context';
-import { db } from '@/lib/firebase';
-import { collection, query, onSnapshot, doc, updateDoc, arrayUnion, serverTimestamp, orderBy } from 'firebase/firestore';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { MessageSquare, Send, User, Bot, Loader, ArrowLeft, Info, Phone, MoreVertical, Paperclip, Smile } from 'lucide-react';
-import { PageWrapper } from '@/components/shared/page-wrapper';
-import { chat } from '@/ai/flows/chat-flow';
+import { Loader, ArrowLeft, Info, Phone, MoreVertical, Paperclip, Smile, MessageSquare, Send } from 'lucide-react';
 import { ProtectedRoute } from '@/components/shared/protected-route';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { Conversation, Message } from '@/ai/flows/chat.types';
+import type { Timestamp } from 'firebase/firestore';
+
+
+// --- Mock Data ---
+
+const mockTimestamp = (date: Date): Timestamp => ({
+  toDate: () => date,
+  toMillis: () => date.getTime(),
+  seconds: Math.floor(date.getTime() / 1000),
+  nanoseconds: (date.getTime() % 1000) * 1e6,
+  isEqual: () => false,
+  valueOf: () => '',
+  toJSON: () => ({ seconds: 0, nanoseconds: 0 }),
+  toString: () => '',
+  _compareTo: () => 0,
+  _isEqual: () => false,
+  _toMillis: () => 0,
+});
+
+
+const MOCK_CONVERSATIONS: Conversation[] = [
+  {
+    id: 'convo_1',
+    participants: {
+      'user-123': { name: 'You', avatar: '' },
+      'ai-assistant': { name: 'AI Planner', avatar: '/logo.png', isAi: true },
+    },
+    messages: [
+      { id: '1', senderId: 'ai-assistant', text: "Hello! I'm your AI event planner. How can I help you brainstorm for your next event?", timestamp: mockTimestamp(new Date(Date.now() - 1000 * 60 * 60 * 24)) },
+      { id: '2', senderId: 'user-123', text: "I'm planning a birthday party for my friend who loves hiking.", timestamp: mockTimestamp(new Date(Date.now() - 1000 * 60 * 50)) },
+      { id: '3', senderId: 'ai-assistant', text: "That sounds fun! How about a 'Woodland Adventure' theme? Decorations could include faux moss, lanterns, and wooden signs. For an activity, you could set up a mini 'trail mix' bar.", timestamp: mockTimestamp(new Date(Date.now() - 1000 * 60 * 48)) },
+    ],
+  },
+  {
+    id: 'convo_2',
+    participants: {
+      'user-123': { name: 'You', avatar: '' },
+      'provider_gourmet-delights-catering': { name: 'Gourmet Delights', avatar: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=100&h=100&fit=crop' },
+    },
+    messages: [
+      { id: '4', senderId: 'provider_gourmet-delights-catering', text: 'Hi there! Thanks for your interest in our catering services. Do you have a date in mind?', timestamp: mockTimestamp(new Date(Date.now() - 1000 * 60 * 60 * 48)) },
+    ],
+  },
+];
+
+MOCK_CONVERSATIONS.forEach(convo => {
+    const lastMessage = convo.messages[convo.messages.length - 1];
+    convo.lastMessage = {
+        text: lastMessage.text,
+        timestamp: lastMessage.timestamp
+    };
+});
+
+// --- End Mock Data ---
+
 
 export default function ChatPage() {
   const { user } = useAuth();
-  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>(MOCK_CONVERSATIONS);
   const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [conversationsLoading, setConversationsLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -34,116 +83,65 @@ export default function ChatPage() {
     scrollToBottom();
   }, [activeConversation?.messages, loading]);
 
-  useEffect(() => {
-    if (!user) {
-        setConversationsLoading(false);
-        return;
-    };
-
-    const q = query(collection(db, "conversations"));
-    
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const userConvos: Conversation[] = [];
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            // Check if user is a participant
-            if (data.participants && data.participants[user.uid]) {
-                const lastMessage = data.messages?.[data.messages.length - 1];
-                userConvos.push({
-                    id: doc.id,
-                    ...data,
-                    lastMessage: {
-                        text: lastMessage?.text || "No messages yet",
-                        timestamp: lastMessage?.timestamp || data.createdAt
-                    }
-                } as Conversation);
-            }
-        });
-       
-        userConvos.sort((a, b) => (b.lastMessage?.timestamp?.toMillis() || 0) - (a.lastMessage?.timestamp?.toMillis() || 0));
-        setConversations(userConvos);
-        setConversationsLoading(false);
-    }, (error) => {
-        console.error("Error fetching conversations: ", error);
-        setConversationsLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [user]);
-
-   useEffect(() => {
-    if (activeConversation?.id) {
-        const unsub = onSnapshot(doc(db, 'conversations', activeConversation.id), (doc) => {
-            if (doc.exists()) {
-                 const data = doc.data();
-                 const lastMessage = data.messages?.[data.messages.length - 1];
-                 setActiveConversation(prev => ({
-                     ...prev!,
-                     ...data,
-                      lastMessage: {
-                        text: lastMessage?.text || "No messages yet",
-                        timestamp: lastMessage?.timestamp || data.createdAt
-                     },
-                     messages: data.messages || [],
-                 }));
-            }
-        });
-        return () => unsub();
-    }
-   }, [activeConversation?.id]);
-
-
   const handleSendMessage = async () => {
     if (newMessage.trim() === '' || !activeConversation || !user) return;
 
-    const conversationRef = doc(db, 'conversations', activeConversation.id);
+    const myUserId = 'user-123'; // Using mock user ID
 
     const userMessage = {
-      senderId: user.uid,
+      id: String(Date.now()),
+      senderId: myUserId,
       text: newMessage,
-      timestamp: serverTimestamp(),
+      timestamp: mockTimestamp(new Date()),
     };
-
+    
     setNewMessage('');
-    await updateDoc(conversationRef, {
-        messages: arrayUnion(userMessage)
-    });
+
+    // --- Start of Frontend-only update logic ---
+    const updatedConversation = {
+        ...activeConversation,
+        messages: [...activeConversation.messages, userMessage]
+    };
+    setActiveConversation(updatedConversation);
+
+    setConversations(prevConvos => prevConvos.map(c => 
+        c.id === updatedConversation.id ? updatedConversation : c
+    ));
+    // --- End of Frontend-only update logic ---
+
     
     const otherParticipant = Object.values(activeConversation.participants).find(p => p.isAi);
 
     if (otherParticipant?.isAi) {
         setLoading(true);
-        try {
-            const result = await chat({ message: newMessage });
-            
+        // Simulate AI response
+        setTimeout(() => {
             const aiMessage = { 
+                id: String(Date.now() + 1),
                 senderId: 'ai-assistant',
-                text: result,
-                timestamp: serverTimestamp()
+                text: "That's a great question! Let me think of some ideas for you. I suggest looking into venues with outdoor spaces to match the hiking theme.",
+                timestamp: mockTimestamp(new Date())
             };
-             await updateDoc(conversationRef, {
-                messages: arrayUnion(aiMessage)
-            });
+            
+            // --- Start of Frontend-only update logic ---
+             const finalConversation = {
+                ...updatedConversation,
+                messages: [...updatedConversation.messages, aiMessage]
+            };
+            setActiveConversation(finalConversation);
+            setConversations(prevConvos => prevConvos.map(c => 
+                c.id === finalConversation.id ? finalConversation : c
+            ));
+            // --- End of Frontend-only update logic ---
 
-        } catch (error) {
-            console.error("Error fetching AI suggestion:", error);
-            const errorMessage = { 
-                senderId: 'ai-assistant',
-                text: 'Sorry, I had trouble coming with a response right now. Please try again.',
-                timestamp: serverTimestamp()
-             };
-            await updateDoc(conversationRef, {
-                messages: arrayUnion(errorMessage)
-            });
-        } finally {
             setLoading(false);
-        }
+        }, 1500);
     }
   };
 
   const getOtherParticipant = (convo: Conversation) => {
-      if (!user) return null;
-      const otherParticipantId = Object.keys(convo.participants).find(id => id !== user.uid);
+      // Using mock user ID
+      const otherParticipantId = Object.keys(convo.participants).find(id => id !== 'user-123');
       return otherParticipantId ? convo.participants[otherParticipantId] : null;
   }
 
@@ -215,11 +213,11 @@ export default function ChatPage() {
                 </div>
             </header>
             <main className="flex-grow overflow-y-auto p-4 space-y-6">
-                {activeConversation.messages.map((message, index) => {
-                const fromMe = message.senderId === user?.uid;
+                {activeConversation.messages.map((message) => {
+                const fromMe = message.senderId === 'user-123'; // Using mock user ID
                 return (
                     <div
-                        key={index}
+                        key={message.id}
                         className={cn('flex items-end gap-2', fromMe ? 'justify-end' : 'justify-start')}
                     >
                         {!fromMe && (
@@ -280,14 +278,6 @@ export default function ChatPage() {
     )
   }
 
-  if (conversationsLoading) {
-    return (
-        <div className="flex items-center justify-center h-screen">
-            <Loader className="h-8 w-8 animate-spin" />
-        </div>
-    )
-  }
-
   return (
     <ProtectedRoute>
       <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[350px_1fr] h-[calc(100vh-4rem)]">
@@ -309,5 +299,3 @@ export default function ChatPage() {
     </ProtectedRoute>
   );
 }
-
-    
