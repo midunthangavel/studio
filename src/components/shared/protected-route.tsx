@@ -11,11 +11,14 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    // We only want to redirect if loading is finished and there's no user.
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
 
+  // If we are loading, or if there is no user, show a loading screen.
+  // The useEffect above will handle the redirect if there's no user after loading.
   if (loading || !user) {
      return (
         <div className="flex items-center justify-center h-screen bg-background">
@@ -23,6 +26,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
         </div>
     )
   }
-
+  
+  // If loading is finished and there is a user, show the children.
   return <>{children}</>;
 }
