@@ -60,24 +60,24 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-red-200 via-yellow-200 to-orange-200 p-6">
+    <div className="flex flex-col h-screen bg-background p-6">
       <div className="absolute top-4 left-4 z-10">
-        <Button variant="ghost" size="icon" onClick={() => router.push('/')} className="bg-background/20 hover:bg-background/40">
+        <Button variant="ghost" size="icon" onClick={() => router.push('/')} className="bg-muted hover:bg-muted/80">
             <ArrowLeft />
         </Button>
       </div>
 
       <div className="flex-1 flex flex-col justify-center items-center text-center">
-         <AppLogo width={192} height={96} />
+         <div className='mb-6'>
+            <AppLogo width={192} height={96} />
+         </div>
+         <h1 className="text-3xl font-bold font-headline">Create your Account</h1>
+         <p className="text-muted-foreground max-w-xs mt-2">
+            Let's get you started with a free account to plan your perfect event.
+        </p>
       </div>
 
-      <div className="bg-background/50 backdrop-blur-sm p-6 rounded-2xl space-y-4">
-        <div className='text-left mb-4'>
-            <h1 className="text-2xl font-bold font-headline">Create your Account</h1>
-            <p className="text-muted-foreground">
-                Let's get started with a free account.
-            </p>
-        </div>
+      <div className="bg-card border p-6 rounded-2xl space-y-4 shadow-lg">
         
         <form onSubmit={handleSignUp} className="space-y-4">
            <div className="relative">

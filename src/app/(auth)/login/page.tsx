@@ -9,17 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useToast } from '@/hooks/use-toast';
-import { Loader, ArrowLeft, Chrome } from 'lucide-react';
+import { Loader, ArrowLeft, Chrome, Mail, Lock } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 import { AppLogo } from '@/components/shared/app-logo';
 
-// A mock icon for Apple
-const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-        <path d="M12.012 15.388c-.623 0-1.21-.212-1.8-.626-1.173-.82-1.89-2.22-1.89-3.722 0-2.38 1.545-3.868 3.65-3.868 1.018 0 1.93.483 2.583 1.23l-.014-.012.004.004c.64.735.922 1.543.95 2.375-.028.018-.54.21-1.38.21-.755 0-1.33-.21-2.11-.21-1.12 0-2.25.68-2.25 2.12 0 1.23.86 1.87 1.95 1.87.62 0 1.25-.21 1.88-.65l.02.01c.023-.02.6-.4 1.2-.4.06 0 .1.01.13.01.02 0 .02-.001.03-.001.21.002.4.018.55.053-.05.29-.14.57-.3.84-.52.9-1.3 1.7-2.4 1.7zM14.998 4.5c0-1.24-1.01-2.25-2.26-2.25s-2.25 1.01-2.25 2.25c0 1.24 1.01 2.25 2.25 2.25s2.26-1.01 2.26-2.25z"/>
-    </svg>
-)
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -54,9 +48,9 @@ export default function LoginPage() {
   
   return (
     <>
-      <div className="flex flex-col h-screen bg-gradient-to-br from-red-200 via-yellow-200 to-orange-200 p-6">
+      <div className="flex flex-col h-screen bg-background p-6">
           <div className="absolute top-4 left-4 z-10">
-              <Button variant="ghost" size="icon" onClick={() => router.push('/')} className="bg-background/20 hover:bg-background/40">
+              <Button variant="ghost" size="icon" onClick={() => router.push('/')} className="bg-muted hover:bg-muted/80">
                   <ArrowLeft />
               </Button>
           </div>
@@ -68,18 +62,18 @@ export default function LoginPage() {
                 <AppLogo width={160} height={80} />
               </div>
               <h1 className="text-3xl font-bold font-headline mb-2 text-foreground">Welcome Back</h1>
-              <p className="text-foreground/80 mb-8">Login to your account</p>
+              <p className="text-foreground/80 mb-8 max-w-xs">Enter your credentials to access your account and plan your next masterpiece.</p>
         </div>
         
-        <div className="bg-background/50 backdrop-blur-sm p-6 rounded-2xl space-y-4">
+        <div className="bg-card border p-6 rounded-2xl space-y-4 shadow-lg">
           <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2 text-left">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" />
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 pl-10" />
             </div>
-            <div className="space-y-2 text-left">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-12" />
+             <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-14 pl-10" placeholder="Password" />
             </div>
             <Button type="submit" disabled={loading} className="w-full h-14 text-base">
               {loading ? <Loader className="animate-spin" /> : 'Sign in'}
@@ -95,12 +89,9 @@ export default function LoginPage() {
               <Button onClick={handleGoogleSignIn} variant="outline" className="w-full h-14 text-base" disabled={loading}>
                   <Chrome className="mr-2" /> Continue with Google
               </Button>
-              <Button variant="outline" className="w-full h-14 text-base" disabled>
-                  <AppleIcon className="mr-2 w-5 h-5" /> Continue with Apple
-              </Button>
             </div>
             <p className="text-center text-muted-foreground text-sm mt-6">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href="/signup" className="underline font-semibold text-primary">
                 Sign up
               </Link>
