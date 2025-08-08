@@ -112,7 +112,7 @@ export default function AccountPage() {
         {user ? (
           <div className="relative h-40 bg-primary/20 p-4 flex items-end text-primary-foreground">
             <Image 
-                src="https://placehold.co/600x400/7A90E7/FFFFFF"
+                src="https://placehold.co/600x400/E77A7A/FFFFFF"
                 alt="Profile background"
                 layout='fill'
                 objectFit='cover'
@@ -128,7 +128,7 @@ export default function AccountPage() {
         ) : (
              <div className="relative h-40 bg-primary/20 p-4 flex items-end text-primary-foreground">
                 <Image 
-                    src="https://placehold.co/600x400/7A90E7/FFFFFF"
+                    src="https://placehold.co/600x400/E77A7A/FFFFFF"
                     alt="Profile background"
                     layout='fill'
                     objectFit='cover'

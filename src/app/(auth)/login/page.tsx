@@ -63,10 +63,9 @@ export default function LoginPage() {
           
         <div className="flex-1 flex flex-col justify-center p-6">
               <div 
-                  className="w-40 h-20 mb-6 flex items-center justify-center" 
-                  data-ai-hint="logo placeholder"
+                  className="mb-6"
               >
-                <AppLogo />
+                <AppLogo width={160} height={80} />
               </div>
               <h1 className="text-3xl font-bold font-headline mb-2">Welcome Back</h1>
               <p className="text-muted-foreground mb-8">Login to your account</p>

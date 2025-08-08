@@ -22,10 +22,9 @@ export default function WelcomePage() {
     <div className="flex flex-col h-screen bg-background p-8">
       <div className="flex-1 flex flex-col justify-center items-center text-center">
         <div 
-            className="w-48 h-24 mb-8 flex items-center justify-center" 
-            data-ai-hint="logo placeholder"
+            className="mb-8" 
         >
-          <AppLogo />
+          <AppLogo width={192} height={96} />
         </div>
         
         <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4">

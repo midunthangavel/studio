@@ -1,17 +1,22 @@
 
-import { Playfair_Display } from 'next/font/google';
-import { cn } from "@/lib/utils";
+import Image from 'next/image';
 
-const playfair = Playfair_Display({
-    subsets: ['latin'],
-    variable: '--font-headline',
-});
+interface AppLogoProps {
+  width?: number;
+  height?: number;
+  className?: string;
+}
 
-export function AppLogo() {
+export function AppLogo({ width = 120, height = 40, className }: AppLogoProps) {
   return (
-    <h1 className={cn("font-headline text-2xl font-bold", playfair.variable)}>
-      <span className="text-primary">Venue</span>
-      <span className="text-accent">Voyager</span>
-    </h1>
+    <div className={className}>
+      <Image
+        src="/logo.png"
+        alt="FixmyEvent Logo"
+        width={width}
+        height={height}
+        priority
+      />
+    </div>
   );
 }
