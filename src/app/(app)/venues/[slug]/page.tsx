@@ -11,17 +11,13 @@ async function getVenueData(slug: string) {
     if (!venue) return null;
 
     try {
-        // In a real app, you would fetch reviews from a 'venues' collection
-        // For this demo, we'll just use the mock reviews in allVenues.
-        // const venueDoc = await getDoc(doc(db, "venues", slug));
-        // if (venueDoc.exists()) {
-        //     return { ...venue, ...venueDoc.data() };
-        // }
+        // In a real app, you would fetch reviews from a 'venues' collection in Firestore.
+        // To keep this demo app simple and performant, we are using the mock reviews 
+        // located in the `allVenues` data source.
         return venue;
-
     } catch (error) {
         console.error("Error fetching venue data:", error);
-        return venue; // Fallback to mock data
+        return venue; // Fallback to mock data on error
     }
 }
 

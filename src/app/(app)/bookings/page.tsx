@@ -63,11 +63,17 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
             const bookingRef = doc(db, "bookings", booking.id);
             await updateDoc(bookingRef, { review: reviewData });
 
-            // Add review to the venue's reviews subcollection (or array)
-            const venueRef = doc(db, "venues", booking.venueId); // Assuming you have a 'venues' collection
-            await updateDoc(venueRef, {
-                reviews: arrayUnion(reviewData)
-            });
+            // Add review to the venue's reviews array
+            const venueRef = doc(db, "venues", booking.venueId);
+             try {
+                await updateDoc(venueRef, {
+                    reviews: arrayUnion(reviewData)
+                });
+            } catch (e) {
+                // Venue doc might not exist, that's okay for this demo.
+                console.warn("Venue document not found for review update, skipping.", e)
+            }
+
 
             onReviewSubmit(booking.id, reviewData);
             toast({
