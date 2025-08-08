@@ -1,21 +1,17 @@
 
-'use client';
 import { allVenues } from '@/lib/venues';
 import { SearchPageClient } from './page.client';
 import type { VenueCardProps } from '@/components/venue-card';
-import { use } from 'react';
 
 export interface SearchParams {
   [key: string]: string | string[] | undefined;
 }
 
-// This is a Server Component
+// This is a Server Component that fetches data and passes it to a Client Component.
 export default function SearchPage({ searchParams }: { searchParams: SearchParams }) {
-  // The 'use' hook is recommended for accessing searchParams in Server Components.
-  const unwrappedSearchParams = use(searchParams);
-  const { q, location, category, minPrice, maxPrice } = unwrappedSearchParams;
+  const { q, location, category, minPrice, maxPrice } = searchParams;
 
-  const hasSearched = Object.keys(unwrappedSearchParams).length > 0;
+  const hasSearched = Object.keys(searchParams).length > 0;
 
   let searchResults: (VenueCardProps & { category: string; })[] = [];
 
@@ -33,9 +29,9 @@ export default function SearchPage({ searchParams }: { searchParams: SearchParam
         return queryMatch && locationMatch && categoryMatch && minPriceMatch && maxPriceMatch;
     });
   } else {
-    // When no specific search is made, show some popular items as default, but we'll show categories instead.
+    // When no specific search is made, we will show categories instead of search results.
     searchResults = [];
   }
 
-  return <SearchPageClient searchResults={searchResults} searchParams={unwrappedSearchParams} />;
+  return <SearchPageClient searchResults={searchResults} searchParams={searchParams} />;
 }

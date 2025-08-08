@@ -193,15 +193,15 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
       </div>
 
       {/* Image Gallery */}
-      <div className="mb-12 -mx-4">
+      <div className="mb-12 -mx-4 md:mx-0">
         <Carousel>
             <CarouselContent>
                 <CarouselItem>
-                    <Image src={venue.image} alt={venue.name} width={800} height={600} className="object-cover w-full h-64" data-ai-hint={venue.hint} />
+                    <Image src={venue.image} alt={venue.name} width={800} height={600} className="object-cover w-full h-96 rounded-lg" data-ai-hint={venue.hint} />
                 </CarouselItem>
                     {galleryImages.map((src, index) => (
                     <CarouselItem key={index}>
-                        <Image src={src} alt={`Venue detail ${index + 1}`} width={800} height={600} className="object-cover w-full h-64" data-ai-hint="banquet hall" />
+                        <Image src={src} alt={`Venue detail ${index + 1}`} width={800} height={600} className="object-cover w-full h-96 rounded-lg" data-ai-hint="banquet hall" />
                     </CarouselItem>
                     ))}
             </CarouselContent>
@@ -211,9 +211,9 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
       </div>
 
 
-      <div className="grid grid-cols-1 gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-8">
         {/* Main Content */}
-        <div>
+        <div className="md:col-span-2">
             <h2 className="text-2xl font-bold mb-4">About this {venue.category}</h2>
             <p className="text-muted-foreground leading-relaxed">
                 {venue.name} is a premier provider of {venue.category.toLowerCase()} services, located in the heart of {venue.location}. With a stellar rating of {venue.rating} from over {venue.reviewCount} clients, we pride ourselves on delivering exceptional experiences. Our space is perfect for weddings, corporate events, and private parties, offering a blend of elegance and modern amenities.
@@ -261,7 +261,7 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
         </div>
 
         {/* Booking Card */}
-        <div>
+        <div className="md:col-span-1">
             <Card className="sticky top-24 shadow-lg">
                 <CardHeader>
                     <CardTitle className='text-xl'>Request to Book</CardTitle>
