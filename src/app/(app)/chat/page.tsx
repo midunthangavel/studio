@@ -12,6 +12,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { Conversation, Message } from '@/ai/flows/chat.types';
 import type { Timestamp } from 'firebase/firestore';
+import { chat } from '@/ai/flows/chat-flow';
 
 
 // --- Mock Data ---
@@ -58,10 +59,12 @@ const MOCK_CONVERSATIONS: Conversation[] = [
 
 MOCK_CONVERSATIONS.forEach(convo => {
     const lastMessage = convo.messages[convo.messages.length - 1];
-    convo.lastMessage = {
-        text: lastMessage.text,
-        timestamp: lastMessage.timestamp
-    };
+    if(lastMessage) {
+        convo.lastMessage = {
+            text: lastMessage.text,
+            timestamp: lastMessage.timestamp
+        };
+    }
 });
 
 // --- End Mock Data ---
@@ -70,7 +73,7 @@ MOCK_CONVERSATIONS.forEach(convo => {
 export default function ChatPage() {
   const { user } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>(MOCK_CONVERSATIONS);
-  const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
+  const [activeConversation, setActiveConversation] = useState<Conversation | null>(MOCK_CONVERSATIONS[0]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -88,42 +91,35 @@ export default function ChatPage() {
 
     const myUserId = 'user-123'; // Using mock user ID
 
-    const userMessage = {
+    const userMessage: Message = {
       id: String(Date.now()),
       senderId: myUserId,
       text: newMessage,
       timestamp: mockTimestamp(new Date()),
     };
     
+    const currentMessageText = newMessage;
     setNewMessage('');
 
-    // --- Start of Frontend-only update logic ---
     const updatedConversation = {
         ...activeConversation,
         messages: [...activeConversation.messages, userMessage]
     };
     setActiveConversation(updatedConversation);
 
-    setConversations(prevConvos => prevConvos.map(c => 
-        c.id === updatedConversation.id ? updatedConversation : c
-    ));
-    // --- End of Frontend-only update logic ---
-
-    
     const otherParticipant = Object.values(activeConversation.participants).find(p => p.isAi);
 
     if (otherParticipant?.isAi) {
         setLoading(true);
-        // Simulate AI response
-        setTimeout(() => {
-            const aiMessage = { 
+        try {
+            const aiResponse = await chat({ message: currentMessageText });
+            const aiMessage: Message = {
                 id: String(Date.now() + 1),
                 senderId: 'ai-assistant',
-                text: "That's a great question! Let me think of some ideas for you. I suggest looking into venues with outdoor spaces to match the hiking theme.",
+                text: aiResponse,
                 timestamp: mockTimestamp(new Date())
             };
             
-            // --- Start of Frontend-only update logic ---
              const finalConversation = {
                 ...updatedConversation,
                 messages: [...updatedConversation.messages, aiMessage]
@@ -132,10 +128,22 @@ export default function ChatPage() {
             setConversations(prevConvos => prevConvos.map(c => 
                 c.id === finalConversation.id ? finalConversation : c
             ));
-            // --- End of Frontend-only update logic ---
-
+        } catch(e) {
+            console.error(e);
+            const aiMessage: Message = {
+                id: String(Date.now() + 1),
+                senderId: 'ai-assistant',
+                text: "Sorry, I'm having trouble connecting right now.",
+                timestamp: mockTimestamp(new Date())
+            };
+            const finalConversation = {
+                ...updatedConversation,
+                messages: [...updatedConversation.messages, aiMessage]
+            };
+            setActiveConversation(finalConversation);
+        } finally {
             setLoading(false);
-        }, 1500);
+        }
     }
   };
 
