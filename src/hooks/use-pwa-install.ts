@@ -29,7 +29,7 @@ export function usePWAInstall() {
     }
 
     // Check if the app is already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    if (typeof window !== "undefined" && window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true);
       setCanInstall(false);
       return;
@@ -38,7 +38,9 @@ export function usePWAInstall() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setCanInstall(true);
+      if(!isInstalled) {
+        setCanInstall(true);
+      }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -55,7 +57,7 @@ export function usePWAInstall() {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
-  }, []);
+  }, [isInstalled]);
 
   const install = async () => {
     if (deferredPrompt) {
