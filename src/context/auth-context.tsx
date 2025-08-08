@@ -2,14 +2,42 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { usePathname, useRouter } from 'next/navigation';
+import type { User } from 'firebase/auth';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
 }
+
+// Create a mock user for development
+const mockUser = {
+  uid: 'dev-user-id',
+  email: 'dev@example.com',
+  displayName: 'Dev User',
+  photoURL: 'https://placehold.co/100x100.png',
+  // Add other properties as needed by your components
+  emailVerified: true,
+  isAnonymous: false,
+  metadata: {},
+  providerData: [],
+  providerId: 'password',
+  tenantId: null,
+  delete: async () => {},
+  getIdToken: async () => 'mock-token',
+  getIdTokenResult: async () => ({
+    token: 'mock-token',
+    expirationTime: '',
+    authTime: '',
+    issuedAtTime: '',
+    signInProvider: null,
+    signInSecondFactor: null,
+    claims: {},
+  }),
+  reload: async () => {},
+  toJSON: () => ({}),
+  phoneNumber: null,
+};
+
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -17,30 +45,9 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const handleAuthChange = useCallback((user: User | null) => {
-    setUser(user);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, handleAuthChange);
-    return () => unsubscribe();
-  }, [handleAuthChange]);
-
-
-  useEffect(() => {
-    if (!loading) {
-      const isAuthPage = pathname === '/login' || pathname === '/signup' || pathname === '/';
-      if (user && isAuthPage) {
-        router.replace('/home');
-      }
-    }
-  }, [user, loading, pathname, router]);
+  // For development, we'll just use the mock user and set loading to false.
+  const [user] = useState<User | null>(mockUser as User);
+  const [loading] = useState(false);
 
   return (
     <AuthContext.Provider value={{ user, loading }}>

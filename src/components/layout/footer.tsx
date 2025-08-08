@@ -44,8 +44,8 @@ export function Footer() {
     },
   ];
 
-  // Hide footer on auth pages
-  if (pathname === '/login' || pathname === '/signup' || pathname === '/') {
+  // Hide footer on auth pages that we are no longer using
+  if (['/login', '/signup', '/'].includes(pathname)) {
     return null;
   }
 

@@ -16,7 +16,6 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { Loader, PlusCircle, Trash2, Wallet, Sparkles } from 'lucide-react';
-import { ProtectedRoute } from '@/components/shared/protected-route';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { addExpensesToBudget } from '@/ai/flows/budget-assistant';
@@ -137,129 +136,127 @@ export default function BudgetPage() {
     }
     
     return (
-        <ProtectedRoute>
-            <PageWrapper
-                icon={Wallet}
-                title="Budget"
-                description="Manage your event expenses and stay on top of your budget."
-            >
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-4xl mx-auto">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Budget Overview</CardTitle>
-                             <div className="flex items-center gap-4 pt-2">
-                                <Label htmlFor="total-budget" className="whitespace-nowrap text-sm">Total Budget ($)</Label>
-                                <Input
-                                    id="total-budget"
-                                    type="number"
-                                    className="max-w-xs h-9"
-                                    {...form.register('totalBudget')}
-                                />
-                            </div>
-                        </CardHeader>
-                        <CardContent className="grid grid-cols-2 gap-4">
-                            <Card>
-                                <CardHeader className='p-4'>
-                                    <CardTitle className="text-base">Total Spent</CardTitle>
-                                    <CardDescription>${totalSpent.toFixed(2)}</CardDescription>
-                                </CardHeader>
-                            </Card>
-                            <Card>
-                                <CardHeader className='p-4'>
-                                    <CardTitle className="text-base">Remaining</CardTitle>
-                                    <CardDescription 
-                                        className={cn("text-base", remaining < 0 && "text-destructive")}
+        <PageWrapper
+            icon={Wallet}
+            title="Budget"
+            description="Manage your event expenses and stay on top of your budget."
+        >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-4xl mx-auto">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Budget Overview</CardTitle>
+                         <div className="flex items-center gap-4 pt-2">
+                            <Label htmlFor="total-budget" className="whitespace-nowrap text-sm">Total Budget ($)</Label>
+                            <Input
+                                id="total-budget"
+                                type="number"
+                                className="max-w-xs h-9"
+                                {...form.register('totalBudget')}
+                            />
+                        </div>
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-2 gap-4">
+                        <Card>
+                            <CardHeader className='p-4'>
+                                <CardTitle className="text-base">Total Spent</CardTitle>
+                                <CardDescription>${totalSpent.toFixed(2)}</CardDescription>
+                            </CardHeader>
+                        </Card>
+                        <Card>
+                            <CardHeader className='p-4'>
+                                <CardTitle className="text-base">Remaining</CardTitle>
+                                <CardDescription 
+                                    className={cn("text-base", remaining < 0 && "text-destructive")}
+                                >
+                                    ${remaining.toFixed(2)}
+                                </CardDescription>
+                            </CardHeader>
+                        </Card>
+                        <div className="col-span-2">
+                            <Progress value={spentPercentage} className="w-full h-2" />
+                            <p className="text-xs text-muted-foreground mt-2 text-center">{spentPercentage.toFixed(0)}% of budget used</p>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>AI Expense Assistant</CardTitle>
+                        <CardDescription>Quickly add expenses using natural language. Try &quot;Add $500 for catering and $200 for a DJ.&quot;</CardDescription>
+                    </CardHeader>
+                    <CardContent className='space-y-2'>
+                       <Textarea 
+                         placeholder="e.g., Add $1500 for venue, $500 for flowers, and $300 for the cake"
+                         value={aiPrompt}
+                         onChange={(e) => setAiPrompt(e.target.value)}
+                         disabled={aiLoading}
+                       />
+                       <Button type="button" onClick={handleAiAdd} disabled={aiLoading || !aiPrompt} size="sm">
+                           {aiLoading ? <Loader className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
+                           Add with AI
+                       </Button>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Expenses</CardTitle>
+                        <CardDescription>Add and manage your expense items manually.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            {fields.map((field, index) => (
+                                <Card key={field.id} className="p-4 space-y-4">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <Input 
+                                            placeholder="Expense Name"
+                                            className="text-base font-semibold border-none shadow-none p-0 focus-visible:ring-0 h-auto"
+                                            {...form.register(`expenses.${index}.name`)} 
+                                        />
+                                        <Button type="button" variant="ghost" size="icon" className='h-7 w-7' onClick={() => remove(index)}>
+                                            <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
+                                    </div>
+                                     <Select
+                                        onValueChange={(value) => form.setValue(`expenses.${index}.category`, value)}
+                                        defaultValue={field.category}
                                     >
-                                        ${remaining.toFixed(2)}
-                                    </CardDescription>
-                                </CardHeader>
-                            </Card>
-                            <div className="col-span-2">
-                                <Progress value={spentPercentage} className="w-full h-2" />
-                                <p className="text-xs text-muted-foreground mt-2 text-center">{spentPercentage.toFixed(0)}% of budget used</p>
-                            </div>
-                        </CardContent>
-                    </Card>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Category" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {expenseCategories.map(cat => (
+                                                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-muted-foreground">$</span>
+                                        <Input type="number" placeholder='0.00' {...form.register(`expenses.${index}.amount`)} />
+                                    </div>
+                                </Card>
+                            ))}
+                        </div>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>AI Expense Assistant</CardTitle>
-                            <CardDescription>Quickly add expenses using natural language. Try &quot;Add $500 for catering and $200 for a DJ.&quot;</CardDescription>
-                        </CardHeader>
-                        <CardContent className='space-y-2'>
-                           <Textarea 
-                             placeholder="e.g., Add $1500 for venue, $500 for flowers, and $300 for the cake"
-                             value={aiPrompt}
-                             onChange={(e) => setAiPrompt(e.target.value)}
-                             disabled={aiLoading}
-                           />
-                           <Button type="button" onClick={handleAiAdd} disabled={aiLoading || !aiPrompt} size="sm">
-                               {aiLoading ? <Loader className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
-                               Add with AI
-                           </Button>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Expenses</CardTitle>
-                            <CardDescription>Add and manage your expense items manually.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
-                                {fields.map((field, index) => (
-                                    <Card key={field.id} className="p-4 space-y-4">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <Input 
-                                                placeholder="Expense Name"
-                                                className="text-base font-semibold border-none shadow-none p-0 focus-visible:ring-0 h-auto"
-                                                {...form.register(`expenses.${index}.name`)} 
-                                            />
-                                            <Button type="button" variant="ghost" size="icon" className='h-7 w-7' onClick={() => remove(index)}>
-                                                <Trash2 className="h-4 w-4 text-destructive" />
-                                            </Button>
-                                        </div>
-                                         <Select
-                                            onValueChange={(value) => form.setValue(`expenses.${index}.category`, value)}
-                                            defaultValue={field.category}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Category" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {expenseCategories.map(cat => (
-                                                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-muted-foreground">$</span>
-                                            <Input type="number" placeholder='0.00' {...form.register(`expenses.${index}.amount`)} />
-                                        </div>
-                                    </Card>
-                                ))}
-                            </div>
-
-                             <Button
-                                type="button"
-                                variant="outline"
-                                className="mt-4"
-                                size="sm"
-                                onClick={() => append({ name: '', category: 'Other', amount: 0 })}
-                            >
-                                <PlusCircle className="mr-2 h-4 w-4" /> Add Expense Manually
-                            </Button>
-                        </CardContent>
-                    </Card>
-
-                    <div className="flex justify-end">
-                        <Button type="submit" disabled={form.formState.isSubmitting}>
-                           {form.formState.isSubmitting ? <Loader className="animate-spin mr-2" /> : null}
-                           Save Budget
+                         <Button
+                            type="button"
+                            variant="outline"
+                            className="mt-4"
+                            size="sm"
+                            onClick={() => append({ name: '', category: 'Other', amount: 0 })}
+                        >
+                            <PlusCircle className="mr-2 h-4 w-4" /> Add Expense Manually
                         </Button>
-                    </div>
-                </form>
-            </PageWrapper>
-        </ProtectedRoute>
+                    </CardContent>
+                </Card>
+
+                <div className="flex justify-end">
+                    <Button type="submit" disabled={form.formState.isSubmitting}>
+                       {form.formState.isSubmitting ? <Loader className="animate-spin mr-2" /> : null}
+                       Save Budget
+                    </Button>
+                </div>
+            </form>
+        </PageWrapper>
     );
 }

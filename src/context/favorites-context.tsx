@@ -17,26 +17,31 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [favorites, setFavorites] = useState<VenueCardProps[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  
+  // Derive a key for local storage. Use a default if user is not logged in (for dev).
+  const storageKey = user ? `favorites_${user.uid}` : 'favorites_dev';
+
 
   // Load favorites from local storage on initial render
   useEffect(() => {
-    if (user) {
-        const storedFavorites = localStorage.getItem(`favorites_${user.uid}`);
+    try {
+        const storedFavorites = localStorage.getItem(storageKey);
         if (storedFavorites) {
             setFavorites(JSON.parse(storedFavorites));
         }
-    } else {
+    } catch (error) {
+        console.error("Failed to parse favorites from local storage", error);
         setFavorites([]);
     }
     setIsLoaded(true);
-  }, [user]);
+  }, [storageKey]);
 
   // Save favorites to local storage whenever they change
   useEffect(() => {
-    if (isLoaded && user) {
-        localStorage.setItem(`favorites_${user.uid}`, JSON.stringify(favorites));
+    if (isLoaded) {
+        localStorage.setItem(storageKey, JSON.stringify(favorites));
     }
-  }, [favorites, user, isLoaded]);
+  }, [favorites, storageKey, isLoaded]);
 
   const toggleFavorite = (venue: VenueCardProps) => {
     setFavorites(prevFavorites => {

@@ -35,7 +35,6 @@ import { FormSchema, type SuggestEventIdeasOutput, type FormValues } from '@/ai/
 import { Separator } from '@/components/ui/separator';
 import { PageWrapper } from '@/components/shared/page-wrapper';
 import { useToast } from '@/hooks/use-toast';
-import { ProtectedRoute } from '@/components/shared/protected-route';
 import { generateMoodBoard } from '@/ai/flows/generate-mood-board';
 import Image from 'next/image';
 
@@ -98,7 +97,6 @@ export default function PlannerPage() {
   };
 
   return (
-    <ProtectedRoute>
     <PageWrapper
         icon={Sparkles}
         title="AI Planner"
@@ -300,6 +298,5 @@ export default function PlannerPage() {
         </div>
       </div>
     </PageWrapper>
-    </ProtectedRoute>
   );
 }

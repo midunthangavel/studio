@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle, Clock, Loader, MapPin, Star, Edit } from "lucide-react";
 import Image from "next/image";
 import { PageWrapper } from "@/components/shared/page-wrapper";
-import { ProtectedRoute } from "@/components/shared/protected-route";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
@@ -62,19 +61,15 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
             const bookingRef = doc(db, "bookings", booking.id);
             await updateDoc(bookingRef, { review: reviewData });
             
-            // NOTE: In a real-world application, you would likely want to trigger
-            // a Cloud Function here to update the average rating on the venue document
-            // to avoid clients having to write to two collections.
-            // For this demo, we will optimistically update the client state and
-            // also try to update the venue document directly.
             const venueRef = doc(db, "venues", booking.venueId);
              try {
+                // In a real app, you might trigger a cloud function to update aggregates.
+                // For this demo, we'll just add the review to an array.
                 await updateDoc(venueRef, {
                     reviews: arrayUnion(reviewData)
-                });
+                }, { merge: true });
             } catch (e) {
-                // This might fail if the venue doc doesn't exist, which is okay for the demo.
-                console.warn("Venue document not found for review update, skipping.", e)
+                console.warn("Could not update venue with new review.", e)
             }
 
 
@@ -286,7 +281,6 @@ function BookingsPage() {
   )
 
   return (
-    <ProtectedRoute>
     <PageWrapper
         icon={Calendar}
         title="My Bookings"
@@ -329,7 +323,6 @@ function BookingsPage() {
         </TabsContent>
       </Tabs>
     </PageWrapper>
-    </ProtectedRoute>
   );
 }
 

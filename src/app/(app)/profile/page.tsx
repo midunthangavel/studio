@@ -22,11 +22,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
-import { useRouter } from 'next/navigation';
-import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ProtectedRoute } from '@/components/shared/protected-route';
 import Image from 'next/image';
 
 const accountSettings = [
@@ -100,67 +97,58 @@ const Section = ({
 
 export default function AccountPage() {
   const { user } = useAuth();
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await auth.signOut();
-    router.push('/login');
-  };
 
   return (
-    <ProtectedRoute>
-      <div className="bg-muted/40 pb-20">
-        {user ? (
-          <div className="relative h-32 text-white">
-            <Image 
-                src="https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=600&fit=crop"
-                alt="Profile background"
-                layout='fill'
-                objectFit='cover'
-                data-ai-hint="mountain landscape"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
-            <div className="relative z-10 h-full flex flex-col justify-end p-4">
-                <h2 className="text-xl font-bold">{user.displayName || 'User'}</h2>
-                <p className="text-sm">{user.email}</p>
-                <p className='text-xs mt-1'>Member since Jun 2024</p>
-            </div>
+    <div className="bg-muted/40 pb-20">
+      {user ? (
+        <div className="relative h-32 text-white">
+          <Image 
+              src="https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=600&fit=crop"
+              alt="Profile background"
+              layout='fill'
+              objectFit='cover'
+              data-ai-hint="mountain landscape"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+          <div className="relative z-10 h-full flex flex-col justify-end p-4">
+              <h2 className="text-xl font-bold">{user.displayName || 'User'}</h2>
+              <p className="text-sm">{user.email}</p>
+              <p className='text-xs mt-1'>Member since Jun 2024</p>
           </div>
-        ) : (
-             <div className="relative h-32 text-white">
-                <Image 
-                    src="https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=600&fit=crop"
-                    alt="Profile background"
-                    layout='fill'
-                    objectFit='cover'
-                    data-ai-hint="mountain landscape"
-                />
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
-                <div className="relative z-10 h-full flex flex-col justify-end p-4">
-                    <h2 className="text-xl font-bold">Guest User</h2>
-                    <p className="text-sm">guest@example.com</p>
-                    <p className='text-xs mt-1'>Not logged in</p>
-                </div>
-            </div>
-        )}
-        
-        <LanguageSwitcher />
-
-        <Section title="My Account" items={accountSettings} />
-        <Section title="Settings" items={settingsItems} />
-        <Section title="Help & Support" items={helpAndSupport} />
-
-        <div className="p-3 mt-2">
-          <Button
-            variant="outline"
-            className="w-full bg-card"
-            onClick={handleLogout}
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Log Out
-          </Button>
         </div>
+      ) : (
+           <div className="relative h-32 text-white">
+              <Image 
+                  src="https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=600&fit=crop"
+                  alt="Profile background"
+                  layout='fill'
+                  objectFit='cover'
+                  data-ai-hint="mountain landscape"
+              />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+              <div className="relative z-10 h-full flex flex-col justify-end p-4">
+                  <h2 className="text-xl font-bold">Guest User</h2>
+                  <p className="text-sm">guest@example.com</p>
+                  <p className='text-xs mt-1'>Not logged in</p>
+              </div>
+          </div>
+      )}
+      
+      <LanguageSwitcher />
+
+      <Section title="My Account" items={accountSettings} />
+      <Section title="Settings" items={settingsItems} />
+      <Section title="Help & Support" items={helpAndSupport} />
+
+      <div className="p-3 mt-2">
+        <Button
+          variant="outline"
+          className="w-full bg-card"
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Log Out
+        </Button>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }

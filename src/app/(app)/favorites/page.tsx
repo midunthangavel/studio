@@ -6,14 +6,12 @@ import { Heart } from "lucide-react";
 import { VenueCard, VenueCardProps } from "@/components/venue-card";
 import { PageWrapper } from "@/components/shared/page-wrapper";
 import Link from "next/link";
-import { ProtectedRoute } from "@/components/shared/protected-route";
 import { useFavorites } from "@/context/favorites-context";
 
 function FavoritesPage() {
   const { favorites, toggleFavorite } = useFavorites();
 
   return (
-    <ProtectedRoute>
     <PageWrapper
         icon={Heart}
         title="My Favorites"
@@ -64,7 +62,6 @@ function FavoritesPage() {
         </div>
       )}
     </PageWrapper>
-    </ProtectedRoute>
   );
 }
 

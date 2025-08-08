@@ -3,24 +3,12 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Bell, LogOut, User, MessageSquare, MapPin, Search } from "lucide-react";
+import { Bell, MessageSquare, Search } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { AppLogo } from "@/components/shared/app-logo";
-import { useAuth } from "@/context/auth-context";
-import { auth } from "@/lib/firebase";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ThemeToggle } from "./theme-toggle";
 import { Input } from "@/components/ui/input";
-import { HeaderNavigation } from "./header-navigation";
 import { useEffect, useState } from "react";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
@@ -45,7 +33,6 @@ function SearchResults({ results, onResultClick }: { results: (VenueCardProps & 
 }
 
 export function Header() {
-  const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/home';
@@ -53,11 +40,6 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
   const [showResults, setShowResults] = useState(false);
-
-  const handleLogout = async () => {
-    await auth.signOut();
-    router.push('/login');
-  };
 
   const handleSearchChange = (e: React.FormEvent<HTMLInputElement>) => {
     const query = e.currentTarget.value;
@@ -141,48 +123,6 @@ export function Header() {
             </Link>
           </Button>
           <ThemeToggle />
-          {user ? (
-            <>
-             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                   <Avatar className="h-8 w-8">
-                     <AvatarImage src={user.photoURL ?? undefined} />
-                     <AvatarFallback>{user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}</AvatarFallback>
-                   </Avatar>
-                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>
-                    <p className='text-sm'>Welcome!</p>
-                    <p className="font-normal text-xs text-muted-foreground">{user.displayName}</p>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push('/profile')}>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/bookings')}>
-                  <Bell className="mr-2 h-4 w-4" />
-                  <span>Bookings</span>
-                </DropdownMenuItem>
-                 <DropdownMenuItem onClick={() => router.push('/chat')}>
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  <span>Messages</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            </>
-          ) : (
-            <Button asChild size="sm">
-              <Link href="/login">Login</Link>
-            </Button>
-          )}
         </div>
       </div>
     </header>

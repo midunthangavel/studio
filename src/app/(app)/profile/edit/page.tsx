@@ -13,8 +13,6 @@ import { Loader, User, Mail, Phone } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import { updateProfile } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { ProtectedRoute } from '@/components/shared/protected-route';
 
 const profileSchema = z.object({
   displayName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -59,7 +57,6 @@ export default function EditProfilePage() {
     };
 
   return (
-    <ProtectedRoute>
     <PageWrapper
         icon={User}
         title="Edit Profile"
@@ -105,6 +102,5 @@ export default function EditProfilePage() {
         </form>
       </Card>
     </PageWrapper>
-    </ProtectedRoute>
   );
 }

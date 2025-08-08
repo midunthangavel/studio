@@ -7,14 +7,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader, ArrowLeft, Info, Phone, MoreVertical, Paperclip, Smile, MessageSquare, Send } from 'lucide-react';
-import { ProtectedRoute } from '@/components/shared/protected-route';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { Conversation, Message } from '@/ai/flows/chat.types';
 import { chat } from '@/ai/flows/chat-flow';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, doc, addDoc, serverTimestamp, orderBy, limit, setDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc, addDoc, serverTimestamp, orderBy, limit, setDoc, getDoc } from 'firebase/firestore';
 
 
 function useConversations(userId: string | null) {
@@ -36,7 +35,7 @@ function useConversations(userId: string | null) {
       const convos: Conversation[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const lastMessage = data.messages?.[data.messages.length - 1] || null;
+        const lastMessage = data.lastMessage || data.messages?.[data.messages.length - 1] || null;
         convos.push({ 
             id: doc.id,
             ...data,
@@ -61,7 +60,7 @@ function useConversations(userId: string | null) {
         convos.unshift(aiConvo);
       }
       
-      setConversations(convos.sort((a,b) => (b.lastMessage?.timestamp?.toDate() || 0) - (a.lastMessage?.timestamp?.toDate() || 0)));
+      setConversations(convos.sort((a,b) => (b.lastMessage?.timestamp?.toDate?.() || 0) - (a.lastMessage?.timestamp?.toDate?.() || 0)));
       setLoading(false);
     }, (error) => {
       console.error("Error fetching conversations: ", error);
@@ -111,7 +110,12 @@ export default function ChatPage() {
       querySnapshot.forEach((doc) => {
         msgs.push({ id: doc.id, ...doc.data() } as Message);
       });
-      setMessages(msgs);
+       // If it's the initial AI message, don't fetch from DB, use the hardcoded one.
+      if (activeConversation.id === [user?.uid, 'ai-assistant'].sort().join('_') && msgs.length === 0) {
+        setMessages(activeConversation.messages);
+      } else {
+        setMessages(msgs);
+      }
       setMessagesLoading(false);
     }, (error) => {
       console.error("Error fetching messages:", error);
@@ -119,7 +123,7 @@ export default function ChatPage() {
     });
 
     return () => unsubscribe();
-  }, [activeConversation?.id]);
+  }, [activeConversation?.id, activeConversation, user?.uid]);
 
 
   const scrollToBottom = () => {
@@ -148,11 +152,15 @@ export default function ChatPage() {
     const tempMessage: Message = { ...userMessage, id: Date.now().toString(), timestamp: new Date() as any };
     setMessages(prev => [...prev, tempMessage]);
 
-    await addDoc(messagesRef, { ...userMessage, timestamp: serverTimestamp() });
+    const messageTimestamp = serverTimestamp();
+    await addDoc(messagesRef, { ...userMessage, timestamp: messageTimestamp });
     
     // Update last message on conversation
-    const lastMessageData = { text: currentMessageText, timestamp: serverTimestamp() };
-    if((await getDoc(conversationRef)).exists()) {
+    const lastMessageData = { text: currentMessageText, timestamp: messageTimestamp };
+    
+    // Check if conversation exists before trying to update it.
+    const convoSnap = await getDoc(conversationRef);
+    if(convoSnap.exists()) {
         await setDoc(conversationRef, { lastMessage: lastMessageData, updatedAt: serverTimestamp() }, { merge: true });
     } else {
         await setDoc(conversationRef, { ...activeConversation, lastMessage: lastMessageData, createdAt: serverTimestamp() });
@@ -168,8 +176,9 @@ export default function ChatPage() {
                 senderId: 'ai-assistant',
                 text: aiResponse,
             };
-            await addDoc(messagesRef, { ...aiMessage, timestamp: serverTimestamp() });
-             await setDoc(conversationRef, { lastMessage: {text: aiResponse, timestamp: serverTimestamp()}, updatedAt: serverTimestamp() }, { merge: true });
+            const aiTimestamp = serverTimestamp();
+            await addDoc(messagesRef, { ...aiMessage, timestamp: aiTimestamp });
+             await setDoc(conversationRef, { lastMessage: {text: aiResponse, timestamp: aiTimestamp}, updatedAt: serverTimestamp() }, { merge: true });
 
         } catch(e) {
             console.error(e);
@@ -340,7 +349,6 @@ export default function ChatPage() {
   }
 
   return (
-    <ProtectedRoute>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-[calc(100vh-3.5rem)]">
         <div className={cn("hidden md:block border-r h-full", activeConversation && "hidden md:block")}>
            <ConversationList />
@@ -363,6 +371,5 @@ export default function ChatPage() {
             )}
         </div>
       </div>
-    </ProtectedRoute>
   );
 }
