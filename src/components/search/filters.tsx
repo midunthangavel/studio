@@ -2,38 +2,41 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Search } from "lucide-react";
-import type { SearchParams } from '@/app/(app)/search/page';
 
-export const Filters = ({ searchParams, id }: { searchParams: SearchParams; id?: string }) => {
+export const Filters = ({ id }: { id?: string }) => {
     const router = useRouter();
+    const searchParams = useSearchParams();
 
-    const [keyword, setKeyword] = useState(searchParams?.q || '');
-    const [location, setLocation] = useState(searchParams?.location || '');
-    const [category, setCategory] = useState(searchParams?.category || '');
-    const [priceRange, setPriceRange] = useState([Number(searchParams?.minPrice) || 0, Number(searchParams?.maxPrice) || 30000]);
+    const [keyword, setKeyword] = useState('');
+    const [location, setLocation] = useState('');
+    const [category, setCategory] = useState('');
+    const [priceRange, setPriceRange] = useState([0, 30000]);
 
     useEffect(() => {
-        setKeyword(searchParams?.q || '');
-        setLocation(searchParams?.location || '');
-        setCategory(searchParams?.category || '');
-        setPriceRange([Number(searchParams?.minPrice) || 0, Number(searchParams?.maxPrice) || 30000]);
+        setKeyword(searchParams.get('q') || '');
+        setLocation(searchParams.get('location') || '');
+        setCategory(searchParams.get('category') || '');
+        setPriceRange([
+            Number(searchParams.get('minPrice')) || 0,
+            Number(searchParams.get('maxPrice')) || 30000
+        ]);
     }, [searchParams]);
 
     const handleFilterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const params = new URLSearchParams();
-        if (keyword) params.set('q', String(keyword));
-        if (location) params.set('location', String(location));
-        if (category) params.set('category', category);
-        if (priceRange[0] > 0) params.set('minPrice', String(priceRange[0]));
-        if (priceRange[1] < 30000) params.set('maxPrice', String(priceRange[1]));
+        const params = new URLSearchParams(searchParams.toString());
+        if (keyword) params.set('q', keyword); else params.delete('q');
+        if (location) params.set('location', location); else params.delete('location');
+        if (category) params.set('category', category); else params.delete('category');
+        if (priceRange[0] > 0) params.set('minPrice', String(priceRange[0])); else params.delete('minPrice');
+        if (priceRange[1] < 30000) params.set('maxPrice', String(priceRange[1])); else params.delete('maxPrice');
         
         router.push(`/search?${params.toString()}`);
     }

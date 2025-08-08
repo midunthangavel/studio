@@ -46,8 +46,8 @@ function BookingsPage() {
         });
 
         const now = new Date();
-        const upcoming = bookings.filter(b => b.bookingDate.toDate() >= now);
-        const past = bookings.filter(b => b.bookingDate.toDate() < now);
+        const upcoming = bookings.filter(b => b.bookingDate && b.bookingDate.toDate() >= now);
+        const past = bookings.filter(b => b.bookingDate && b.bookingDate.toDate() < now);
         
         setUpcomingBookings(upcoming.sort((a, b) => a.bookingDate.toDate().getTime() - b.bookingDate.toDate().getTime()));
         setPastBookings(past.sort((a, b) => b.bookingDate.toDate().getTime() - a.bookingDate.toDate().getTime()));
@@ -70,6 +70,90 @@ function BookingsPage() {
     )
   }
 
+  const BookingCard = ({ booking }: { booking: Booking }) => (
+    <Card>
+        <div className="grid grid-cols-1 md:grid-cols-3">
+            <div className="md:col-span-1">
+                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+            </div>
+            <div className="md:col-span-2">
+                <CardHeader>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <CardTitle>{booking.venueName}</CardTitle>
+                            <CardDescription>Booking ID: {booking.id}</CardDescription>
+                        </div>
+                        <Badge variant={booking.status === 'Confirmed' ? 'default' : 'secondary'}>{booking.status}</Badge>
+                    </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {booking.bookingDate?.toDate().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </div>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        {booking.venueLocation}
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                        <Button size="sm">View Details</Button>
+                        <Button size="sm" variant="outline">Contact Provider</Button>
+                    </div>
+                </CardContent>
+            </div>
+        </div>
+    </Card>
+  )
+
+  const PastBookingCard = ({ booking }: { booking: Booking }) => (
+     <Card className="opacity-70">
+        <div className="grid grid-cols-1 md:grid-cols-3">
+            <div className="md:col-span-1">
+                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+            </div>
+            <div className="md:col-span-2">
+                <CardHeader>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <CardTitle>{booking.venueName}</CardTitle>
+                            <CardDescription>Booking ID: {booking.id}</CardDescription>
+                        </div>
+                        <Badge variant="secondary">Completed</Badge>
+                    </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                        <div className="flex items-center text-sm text-muted-foreground">
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        {booking.bookingDate?.toDate().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </div>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        {booking.venueLocation}
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                        <Button size="sm" variant="outline">Leave a Review</Button>
+                        <Button size="sm" variant="outline">View Receipt</Button>
+                    </div>
+                </CardContent>
+            </div>
+        </div>
+    </Card>
+  )
+
+  const EmptyState = ({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) => (
+     <div className="border-dashed border rounded-lg">
+        <div className="p-10 text-center">
+            <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
+            <Icon className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">{title}</h3>
+            <p className="text-muted-foreground">
+            {description}
+            </p>
+        </div>
+    </div>
+  )
+
   return (
     <ProtectedRoute>
     <PageWrapper
@@ -86,51 +170,14 @@ function BookingsPage() {
           <div className="space-y-6 mt-6">
             {upcomingBookings.length > 0 ? (
                 upcomingBookings.map(booking => (
-                    <Card key={booking.id}>
-                        <div className="grid grid-cols-1">
-                            <div>
-                                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg" data-ai-hint={booking.venueHint} />
-                            </div>
-                            <div>
-                                <CardHeader>
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <CardTitle>{booking.venueName}</CardTitle>
-                                            <CardDescription>Booking ID: {booking.id}</CardDescription>
-                                        </div>
-                                        <Badge variant={booking.status === 'Confirmed' ? 'default' : 'secondary'}>{booking.status}</Badge>
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div className="flex items-center text-sm text-muted-foreground">
-                                        <Clock className="w-4 h-4 mr-2" />
-                                        {booking.bookingDate.toDate().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                                    </div>
-                                    <div className="flex items-center text-sm text-muted-foreground">
-                                        <MapPin className="w-4 h-4 mr-2" />
-                                        {booking.venueLocation}
-                                    </div>
-                                    <div className="flex gap-2 pt-2">
-                                        <Button size="sm">View Details</Button>
-                                        <Button size="sm" variant="outline">Contact Provider</Button>
-                                    </div>
-                                </CardContent>
-                            </div>
-                        </div>
-                    </Card>
+                   <BookingCard key={booking.id} booking={booking} />
                 ))
             ) : (
-                <div className="border-dashed border rounded-lg">
-                    <div className="p-10 text-center">
-                        <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
-                        <Calendar className="w-8 h-8 text-muted-foreground" />
-                        </div>
-                        <h3 className="text-xl font-semibold mb-2">No Upcoming Bookings</h3>
-                        <p className="text-muted-foreground">
-                        You have no upcoming bookings. Why not explore some venues?
-                        </p>
-                    </div>
-                </div>
+                <EmptyState 
+                    icon={Calendar}
+                    title="No Upcoming Bookings"
+                    description="You have no upcoming bookings. Why not explore some venues?"
+                />
             )}
             </div>
         </TabsContent>
@@ -138,51 +185,14 @@ function BookingsPage() {
             <div className="space-y-6 mt-6">
             {pastBookings.length > 0 ? (
                 pastBookings.map(booking => (
-                    <Card key={booking.id} className="opacity-70">
-                        <div className="grid grid-cols-1">
-                            <div>
-                                <Image src={booking.venueImage} alt={booking.venueName} width={600} height={300} className="object-cover h-full w-full rounded-t-lg" data-ai-hint={booking.venueHint} />
-                            </div>
-                            <div>
-                                <CardHeader>
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <CardTitle>{booking.venueName}</CardTitle>
-                                            <CardDescription>Booking ID: {booking.id}</CardDescription>
-                                        </div>
-                                        <Badge variant="secondary">Completed</Badge>
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                     <div className="flex items-center text-sm text-muted-foreground">
-                                        <CheckCircle className="w-4 h-4 mr-2" />
-                                        {booking.bookingDate.toDate().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                                    </div>
-                                    <div className="flex items-center text-sm text-muted-foreground">
-                                        <MapPin className="w-4 h-4 mr-2" />
-                                        {booking.venueLocation}
-                                    </div>
-                                    <div className="flex gap-2 pt-2">
-                                        <Button size="sm" variant="outline">Leave a Review</Button>
-                                        <Button size="sm" variant="outline">View Receipt</Button>
-                                    </div>
-                                </CardContent>
-                            </div>
-                        </div>
-                    </Card>
+                   <PastBookingCard key={booking.id} booking={booking} />
                 ))
             ) : (
-                <div className="border-dashed border rounded-lg">
-                    <div className="p-10 text-center">
-                        <div className="mx-auto w-fit bg-secondary p-4 rounded-full mb-4">
-                        <CheckCircle className="w-8 h-8 text-muted-foreground" />
-                        </div>
-                        <h3 className="text-xl font-semibold mb-2">No Past Bookings</h3>
-                        <p className="text-muted-foreground">
-                        You have no past bookings.
-                        </p>
-                    </div>
-                </div>
+               <EmptyState 
+                    icon={CheckCircle}
+                    title="No Past Bookings"
+                    description="You have no past bookings."
+                />
             )}
             </div>
         </TabsContent>

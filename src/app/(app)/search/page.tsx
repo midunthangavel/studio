@@ -1,37 +1,51 @@
 
+import { Suspense } from 'react';
 import { allVenues } from '@/lib/venues';
 import { SearchPageClient } from './page.client';
 import type { VenueCardProps } from '@/components/venue-card';
+import { Loader } from 'lucide-react';
 
 export interface SearchParams {
   [key: string]: string | string[] | undefined;
 }
 
-// This is a Server Component that fetches data and passes it to a Client Component.
-export default function SearchPage({ searchParams }: { searchParams: SearchParams }) {
-  const { q, location, category, minPrice, maxPrice } = searchParams;
+function SearchFallback() {
+  return (
+    <div className="flex items-center justify-center h-[50vh]">
+      <Loader className="h-8 w-8 animate-spin" />
+    </div>
+  )
+}
 
+function performSearch(searchParams: SearchParams): (VenueCardProps & { category: string; })[] {
+  const { q, location, category, minPrice, maxPrice } = searchParams;
   const hasSearched = Object.keys(searchParams).length > 0;
 
-  let searchResults: (VenueCardProps & { category: string; })[] = [];
-
-  if (hasSearched) {
-    searchResults = allVenues.filter(venue => {
-        const queryMatch = !q || (
-            venue.name.toLowerCase().includes((q as string).toLowerCase()) ||
-            venue.hint.toLowerCase().includes((q as string).toLowerCase())
-        );
-        const locationMatch = !location || venue.location.toLowerCase().includes((location as string).toLowerCase());
-        const categoryMatch = !category || venue.category.toLowerCase() === (category as string).toLowerCase();
-        const minPriceMatch = !minPrice || venue.priceValue >= Number(minPrice);
-        const maxPriceMatch = !maxPrice || venue.priceValue <= Number(maxPrice);
-
-        return queryMatch && locationMatch && categoryMatch && minPriceMatch && maxPriceMatch;
-    });
-  } else {
-    // When no specific search is made, we will show categories instead of search results.
-    searchResults = [];
+  if (!hasSearched) {
+    return [];
   }
+  
+  return allVenues.filter(venue => {
+      const queryMatch = !q || (
+          venue.name.toLowerCase().includes(String(q).toLowerCase()) ||
+          venue.hint.toLowerCase().includes(String(q).toLowerCase())
+      );
+      const locationMatch = !location || venue.location.toLowerCase().includes(String(location).toLowerCase());
+      const categoryMatch = !category || venue.category.toLowerCase() === String(category).toLowerCase();
+      const minPriceMatch = !minPrice || venue.priceValue >= Number(minPrice);
+      const maxPriceMatch = !maxPrice || venue.priceValue <= Number(maxPrice);
 
-  return <SearchPageClient searchResults={searchResults} searchParams={searchParams} />;
+      return queryMatch && locationMatch && categoryMatch && minPriceMatch && maxPriceMatch;
+  });
+}
+
+// This is a Server Component that fetches data and passes it to a Client Component.
+export default function SearchPage({ searchParams }: { searchParams: SearchParams }) {
+  const searchResults = performSearch(searchParams);
+
+  return (
+    <Suspense fallback={<SearchFallback />}>
+      <SearchPageClient searchResults={searchResults} />
+    </Suspense>
+  );
 }

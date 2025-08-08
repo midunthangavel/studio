@@ -164,7 +164,7 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
                 <h1 className="text-3xl font-bold font-headline">{venue.name}</h1>
                 <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-muted-foreground mt-2">
                     <div className="flex items-center gap-1">
-                        <Star className="w-5 h-5 text-primary" />
+                        <Star className="w-5 h-5 text-primary fill-current" />
                         <span className="font-semibold text-foreground">{venue.rating}</span>
                         <span>({venue.reviewCount} reviews)</span>
                     </div>
@@ -211,9 +211,9 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
       </div>
 
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-8">
         {/* Main Content */}
-        <div className="md:col-span-2">
+        <div className="lg:col-span-2">
             <h2 className="text-2xl font-bold mb-4">About this {venue.category}</h2>
             <p className="text-muted-foreground leading-relaxed">
                 {venue.name} is a premier provider of {venue.category.toLowerCase()} services, located in the heart of {venue.location}. With a stellar rating of {venue.rating} from over {venue.reviewCount} clients, we pride ourselves on delivering exceptional experiences. Our space is perfect for weddings, corporate events, and private parties, offering a blend of elegance and modern amenities.
@@ -261,7 +261,7 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
         </div>
 
         {/* Booking Card */}
-        <div className="md:col-span-1">
+        <div className="lg:col-span-1">
             <Card className="sticky top-24 shadow-lg">
                 <CardHeader>
                     <CardTitle className='text-xl'>Request to Book</CardTitle>
