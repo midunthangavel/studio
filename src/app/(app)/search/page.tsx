@@ -5,10 +5,11 @@ import { SearchPageClient } from './page.client';
 import type { VenueCardProps } from '@/components/venue-card';
 import { use } from 'react';
 
-
 // This is a Server Component
 export default function SearchPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  const query = searchParams?.q as string | undefined;
+  // The 'use' hook is recommended for accessing searchParams in Server Components.
+  const unwrappedSearchParams = use(searchParams);
+  const query = unwrappedSearchParams?.q as string | undefined;
 
   let searchResults: (VenueCardProps & { category: string; })[] = [];
   const hasSearched = !!query;
