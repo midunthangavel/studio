@@ -4,8 +4,6 @@
  * @fileOverview An AI agent for brainstorming event ideas.
  * 
  * - suggestEventIdeas: A function that generates event ideas based on user input.
- * - SuggestEventIdeasInput: The input type for the suggestEventIdeas function.
- * - SuggestEventIdeasOutput: The return type for the suggestEventIdeas function.
  */
 
 import { ai } from '@/ai/genkit';

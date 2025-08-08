@@ -15,3 +15,19 @@ export const SuggestEventIdeasOutputSchema = z.object({
   activity: z.string().describe('Suggestions for activities or entertainment for the guests.'),
 });
 export type SuggestEventIdeasOutput = z.infer<typeof SuggestEventIdeasOutputSchema>;
+
+
+export const FormSchema = z.object({
+  eventType: z.string().min(2, {
+    message: 'Function type must be at least 2 characters.',
+  }),
+  guestCount: z.coerce.number().int().positive({
+    message: 'Please enter a valid number of guests.',
+  }),
+  budget: z.coerce.number().positive({
+    message: 'Please enter a valid budget.',
+  }),
+  additionalInfo: z.string().optional(),
+});
+
+export type FormValues = z.infer<typeof FormSchema>;

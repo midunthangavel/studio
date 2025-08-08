@@ -4,7 +4,6 @@
 import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -32,7 +31,7 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import { suggestEventIdeas } from '@/ai/flows/suggest-event-ideas';
-import type { SuggestEventIdeasOutput } from '@/ai/flows/suggest-event-ideas.types';
+import type { SuggestEventIdeasOutput, FormValues, FormSchema } from '@/ai/flows/suggest-event-ideas.types';
 import { Separator } from '@/components/ui/separator';
 import { PageWrapper } from '@/components/shared/page-wrapper';
 import { useToast } from '@/hooks/use-toast';
@@ -40,20 +39,6 @@ import { ProtectedRoute } from '@/components/shared/protected-route';
 import { generateMoodBoard } from '@/ai/flows/generate-mood-board';
 import Image from 'next/image';
 
-const formSchema = z.object({
-  eventType: z.string().min(2, {
-    message: 'Function type must be at least 2 characters.',
-  }),
-  guestCount: z.coerce.number().int().positive({
-    message: 'Please enter a valid number of guests.',
-  }),
-  budget: z.coerce.number().positive({
-    message: 'Please enter a valid budget.',
-  }),
-  additionalInfo: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
 
 export default function PlannerPage() {
   const [loading, setLoading] = useState(false);
@@ -63,7 +48,7 @@ export default function PlannerPage() {
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(FormSchema),
     defaultValues: {
       eventType: '',
       guestCount: 50,

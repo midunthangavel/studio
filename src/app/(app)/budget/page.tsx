@@ -19,7 +19,8 @@ import { Loader, PlusCircle, Trash2, Wallet, Sparkles } from 'lucide-react';
 import { ProtectedRoute } from '@/components/shared/protected-route';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { addExpensesToBudget, AddExpensesToBudgetOutput } from '@/ai/flows/budget-assistant';
+import { addExpensesToBudget } from '@/ai/flows/budget-assistant';
+import type { AddExpensesToBudgetOutput } from '@/ai/flows/budget-assistant.types';
 import { Textarea } from '@/components/ui/textarea';
 
 const expenseSchema = z.object({

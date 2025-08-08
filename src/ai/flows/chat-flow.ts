@@ -12,6 +12,7 @@ import { SuggestEventIdeasInputSchema } from './suggest-event-ideas.types';
 import { z } from 'zod';
 import { ChatInput, ChatInputSchema, ChatOutput, ChatOutputSchema } from './chat.types';
 import { addExpensesToBudget } from './budget-assistant';
+import { AddExpensesToBudgetInputSchema } from './budget-assistant.types';
 
 const suggestEventIdeasTool = ai.defineTool(
     {
@@ -33,18 +34,13 @@ const suggestEventIdeasTool = ai.defineTool(
     {
         name: 'addExpensesToBudget',
         description: 'Adds one or more expense items to the user\'s event budget. Use this when the user asks to add, track, or manage expenses.',
-        inputSchema: z.object({
-            expenses: z.array(z.object({
-                name: z.string(),
-                amount: z.number(),
-            }))
-        }),
+        inputSchema: AddExpensesToBudgetInputSchema.pick({prompt: true}),
         outputSchema: z.string().describe('A confirmation message summarizing the expenses that were added.'),
     },
     async (input) => {
         // In a real app, you would save this to the database here.
         // For this example, we just process the text.
-        const { expenses } = await addExpensesToBudget({ prompt: `Add expenses: ${input.expenses.map(e => `${e.name} ${e.amount}`).join(', ')}` });
+        const { expenses } = await addExpensesToBudget({ prompt: input.prompt });
         const expenseSummary = expenses.map(e => `${e.name} ($${e.amount})`).join(', ');
         return `I have added the following expenses to your budget: ${expenseSummary}.`;
     }
