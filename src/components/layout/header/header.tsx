@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Bell, LogOut, User, MessageSquare, MapPin } from "lucide-react";
+import { Bell, LogOut, User, MessageSquare, MapPin, Search } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { AppLogo } from "@/components/shared/app-logo";
 import { useAuth } from "@/context/auth-context";
@@ -26,14 +26,14 @@ import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
 import { NotificationsPopover } from "./notifications-popover";
 
-function SearchResults({ results }: { results: (VenueCardProps & { category: string; })[] }) {
+function SearchResults({ results, onResultClick }: { results: (VenueCardProps & { category: string; })[], onResultClick: () => void }) {
     if (results.length === 0) return null;
     return (
         <div className="absolute top-full left-0 w-full bg-background border rounded-lg mt-2 shadow-lg z-50 max-h-96 overflow-y-auto">
             <ul className="divide-y">
                 {results.map(item => (
                     <li key={item.slug}>
-                        <Link href={`/venues/${item.slug}`} className="block p-4 hover:bg-muted">
+                        <Link href={`/venues/${item.slug}`} className="block p-4 hover:bg-muted" onClick={onResultClick}>
                             <h4 className="font-semibold">{item.name}</h4>
                             <p className="text-sm text-muted-foreground">{item.location} - <span className="text-primary">{item.category}</span></p>
                         </Link>
@@ -84,6 +84,11 @@ export function Header() {
     }
   }
 
+   const handleResultClick = () => {
+    setShowResults(false);
+    setSearchQuery('');
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if ((event.target as Element).closest('header')) return;
@@ -97,12 +102,24 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-16 items-center">
-        <div className="flex flex-1 items-center justify-start">
-             <div className="flex items-center gap-6">
-                <Link href="/" className="flex items-center space-x-2">
-                  <AppLogo />
-                </Link>
-             </div>
+        <div className="flex flex-1 items-center justify-start gap-6">
+            <Link href="/" className="flex items-center space-x-2">
+                <AppLogo />
+            </Link>
+            {!isHomePage && (
+                <div className="relative hidden md:block w-full max-w-sm">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        placeholder="Search..."
+                        className="pl-9"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleSearchSubmit}
+                        onFocus={handleSearchChange}
+                    />
+                    {showResults && <SearchResults results={searchResults} onResultClick={handleResultClick} />}
+                </div>
+            )}
          </div>
         
         <div className="flex flex-shrink-0 items-center justify-end space-x-2">
