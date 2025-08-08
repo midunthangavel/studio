@@ -29,6 +29,7 @@ import {
   Paintbrush,
   Sparkles,
   Loader,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { suggestEventIdeas } from '@/ai/flows/suggest-event-ideas';
 import type { SuggestEventIdeasOutput } from '@/ai/flows/suggest-event-ideas.types';
@@ -36,6 +37,8 @@ import { Separator } from '@/components/ui/separator';
 import { PageWrapper } from '@/components/shared/page-wrapper';
 import { useToast } from '@/hooks/use-toast';
 import { ProtectedRoute } from '@/components/shared/protected-route';
+import { generateMoodBoard } from '@/ai/flows/generate-mood-board';
+import Image from 'next/image';
 
 const formSchema = z.object({
   eventType: z.string().min(2, {
@@ -55,6 +58,8 @@ type FormValues = z.infer<typeof formSchema>;
 export default function PlannerPage() {
   const [loading, setLoading] = useState(false);
   const [ideas, setIdeas] = useState<SuggestEventIdeasOutput | null>(null);
+  const [isMoodBoardLoading, setIsMoodBoardLoading] = useState(false);
+  const [moodBoardImage, setMoodBoardImage] = useState<string | null>(null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -70,6 +75,7 @@ export default function PlannerPage() {
   async function onSubmit(values: FormValues) {
     setLoading(true);
     setIdeas(null);
+    setMoodBoardImage(null);
     try {
       const result = await suggestEventIdeas(values);
       setIdeas(result);
@@ -84,6 +90,27 @@ export default function PlannerPage() {
       setLoading(false);
     }
   }
+
+  const handleGenerateMoodboard = async () => {
+    if (!ideas?.theme) return;
+    setIsMoodBoardLoading(true);
+    setMoodBoardImage(null);
+    try {
+      const result = await generateMoodBoard({ 
+        prompt: `A vibrant, high-quality mood board for an event with the theme: "${ideas.theme}". Include elements of decoration and atmosphere.` 
+      });
+      setMoodBoardImage(result);
+    } catch (error) {
+      console.error('Error generating mood board:', error);
+      toast({
+        variant: "destructive",
+        title: "Mood Board Generation Failed",
+        description: "There was a problem creating your mood board. Please try again.",
+      });
+    } finally {
+      setIsMoodBoardLoading(false);
+    }
+  };
 
   return (
     <ProtectedRoute>
@@ -226,13 +253,54 @@ export default function PlannerPage() {
                     <p className="text-muted-foreground">{ideas.activity}</p>
                   </div>
                 </CardContent>
-                <CardFooter>
-                  <p className="text-xs text-muted-foreground">
+                <CardFooter className='flex-col gap-4 items-stretch'>
+                   <Button onClick={handleGenerateMoodboard} disabled={isMoodBoardLoading}>
+                    {isMoodBoardLoading ? (
+                        <>
+                            <Loader className="mr-2 h-4 w-4 animate-spin" />
+                            Generating...
+                        </>
+                    ) : (
+                        <>
+                            <ImageIcon className="mr-2 h-4 w-4" />
+                            Generate Mood Board
+                        </>
+                    )}
+                   </Button>
+                  <p className="text-xs text-muted-foreground text-center">
                     These are just suggestions! Feel free to mix, match, and customize them.
                   </p>
                 </CardFooter>
               </Card>
             )}
+
+            {isMoodBoardLoading && (
+                 <Card>
+                    <CardContent className="p-6 text-center">
+                        <Loader className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
+                        <p className="text-muted-foreground">Creating your mood board...</p>
+                    </CardContent>
+                </Card>
+            )}
+
+            {moodBoardImage && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Visual Inspiration</CardTitle>
+                         <CardDescription>A mood board for your &quot;{ideas?.theme}&quot; theme.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Image 
+                            src={moodBoardImage}
+                            alt="AI generated mood board"
+                            width={512}
+                            height={512}
+                            className="rounded-lg w-full h-auto object-cover"
+                        />
+                    </CardContent>
+                </Card>
+            )}
+            
             {!loading && !ideas && (
               <Card className="border-dashed">
                 <CardContent className="p-10 text-center">
