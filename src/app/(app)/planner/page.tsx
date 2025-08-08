@@ -31,7 +31,7 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import { suggestEventIdeas } from '@/ai/flows/suggest-event-ideas';
-import type { SuggestEventIdeasOutput, FormValues, FormSchema } from '@/ai/flows/suggest-event-ideas.types';
+import { FormSchema, type SuggestEventIdeasOutput, type FormValues } from '@/ai/flows/suggest-event-ideas.types';
 import { Separator } from '@/components/ui/separator';
 import { PageWrapper } from '@/components/shared/page-wrapper';
 import { useToast } from '@/hooks/use-toast';
