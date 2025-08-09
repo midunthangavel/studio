@@ -6,6 +6,8 @@ import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
 
 const popularVenues: VenueCardProps[] = allVenues.slice(0, 4);
+const topPhotographers: VenueCardProps[] = allVenues.filter(v => v.category === 'Photography').slice(0, 4);
+const invitationDesigners: VenueCardProps[] = allVenues.filter(v => v.category === 'Invitations').slice(0, 4);
 const availableNextMonth: VenueCardProps[] = allVenues.slice(5, 8);
 
 export default function HomePage() {
@@ -13,6 +15,8 @@ export default function HomePage() {
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto py-4">
         <VenueSection title="Popular venues" venues={popularVenues} moreLink="/search" />
+        <VenueSection title="Top Photographers" venues={topPhotographers} moreLink="/search?category=photography" />
+        <VenueSection title="Invitation Designers" venues={invitationDesigners} moreLink="/search?category=invitations" />
         <VenueSection title="Available next month" venues={availableNextMonth} moreLink="/search" />
       </div>
     </div>
