@@ -7,7 +7,7 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import { VenueCard, VenueCardProps } from "@/components/venue-card";
 import { useFavorites } from "@/context/favorites-context";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Heart } from "lucide-react";
+import { ArrowRight, Heart, Plus } from "lucide-react";
 
 export const VenueSection = ({ title, venues, moreLink }: { title: string, venues: VenueCardProps[], moreLink?: string }) => {
     const { isFavorited, toggleFavorite } = useFavorites();
@@ -22,7 +22,7 @@ export const VenueSection = ({ title, venues, moreLink }: { title: string, venue
                     {moreLink && (
                         <Button variant="link" asChild className="text-primary text-sm">
                             <Link href={moreLink}>
-                                See all <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                                See all <Plus className="ml-1.5 h-3.5 w-3.5" />
                             </Link>
                         </Button>
                     )}

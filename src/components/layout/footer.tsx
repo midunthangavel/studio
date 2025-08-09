@@ -50,8 +50,8 @@ export function Footer() {
   }
 
   return (
-    <footer className="fixed bottom-0 left-0 z-50 w-full h-14 border-t bg-background">
-      <div className="container grid h-full max-w-lg grid-cols-5 items-center justify-around">
+    <footer className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm h-14">
+      <div className="relative grid h-full grid-cols-5 items-center justify-around bg-background/70 border backdrop-blur-sm rounded-full shadow-lg">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           return (
@@ -59,11 +59,16 @@ export function Footer() {
               key={item.name}
               href={item.href}
               className={cn(
-                'flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors',
+                'flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors h-full w-full rounded-full',
                 isActive ? 'text-primary' : 'text-muted-foreground hover:text-primary'
               )}
             >
-              <item.icon className={cn("h-4 w-4")} />
+              <div className={cn(
+                  'flex flex-col items-center justify-center h-10 w-10 rounded-full transition-colors',
+                  isActive ? 'bg-primary/10' : ''
+              )}>
+                <item.icon className={cn("h-4 w-4")} />
+              </div>
               <span className="truncate text-[10px]">{item.name}</span>
             </Link>
           );
