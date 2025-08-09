@@ -50,7 +50,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t bg-background/95 backdrop-blur-sm md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:h-16 md:max-w-sm md:rounded-full md:border">
+    <footer className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t bg-background md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:h-16 md:max-w-sm md:rounded-full md:border">
       <div className="grid h-full grid-cols-5 items-center justify-around">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
