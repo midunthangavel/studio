@@ -13,16 +13,22 @@ export function AppLogo({ width = 100, height = 25, className }: AppLogoProps) {
         preserveAspectRatio="xMidYMid meet"
         className="w-full h-full"
       >
+        <style>
+          {`
+            .fixmy-text { fill: hsl(var(--primary)); }
+            .event-text { fill: hsl(var(--accent)); }
+          `}
+        </style>
         <text
           x="0"
           y="22"
           fontFamily="PT Sans, sans-serif"
           fontSize="24"
           fontWeight="bold"
-          fill="#D9363E"
+          className="fixmy-text"
         >
           Fixmy
-          <tspan fill="#F5B92D">event</tspan>
+          <tspan className="event-text">event</tspan>
         </text>
       </svg>
     </div>
