@@ -4,12 +4,8 @@
 import { VenueSection } from "@/components/home/venue-section";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from "@/context/auth-context";
-import { MapPin, Search } from "lucide-react";
-import Link from "next/link";
+import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { InstallPWA } from "@/components/shared/install-pwa";
@@ -18,7 +14,6 @@ const popularVenues: VenueCardProps[] = allVenues.slice(0, 4);
 const availableNextMonth: VenueCardProps[] = allVenues.slice(5, 8);
 
 export default function HomePage() {
-  const { user } = useAuth();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -30,7 +25,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
        <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <form onSubmit={handleSearchSubmit} className="relative">
@@ -46,7 +41,7 @@ export default function HomePage() {
         </div>
        </div>
       
-      <div className="py-4">
+      <div className="flex-1 overflow-y-auto py-4">
         <VenueSection title="Popular venues" venues={popularVenues} moreLink="/search" />
         <VenueSection title="Available next month" venues={availableNextMonth} moreLink="/search" />
       </div>
