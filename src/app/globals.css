@@ -5,48 +5,48 @@
 
 @layer base {
   :root {
-    --background: 231 67% 97%; /* #F0F2F9 */
-    --foreground: 222 84% 4%;
-    --card: 231 67% 97%;
-    --card-foreground: 222 84% 4%;
-    --popover: 231 67% 97%;
-    --popover-foreground: 222 84% 4%;
-    --primary: 231 70% 75%; /* #7A90E7 */
-    --primary-foreground: 222 84% 4%;
-    --secondary: 231 60% 90%;
-    --secondary-foreground: 222 84% 4%;
-    --muted: 231 60% 90%;
-    --muted-foreground: 222 20% 46%;
-    --accent: 0 72% 70%; /* #E77A7A */
-    --accent-foreground: 222 84% 4%;
+    --background: 24 100% 98%; /* Very light orange, almost white */
+    --foreground: 24 95% 15%;
+    --card: 24 100% 98%;
+    --card-foreground: 24 95% 15%;
+    --popover: 24 100% 98%;
+    --popover-foreground: 24 95% 15%;
+    --primary: 30 100% 55%; /* Vibrant Orange */
+    --primary-foreground: 24 95% 15%;
+    --secondary: 30 95% 92%;
+    --secondary-foreground: 24 95% 15%;
+    --muted: 30 95% 92%;
+    --muted-foreground: 24 20% 46%;
+    --accent: 10 90% 60%; /* Reddish-Pink */
+    --accent-foreground: 24 95% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 231 50% 88%;
-    --input: 231 50% 88%;
-    --ring: 231 70% 75%;
+    --border: 30 85% 88%;
+    --input: 30 85% 88%;
+    --ring: 30 100% 55%;
     --radius: 1rem;
   }
 
   .dark {
-    --background: 220 18% 11%; /* A dark blue-gray */
-    --foreground: 210 40% 98%; /* Almost white */
-    --card: 220 18% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 220 18% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 72%; /* A brighter blue */
-    --primary-foreground: 222 84% 4%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 347 88% 71%; /* A vibrant pink/red */
-    --accent-foreground: 210 40% 98%;
+    --background: 20 18% 11%; /* A dark, warm gray */
+    --foreground: 20 10% 92%;
+    --card: 20 18% 11%;
+    --card-foreground: 20 10% 92%;
+    --popover: 20 18% 11%;
+    --popover-foreground: 20 10% 92%;
+    --primary: 30 90% 60%; /* A slightly brighter orange for dark mode */
+    --primary-foreground: 20 18% 11%;
+    --secondary: 20 20% 17%;
+    --secondary-foreground: 20 10% 92%;
+    --muted: 20 20% 17%;
+    --muted-foreground: 20 15% 65%;
+    --accent: 10 80% 65%; /* A vibrant pink/red for dark mode */
+    --accent-foreground: 20 10% 92%;
     --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 217 91% 72%;
+    --destructive-foreground: 20 10% 92%;
+    --border: 20 20% 17%;
+    --input: 20 20% 17%;
+    --ring: 30 90% 60%;
   }
 }
 
