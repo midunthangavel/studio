@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Bell, MessageSquare, Search } from "lucide-react";
+import { Bell, MessageSquare, Search, Download } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { AppLogo } from "@/components/shared/app-logo";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
 import { NotificationsPopover } from "./notifications-popover";
+import { usePWAInstall } from "@/hooks/use-pwa-install";
 
 function SearchResults({ results, onResultClick }: { results: (VenueCardProps & { category: string; })[], onResultClick: () => void }) {
     if (results.length === 0) return null;
@@ -36,6 +37,7 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/home';
+  const { canInstall, install } = usePWAInstall();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
@@ -108,6 +110,12 @@ export function Header() {
          </div>
         
         <div className="flex flex-shrink-0 items-center justify-end space-x-1">
+           {canInstall && (
+            <Button size="icon" variant="ghost" onClick={install}>
+                <Download className="h-4 w-4" />
+                <span className="sr-only">Install App</span>
+            </Button>
+           )}
            <Popover>
             <PopoverTrigger asChild>
               <Button size="icon" variant="ghost">
