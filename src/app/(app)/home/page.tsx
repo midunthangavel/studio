@@ -4,7 +4,6 @@
 import { VenueSection } from "@/components/home/venue-section";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
-import { InstallPWA } from "@/components/shared/install-pwa";
 
 const popularVenues: VenueCardProps[] = allVenues.slice(0, 4);
 const availableNextMonth: VenueCardProps[] = allVenues.slice(5, 8);
@@ -16,7 +15,6 @@ export default function HomePage() {
         <VenueSection title="Popular venues" venues={popularVenues} moreLink="/search" />
         <VenueSection title="Available next month" venues={availableNextMonth} moreLink="/search" />
       </div>
-      <InstallPWA />
     </div>
   );
 }
