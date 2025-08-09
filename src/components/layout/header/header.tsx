@@ -58,13 +58,16 @@ export function Header() {
         setShowResults(false);
     }
   }
-
-  const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchQuery.trim() !== '') {
+  
+  const handleSearchSubmit = (e: React.FormEvent | React.KeyboardEvent<HTMLInputElement>) => {
+    if ('key' in e && e.key !== 'Enter') return;
+    e.preventDefault();
+    if (searchQuery.trim() !== '') {
         router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
         setShowResults(false);
     }
   }
+
 
    const handleResultClick = () => {
     setSearchQuery('');
@@ -125,6 +128,20 @@ export function Header() {
           <ThemeToggle />
         </div>
       </div>
+       {isHomePage && (
+         <div className="container mx-auto px-4 pb-4">
+          <form onSubmit={handleSearchSubmit} className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                  type="search"
+                  placeholder="Search for venues, catering, and more..."
+                  className="w-full h-12 rounded-full bg-muted pl-10"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+              />
+          </form>
+        </div>
+       )}
     </header>
   );
 }
