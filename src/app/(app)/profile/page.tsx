@@ -103,7 +103,7 @@ export default function AccountPage() {
       {user ? (
         <div className="relative h-32 text-white">
           <Image 
-              src="https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=600&fit=crop"
+              src="https://placehold.co/600x400.png"
               alt="Profile background"
               layout='fill'
               objectFit='cover'
@@ -119,7 +119,7 @@ export default function AccountPage() {
       ) : (
            <div className="relative h-32 text-white">
               <Image 
-                  src="https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=600&fit=crop"
+                  src="https://placehold.co/600x400.png"
                   alt="Profile background"
                   layout='fill'
                   objectFit='cover'
@@ -152,3 +152,5 @@ export default function AccountPage() {
     </div>
   );
 }
+
+    

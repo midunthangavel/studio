@@ -23,12 +23,12 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import type { VenueCardProps } from './venue-card';
 
 const galleryImages = [
-    "https://images.unsplash.com/photo-1519688034509-3f5f3ab4349e?q=80&w=400&h=300&fit=crop",
-    "https://images.unsplash.com/photo-1520854221256-17452cc6da82?q=80&w=400&h=300&fit=crop",
-    "https://images.unsplash.com/photo-1579683348053-14b1c5a942ce?q=80&w=400&h=300&fit=crop",
-    "https://images.unsplash.com/photo-1512295767273-b684ac69f887?q=80&w=400&h=300&fit=crop",
-    "https://images.unsplash.com/photo-1550081693-490354b6f585?q=80&w=600&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?q=80&w=600&h=400&fit=crop"
+    "https://placehold.co/400x300.png",
+    "https://placehold.co/400x300.png",
+    "https://placehold.co/400x300.png",
+    "https://placehold.co/400x300.png",
+    "https://placehold.co/600x400.png",
+    "https://placehold.co/600x400.png"
 ];
 
 // Mock booked dates
@@ -311,3 +311,5 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
     </div>
   );
 }
+
+    
