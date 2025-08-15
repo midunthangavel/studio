@@ -99,29 +99,26 @@ export default function ChatPage() {
   const [aiTyping, setAiTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const hasSetInitialConvo = useRef(false);
 
   useEffect(() => {
-    if (hasSetInitialConvo.current || conversationsLoading) return;
+    if (conversationsLoading || conversations.length === 0) return;
 
-    if (conversations.length > 0) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const newConvoId = urlParams.get('new');
-  
-      if (newConvoId) {
-        const newConvo = conversations.find(c => c.id === newConvoId);
-        if (newConvo) {
-          setActiveConversation(newConvo);
-          // Clean up URL
-          const newUrl = window.location.pathname;
-          window.history.replaceState({}, '', newUrl);
-        }
-      } else if (!activeConversation) {
-        setActiveConversation(conversations[0]);
+    const urlParams = new URLSearchParams(window.location.search);
+    const newConvoId = urlParams.get('new');
+    
+    if (newConvoId) {
+      const newConvo = conversations.find(c => c.id === newConvoId);
+      if (newConvo) {
+        setActiveConversation(newConvo);
+        // Clean up URL
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
       }
-      hasSetInitialConvo.current = true;
+    } else if (!activeConversation) {
+      // Set the first conversation as active by default if none is selected
+      setActiveConversation(conversations[0]);
     }
-  }, [conversations, activeConversation, conversationsLoading]);
+  }, [conversations, conversationsLoading, activeConversation]);
 
 
   useEffect(() => {
