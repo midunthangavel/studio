@@ -254,7 +254,7 @@ export default function ChatPage() {
 
     return (
         <div className="flex flex-col h-full bg-muted/30">
-            <header className="flex-shrink-0 flex items-center gap-3 p-2 border-b bg-background sticky top-[56px] z-10">
+            <header className="flex-shrink-0 flex items-center gap-3 p-2 border-b bg-background sticky top-0 z-10 md:top-14">
                 <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setActiveConversation(null)}>
                     <ArrowLeft />
                 </Button>
@@ -274,7 +274,7 @@ export default function ChatPage() {
                     </Button>
                 </div>
             </header>
-            <main className="p-4 space-y-4">
+            <main className="flex-1 p-4 space-y-4">
                 {messagesLoading ? (
                     <div className='flex justify-center items-center h-full'>
                         <Loader className="w-5 h-5 animate-spin" />
@@ -322,7 +322,7 @@ export default function ChatPage() {
                     </>
                 )}
             </main>
-            <footer className="p-2 border-t bg-background flex-shrink-0 sticky bottom-16">
+            <footer className="p-2 border-t bg-background flex-shrink-0 sticky bottom-0 md:bottom-16">
                 <div className="flex w-full items-center space-x-2 bg-muted rounded-full pl-2 pr-1">
                  <Button variant="ghost" size="icon" className="text-muted-foreground">
                     <Smile className="w-5 h-5" />
@@ -350,14 +350,12 @@ export default function ChatPage() {
 
   return (
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-[calc(100vh-3.5rem)]">
-        <div className={cn("hidden md:block border-r h-full overflow-y-auto", activeConversation && "hidden md:block")}>
+        <div className={cn("border-r h-full overflow-y-auto", activeConversation ? "hidden md:block" : "block")}>
            <ConversationList />
         </div>
-        <div className={cn("md:col-start-2 h-full", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
+        <div className={cn("md:col-start-2 h-full overflow-y-auto", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
            {activeConversation ? (
-                <div className="h-full overflow-y-auto">
-                 <ActiveConversation />
-                </div>
+                <ActiveConversation />
             ) : (
                 <div className="text-center p-4">
                      {conversationsLoading ? (
