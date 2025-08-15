@@ -99,18 +99,29 @@ export default function ChatPage() {
   const [aiTyping, setAiTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const hasSetInitialConvo = useRef(false);
 
   useEffect(() => {
-    if (!activeConversation && conversations.length > 0) {
-        setActiveConversation(conversations[0]);
-    } else if (activeConversation) {
-        // If active convo changes, find its latest version from the conversations list
-        const updatedConvo = conversations.find(c => c.id === activeConversation.id);
-        if (updatedConvo) {
-            setActiveConversation(updatedConvo);
+    if (hasSetInitialConvo.current || conversationsLoading) return;
+
+    if (conversations.length > 0) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const newConvoId = urlParams.get('new');
+  
+      if (newConvoId) {
+        const newConvo = conversations.find(c => c.id === newConvoId);
+        if (newConvo) {
+          setActiveConversation(newConvo);
+          // Clean up URL
+          const newUrl = window.location.pathname;
+          window.history.replaceState({}, '', newUrl);
         }
+      } else if (!activeConversation) {
+        setActiveConversation(conversations[0]);
+      }
+      hasSetInitialConvo.current = true;
     }
-  }, [conversations, activeConversation]);
+  }, [conversations, activeConversation, conversationsLoading]);
 
 
   useEffect(() => {

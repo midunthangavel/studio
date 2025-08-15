@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { ListFilter, Heart, Search, Building2, Paintbrush, UtensilsCrossed, Camera, Car, FileText, Music, Mail, UserCheck, Map, List } from "lucide-react";
+import { ListFilter, Heart, Search, Building2, Paintbrush, UtensilsCrossed, Camera, Car, FileText, Music, Mail, UserCheck, Map, LayoutGrid } from "lucide-react";
 import { VenueCard, VenueCardProps } from '@/components/venue-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useFavorites } from '@/context/favorites-context';
@@ -95,7 +95,7 @@ export function SearchPageClient({ searchResults }: { searchResults: (VenueCardP
                             )}
                             <div className='bg-muted p-0.5 rounded-lg flex'>
                                 <Button variant={viewMode === 'list' ? 'outline' : 'ghost'} size='icon' className='h-8 w-8 bg-background shadow-sm' onClick={() => setViewMode('list')}>
-                                    <List className='w-4 h-4' />
+                                    <LayoutGrid className='w-4 h-4' />
                                 </Button>
                                 <Button variant={viewMode === 'map' ? 'outline' : 'ghost'} size='icon' className='h-8 w-8' onClick={() => setViewMode('map')}>
                                     <Map className='w-4 h-4' />

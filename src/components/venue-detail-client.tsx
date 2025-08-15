@@ -133,7 +133,7 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
             });
         }
         
-        router.push('/chat');
+        router.push(`/chat?new=${conversationId}`);
 
     } catch (error) {
          console.error("Error starting conversation: ", error);
