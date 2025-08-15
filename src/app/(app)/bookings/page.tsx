@@ -72,7 +72,7 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
                         reviews: arrayUnion(reviewData)
                     });
 
-                    // Add a notification for the listing owner
+                    // Add a notification for the listing owner only if they exist
                     if (venueData.ownerId) {
                          await addDoc(collection(db, 'notifications'), {
                             userId: venueData.ownerId,
