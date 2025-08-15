@@ -13,6 +13,7 @@ import { Loader, User, Mail, Phone } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import { updateProfile } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 const profileSchema = z.object({
   displayName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -36,9 +37,9 @@ export default function EditProfilePage() {
     });
     
     const onSubmit = async (data: ProfileFormValues) => {
-        if (!user) return;
+        if (!auth.currentUser) return;
         try {
-            await updateProfile(user, {
+            await updateProfile(auth.currentUser, {
                 displayName: data.displayName,
             });
             // Note: Updating email and phone number requires more complex verification flows.
