@@ -1,10 +1,97 @@
-# VenueVoyager: Complete Application Documentation
+Application Overview: Fixmyevent
 
-This document provides a comprehensive, detailed breakdown of the "VenueVoyager" application, covering its architecture, design philosophy, features, and complete user flow.
+Fixmyevent is a comprehensive, Al-enhanced event planning platform designed to simplify the process of organizing any event. It serves as a two-sided marketplace connecting event planners (users) with a wide array of venues and service providers (vendors). From finding the perfect location to managing budgets and brainstorming ideas, Venue Voyager provides all the tools necessary to bring any event vision to life.
+
+The application is built as a modern Progressive Web App (PWA), ensuring a seamless, Installable, and fast experience across all devices.
+
+Core Features:
+Service Discovery: A powerful search engine allows users to find and filter venues, caterers, photographers, decorators, and more based on location, category, price, capacity, and other amenities.
+
+Al-Powered Planning: Al Planner: An intelligent assistant that generates creative and personalized event ideas for themes, decorations, and activities based on user input.
+
+Al Budget Assistant: A natural language tool that parses user requests (e.g, "add $500 for a DJ") and automatically categorizes them into a structured budget.
+
+Al Chat Assistant: A conversational agent integrated into the chat system that can help users brainstorm ideas, find vendors, and manage their budget directly within a conversation.
+
+Exquisite I
+
+Los Angeles
+
+Mood Board Generation: Users can generate Al-powered images to create a visual mood board based on their event theme, providing instant visual inspiration.
+
+$150/pers
+
+Vendor & Venue Listings: Vendors can create detailed profiles showcasing their services, including photos, descriptions, pricing, and availability calendars.
+Booking & Communication System
+
+Users can send booking requests directly to vendors.
+
+An integrated real-time chat system alloves for direct communication between users and vendors, as well as with the Al assistant.
+
+User Account Management: Users have a personal dashboard to manage their profiles, track bookings, view favorite vendors, and see
+
+notifications
+
+Review && Rating Systeme Alter an event, users can leave detailed reviews and ratings for vendors, which are duplayed on listing pages to help other users make informed decisions.
+
+Favorites: Users can save any venue or service to a personal "Favorites" page for easy access and comparison.
+
+Application Screw & Pages
+
+AUTHENTICATION FLOW
+
+Welcome Page (/): The landing page for new visitors, offering a brief introduction and options to either "Get Started" (login/signup) or "Explore as Guest.
+
+Login Page (/Login): Allows existing users to sign in using their email and password or with Google
+
+Signup Page(/signup): Allows new users to create account by providing their name, email, and password
+
+MAIN APPLICATION (SSR)
+
+Home Page (/home): The central hub for authenticated users. It features a prominent search bar and curated carousels of vendor listings, such as "Popular Venues" and "Top Photographers".
+
+Search Page (/search): Displays categories for initial exploration. Once a search is performed, it becomes a powerful results page with advanced filtering (layword, location, price, etc) and sorting options. Results can be viewed as a grid or on a map (placeholder).
+
+Venxue/Vendor Detail Page(/venues/slug): A comprehensive page for each listing, showing an image gallery, detailed description, amenities, user reviews, and an interactive booking card with an availability calendar.
+
+Al Planner Page (/planner): Users input their event details (type, budget, guest count) to receive Al-generated idees for themes, decorations, and activities, along with an option to generate a visual mood board.
+
+Budget Page (/budget): An interactive dashboard for managing event expenses. It features a pie chart visualizing spending by category, tracks total and remaining funds, and allows users to add expenses manually or via the Al assistant.
+
+Chat Page (/chat ): A real-time messaging interface. It lists all conversations on the side and displays the active chat in the main view. Users can chat with vendors or the Al Planner.
+
+Bookings Page (/bookings): A tabbed view showing "Upcoming" and "Past" bookings. Users can view booking details and leave reviewes for completed events.
+
+Favorites Page (/favorites): A gallery of all venues and services the user has marked with a heart icon.
+
+Profile Page(/profile): A central dashboard for account-related actions, with links to edit the profile, manage listings, and log out.
+
+Edit Profile Page (/profile/edit): A form where users can update their personal information, such as their name.
+
+VENDOR SPECIFIC FLOW
+
+Add a Listing Page (/add-listing): A multi-step form that allows vendors to create a new service listing. It starts with category selection, which then dynamically displays the relevant form fields for that specific service (eg, a "Venue" form asks for guest capacity, while a "Photography" form asks for camera gear).
+
+My Listings Page(/my-Listings): A page where vendors can view all the listings they have created on the platform, with options to view edit, or delete them.
+
+Navigation: Mobile Footer Nav (Authenticated Users): A foed bottom navigation bar on mobile devices provides quick access to the five core sections Home, Explore Search), Favorites, Al Planner, and Account (Profile).
+
+Main Hender: The header is present on all authenticated pages.
+
+On the Home Page, it features a large, welcoming search bar.On other pages, it contains a smaller search input that provides live search results in a dropdown. It also includes icons for accessing Notifications and Chat, along with a Theme Toggle (Light/Dark modle) and a PWA Install button if the user wants to download the applications.
+
+Profile Page Links: The profile page acts as a "settings" hat, with links navigating to various management pages like "My Listings." "Add a Listing" and "Edit Profile"
+
+Contractual Navigatione Users are guided through the app via contestual buttons and links, such as clicking a venue card to see its detail page. or clicking "Request to Book which navigates them to their bookings page upon success.
+
+
+# Fixmyevent: Complete Application Documentation
+
+This document provides a comprehensive, detailed breakdown of the "Fixmyevent" application, covering its architecture, design philosophy, features, and complete user flow.
 
 ### 1. High-Level Application Concept
 
-**VenueVoyager** is a sophisticated, AI-driven, two-sided marketplace designed to streamline the event planning process. It connects users (event planners) with a diverse range of vendors providing services like venues, catering, photography, and more. Its core mission is to replace the stress of event planning with a creative, intuitive, and intelligent platform. The app is built as a Progressive Web App (PWA) for a native-like, installable experience on any device.
+**Fixmyevent** is a sophisticated, AI-driven, two-sided marketplace designed to streamline the event planning process. It connects users (event planners) with a diverse range of vendors providing services like venues, catering, photography, and more. Its core mission is to replace the stress of event planning with a creative, intuitive, and intelligent platform. The app is built as a Progressive Web App (PWA) for a native-like, installable experience on any device.
 
 ### 2. Technical Architecture
 
