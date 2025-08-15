@@ -36,7 +36,7 @@ const accountSettings = [
 const settingsItems = [
   { icon: Edit, text: 'Edit Profile', href: '/profile/edit' },
   { icon: ShieldCheck, text: 'Security', href: '#' },
-  { icon: Bell, text: 'Notification Settings', href: '/notifications' },
+  { icon: Bell, text: 'Notification Settings', href: '#' },
   { icon: Globe, text: 'Select Country', href: '#' },
   { icon: Languages, text: 'Select Language', href: '#' },
 ];
