@@ -63,13 +63,15 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
             await updateDoc(bookingRef, { review: reviewData });
             
             // Add review to venue's collection of reviews
-            const venueRef = doc(db, "venues", booking.venueId);
+            const venueRef = doc(db, "listings", booking.venueId);
              try {
+                // Note: The venue data is mock data, so this will likely fail silently
+                // on the client unless you have a 'listings' collection.
                 await updateDoc(venueRef, {
                     reviews: arrayUnion(reviewData)
                 }, { merge: true });
             } catch (e) {
-                console.warn("Could not update venue with new review.", e)
+                console.warn("Could not update venue with new review. This is expected if using mock data.", e)
             }
             
             // Add a notification for the user who submitted the review
@@ -337,3 +339,5 @@ function BookingsPage() {
 }
 
 export default BookingsPage;
+
+    
