@@ -13,6 +13,7 @@ import { z } from 'zod';
 import { ChatInput, ChatInputSchema, ChatOutput, ChatOutputSchema } from './chat.types';
 import { addExpensesToBudget } from './budget-assistant';
 import { AddExpensesToBudgetInputSchema } from './budget-assistant.types';
+import { searchVenuesTool } from './search-venues-tool';
 
 const suggestEventIdeasTool = ai.defineTool(
     {
@@ -55,7 +56,7 @@ const chatFlow = ai.defineFlow(
   async (input) => {
     const llmResponse = await ai.generate({
       prompt: input.message,
-      tools: [suggestEventIdeasTool, addExpensesToBudgetTool],
+      tools: [suggestEventIdeasTool, addExpensesToBudgetTool, searchVenuesTool],
       model: 'googleai/gemini-2.0-flash',
     });
 
