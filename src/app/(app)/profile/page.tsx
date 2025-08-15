@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import {
@@ -13,13 +12,13 @@ import {
   Edit,
   HelpCircle,
   FileText,
-  MessageSquare,
   LogOut,
   Store,
   Wallet,
   Gift,
   ShieldCheck,
   Globe,
+  List,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
@@ -29,10 +28,9 @@ import Image from 'next/image';
 
 const accountSettings = [
   { icon: Wallet, text: 'FixmyEvent Wallet', href: '#' },
-  { icon: MapPin, text: 'Saved Addresses', href: '#' },
-  { icon: CreditCard, text: 'Payment Methods', href: '#' },
-  { icon: Gift, text: 'My Rewards', href: '#' },
+  { icon: List, text: 'My Listings', href: '/my-listings' },
   { icon: Store, text: 'Add a Listing', href: '/add-listing' },
+  { icon: Gift, text: 'My Rewards', href: '#' },
 ];
 
 const settingsItems = [
