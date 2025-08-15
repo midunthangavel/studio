@@ -10,7 +10,7 @@ import Image from "next/image";
 import { PageWrapper } from "@/components/shared/page-wrapper";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth-context";
-import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion, serverTimestamp, addDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
@@ -58,19 +58,29 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
         }
 
         try {
+            // Update booking with review
             const bookingRef = doc(db, "bookings", booking.id);
             await updateDoc(bookingRef, { review: reviewData });
             
+            // Add review to venue's collection of reviews
             const venueRef = doc(db, "venues", booking.venueId);
              try {
-                // In a real app, you might trigger a cloud function to update aggregates.
-                // For this demo, we'll just add the review to an array.
                 await updateDoc(venueRef, {
                     reviews: arrayUnion(reviewData)
                 }, { merge: true });
             } catch (e) {
                 console.warn("Could not update venue with new review.", e)
             }
+            
+            // Add a notification for the user who submitted the review
+            await addDoc(collection(db, 'notifications'), {
+                userId: user.uid,
+                type: 'Review Received',
+                message: `Your review for ${booking.venueName} has been submitted. Thank you!`,
+                timestamp: serverTimestamp(),
+                read: false,
+                iconName: 'Review Received'
+            });
 
 
             onReviewSubmit(booking.id, reviewData);
