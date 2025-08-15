@@ -5,19 +5,19 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 228 100% 98%;
     --foreground: 224 71% 4%;
     --card: 0 0% 100%;
     --card-foreground: 224 71% 4%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 71% 4%;
-    --primary: 357 74% 53%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 236 71% 72%;
+    --primary-foreground: 224 71% 4%;
     --secondary: 240 5% 96%;
     --secondary-foreground: 224 71% 4%;
     --muted: 240 5% 96%;
     --muted-foreground: 240 4% 46%;
-    --accent: 240 5% 96%;
+    --accent: 0 100% 72%;
     --accent-foreground: 224 71% 4%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -33,20 +33,20 @@
   }
 
   .dark {
-    --background: 224 71% 4%;
+    --background: 228 10% 10%;
     --foreground: 210 40% 98%;
     --card: 224 71% 4%;
     --card-foreground: 210 40% 98%;
     --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 357 74% 53%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 236 71% 72%;
+    --primary-foreground: 224 71% 4%;
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 0 100% 72%;
+    --accent-foreground: 224 71% 4%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
     --border: 217 33% 17%;
@@ -68,12 +68,9 @@
     @apply bg-background text-foreground;
   }
   .fixmy-text {
-    fill: #D9363E;
+    fill: hsl(var(--primary));
   }
   .event-text {
     fill: hsl(var(--foreground));
-  }
-  .dark .event-text {
-    fill: #F4B400;
   }
 }

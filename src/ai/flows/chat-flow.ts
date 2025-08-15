@@ -58,11 +58,6 @@ const chatFlow = ai.defineFlow(
       prompt: input.message,
       tools: [suggestEventIdeasTool, addExpensesToBudgetTool, searchVenuesTool],
       model: 'googleai/gemini-2.0-flash',
-      // Allow the model to generate a response after the tool call.
-      // The model will use the tool output to form its response.
-      output: {
-        format: 'text'
-      }
     });
 
     return llmResponse.text;

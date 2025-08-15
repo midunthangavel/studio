@@ -85,7 +85,7 @@ export function CateringForm() {
                 name="costPerPerson"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Average Cost Per Person ($)</Label>
+                        <FormLabel>Average Cost Per Person ($)</FormLabel>
                         <FormControl><Input type="number" placeholder="e.g., 85" {...field} /></FormControl>
                         <FormMessage />
                     </FormItem>
