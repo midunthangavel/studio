@@ -67,4 +67,13 @@
   body {
     @apply bg-background text-foreground;
   }
+  .fixmy-text {
+    fill: #D9363E;
+  }
+  .event-text {
+    fill: hsl(var(--foreground));
+  }
+  .dark .event-text {
+    fill: #F4B400;
+  }
 }

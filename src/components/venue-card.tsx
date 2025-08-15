@@ -54,7 +54,7 @@ export function VenueCard({
           data-ai-hint={hint}
         />
         {guestFavorite && (
-          <div className="absolute top-2 left-2 bg-background/90 text-foreground text-xs font-bold py-1 px-2 rounded-full">
+          <div className="absolute top-2 left-2 bg-background/90 text-foreground text-xs font-bold py-1 px-2 rounded-full shadow">
             Guest favorite
           </div>
         )}

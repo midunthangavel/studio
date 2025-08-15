@@ -14,17 +14,6 @@ export function AppLogo({ width = 100, height = 25, className }: AppLogoProps) {
         className="w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <style>
-          {`
-            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
-            .fixmy-text { fill: #D9363E; }
-            .event-text { fill: hsl(var(--foreground)); }
-
-            .dark .event-text {
-              fill: #F4B400;
-            }
-          `}
-        </style>
         <text
           x="0"
           y="45"
