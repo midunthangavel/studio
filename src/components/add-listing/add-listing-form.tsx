@@ -8,7 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { listingSchema, Category } from '@/types/listing';
+import { listingSchema, Category, ListingFormValues } from '@/types/listing';
+import { useAuth } from '@/context/auth-context';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 // Lazy load forms to improve initial page load
 import dynamic from 'next/dynamic';
@@ -53,19 +58,20 @@ const categoryFormMap: Record<Category, React.ComponentType<any>> = {
 
 export function AddListingForm() {
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const { user } = useAuth();
+    const { toast } = useToast();
+    const router = useRouter();
 
     const form = useForm({
         resolver: zodResolver(listingSchema),
         defaultValues: {
             category: undefined,
-            // Initialize other fields with default values
             name: '',
             ownerName: '',
-            email: '',
+            email: user?.email || '',
             phone: '',
             address: '',
             description: '',
-            // ... other common fields
         },
     });
 
@@ -77,17 +83,51 @@ export function AddListingForm() {
             category,
             name: '',
             ownerName: '',
-            email: '',
+            email: user?.email || '',
             phone: '',
             address: '',
             description: '',
         });
     };
 
-    function onSubmit(values: any) {
-        // In a real application, this would send data to Firestore
-        console.log('Form submitted:', values);
-        alert('Form submitted! Check the console for the data.');
+    async function onSubmit(values: ListingFormValues) {
+        if (!user) {
+            toast({
+                variant: 'destructive',
+                title: 'Authentication Required',
+                description: 'You must be logged in to create a listing.',
+            });
+            return router.push('/login');
+        }
+
+        try {
+            // Note: In a real app, you would handle file uploads to Firebase Storage here
+            // and get back the download URLs before saving to Firestore.
+            // For now, we'll strip out the `photos` field before saving.
+            const { photos, ...listingData } = values;
+
+            await addDoc(collection(db, 'listings'), {
+                ...listingData,
+                ownerId: user.uid,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+            });
+
+            toast({
+                title: 'Listing Created!',
+                description: 'Your service has been successfully listed on the platform.',
+            });
+            // Optionally, redirect to a vendor dashboard page
+            router.push('/profile');
+
+        } catch (error) {
+            console.error('Error creating listing:', error);
+            toast({
+                variant: 'destructive',
+                title: 'Submission Failed',
+                description: 'There was an error creating your listing. Please try again.',
+            });
+        }
     }
 
     const SelectedForm = selectedCategory ? categoryFormMap[selectedCategory] : null;
@@ -140,7 +180,10 @@ export function AddListingForm() {
 
                 {selectedCategory && (
                      <div className="flex justify-end">
-                        <Button type="submit">Submit Listing</Button>
+                        <Button type="submit" disabled={form.formState.isSubmitting}>
+                             {form.formState.isSubmitting && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+                            Submit Listing
+                        </Button>
                     </div>
                 )}
             </form>

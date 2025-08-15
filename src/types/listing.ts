@@ -13,7 +13,7 @@ const baseSchema = z.object({
   phone: z.string().min(10, "Please enter a valid phone number.").optional(),
   address: z.string().min(5, "Please enter a valid address or service area."),
   description: z.string().min(20, "Description must be at least 20 characters long."),
-  photos: z.array(fileSchema).min(1, "Please upload at least one photo.").max(10, "You can upload a maximum of 10 photos."),
+  photos: z.array(fileSchema).max(10, "You can upload a maximum of 10 photos.").optional(),
 });
 
 const venueSchema = baseSchema.extend({
