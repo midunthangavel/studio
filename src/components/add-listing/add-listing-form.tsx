@@ -67,7 +67,6 @@ export function AddListingForm() {
         defaultValues: {
             category: undefined,
             name: '',
-            ownerName: '',
             email: user?.email || '',
             phone: '',
             address: '',
@@ -82,7 +81,6 @@ export function AddListingForm() {
         form.reset({
             category,
             name: '',
-            ownerName: '',
             email: user?.email || '',
             phone: '',
             address: '',

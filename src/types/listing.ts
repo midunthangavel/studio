@@ -31,7 +31,7 @@ const cateringSchema = baseSchema.extend({
     costPerPerson: z.coerce.number().positive(),
     advanceAmount: z.coerce.number().positive(),
     staffCount: z.coerce.number().int().positive(),
-    dietaryOptions: z.object({ veg: z.boolean(), nonVeg: z.boolean() }),
+    dietaryOptions: z.object({ veg: z.boolean(), nonVeg: z.boolean() }).optional(),
     menuOptions: z.enum(['fixed', 'flexible']),
     serviceStyle: z.enum(['on-site', 'delivery']),
 });
