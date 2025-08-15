@@ -26,6 +26,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
 
 const accountSettings = [
   { icon: Wallet, text: 'FixmyEvent Wallet', href: '#' },
@@ -97,12 +98,17 @@ const Section = ({
 );
 
 export default function AccountPage() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const router = useRouter();
 
   const memberSince = user?.metadata?.creationTime 
     ? format(new Date(user.metadata.creationTime), 'MMM yyyy') 
     : 'a while ago';
 
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+  };
 
   return (
     <div className="bg-muted/40 pb-20">
@@ -150,6 +156,7 @@ export default function AccountPage() {
         <Button
           variant="outline"
           className="w-full bg-card"
+          onClick={handleLogout}
         >
           <LogOut className="mr-2 h-4 w-4" />
           Log Out

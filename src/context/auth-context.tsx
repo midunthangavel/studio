@@ -7,6 +7,7 @@ import type { User } from 'firebase/auth';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  signOut: () => void;
 }
 
 // Create a mock user for development
@@ -43,6 +44,7 @@ const createMockUser = () => ({
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  signOut: () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -53,7 +55,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(mockUser);
   const [loading, setLoading] = useState(false);
 
-  const value = useMemo(() => ({ user, loading }), [user, loading]);
+  const signOut = () => {
+    // In a real app, this would be:
+    // import { auth } from '@/lib/firebase';
+    // import { signOut as firebaseSignOut } from 'firebase/auth';
+    // firebaseSignOut(auth).then(() => setUser(null));
+    setUser(null); // For development, just clear the user
+  };
+
+  const value = useMemo(() => ({ user, loading, signOut }), [user, loading]);
 
   return (
     <AuthContext.Provider value={value}>
