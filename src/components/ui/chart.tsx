@@ -320,7 +320,10 @@ ChartLegendContent.displayName = "ChartLegend"
 const ChartLabel = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> &
-    React.ComponentProps<typeof RechartsPrimitive.Label>
+    React.ComponentProps<typeof RechartsPrimitive.Label> & {
+      dy?: number,
+      dx?: number,
+    }
 >(({ className, ...props }, ref) => {
   return (
     <RechartsPrimitive.Label
@@ -381,3 +384,5 @@ export {
   ChartStyle,
   ChartLabel
 }
+
+    

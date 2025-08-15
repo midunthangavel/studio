@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 import { addExpensesToBudget } from '@/ai/flows/budget-assistant';
 import type { AddExpensesToBudgetOutput } from '@/ai/flows/budget-assistant.types';
 import { Textarea } from '@/components/ui/textarea';
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig, ChartLabel } from '@/components/ui/chart';
 import { Pie, PieChart, Cell } from 'recharts';
 
 const expenseSchema = z.object({
@@ -100,11 +100,12 @@ export default function BudgetPage() {
 
     const totalBudget = form.watch('totalBudget');
     const expenses = form.watch('expenses');
-    const totalSpent = expenses.reduce((acc, expense) => acc + expense.amount, 0);
+    const totalSpent = useMemo(() => expenses.reduce((acc, expense) => acc + expense.amount, 0), [expenses]);
     const remaining = totalBudget - totalSpent;
     const spentPercentage = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
 
     const chartData = useMemo(() => {
+        if (expenses.length === 0) return [];
         const categoryTotals = expenses.reduce((acc, expense) => {
             if (!acc[expense.category]) {
                 acc[expense.category] = 0;
@@ -230,10 +231,23 @@ export default function BudgetPage() {
                                             nameKey="category"
                                             innerRadius={60}
                                             strokeWidth={5}
+                                            outerRadius={90}
                                         >
                                             {chartData.map((entry) => (
                                                 <Cell key={entry.category} fill={entry.fill} />
                                             ))}
+                                            <ChartLabel
+                                                className="fill-foreground text-center"
+                                                dy={-10}
+                                            >
+                                                Total
+                                            </ChartLabel>
+                                            <ChartLabel
+                                                className="fill-foreground font-bold text-lg"
+                                                dy={15}
+                                            >
+                                                ${totalSpent.toFixed(2)}
+                                            </ChartLabel>
                                         </Pie>
                                     </PieChart>
                                 </ChartContainer>
@@ -345,3 +359,5 @@ export default function BudgetPage() {
         </PageWrapper>
     );
 }
+
+    
