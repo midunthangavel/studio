@@ -70,7 +70,7 @@ const EmptyState = () => (
         <div className="mx-auto w-fit bg-secondary p-3 rounded-full mb-4">
             <List className="w-8 h-8 text-muted-foreground" />
         </div>
-        <h3 className="text-xl font-semibold mb-2">You haven&apos;t created any listings yet.</h3>
+        <h3 className="text-xl font-semibold mb-2">You haven't created any listings yet.</h3>
         <p className="text-muted-foreground mb-4">
             Add your service to our platform and start connecting with clients.
         </p>

@@ -18,7 +18,11 @@ export function AppLogo({ width = 100, height = 25, className }: AppLogoProps) {
           {`
             @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
             .fixmy-text { fill: #D9363E; }
-            .event-text { fill: #F4B400; }
+            .event-text { fill: hsl(var(--foreground)); }
+
+            .dark .event-text {
+              fill: #F4B400;
+            }
           `}
         </style>
         <text
