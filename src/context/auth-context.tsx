@@ -2,44 +2,15 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
-import type { User } from 'firebase/auth';
+import { onAuthStateChanged, signOut as firebaseSignOut, type User } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { Loader } from 'lucide-react';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   signOut: () => void;
 }
-
-// Create a mock user for development
-const createMockUser = () => ({
-  uid: 'dev-user-id',
-  email: 'dev@example.com',
-  displayName: 'Dev User',
-  photoURL: 'https://placehold.co/100x100.png',
-  emailVerified: true,
-  isAnonymous: false,
-  metadata: {
-    creationTime: new Date().toISOString(),
-    lastSignInTime: new Date().toISOString(),
-  },
-  providerData: [],
-  providerId: 'password',
-  tenantId: null,
-  delete: async () => {},
-  getIdToken: async () => 'mock-token',
-  getIdTokenResult: async () => ({
-    token: 'mock-token',
-    expirationTime: '',
-    authTime: '',
-    issuedAtTime: '',
-    signInProvider: null,
-    signInSecondFactor: null,
-    claims: {},
-  }),
-  reload: async () => {},
-  toJSON: () => ({}),
-  phoneNumber: null,
-});
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -48,22 +19,31 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Use useMemo to ensure the mock user object is stable across renders
-  const mockUser = useMemo(() => createMockUser() as User, []);
-  
-  // For development, we'll just use the mock user and set loading to false.
-  const [user, setUser] = useState<User | null>(mockUser);
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const signOut = () => {
-    // In a real app, this would be:
-    // import { auth } from '@/lib/firebase';
-    // import { signOut as firebaseSignOut } from 'firebase/auth';
-    // firebaseSignOut(auth).then(() => setUser(null));
-    setUser(null); // For development, just clear the user
+    firebaseSignOut(auth).then(() => setUser(null));
   };
 
   const value = useMemo(() => ({ user, loading, signOut }), [user, loading]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-background">
+        <Loader className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={value}>

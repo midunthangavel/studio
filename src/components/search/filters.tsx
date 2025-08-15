@@ -10,9 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Search } from "lucide-react";
 import { Checkbox } from '../ui/checkbox';
-import { allVenues } from '@/lib/venues';
 
-const allAmenities = [...new Set(allVenues.flatMap(v => v.amenities))];
+// This could also be fetched from the database in the future
+const allAmenities = ['WiFi', 'Parking', 'In-house Catering', 'AV Equipment', 'Outdoor Space', 'Bridal Suite'];
 
 export const Filters = ({ id }: { id?: string }) => {
     const router = useRouter();
@@ -84,11 +84,12 @@ export const Filters = ({ id }: { id?: string }) => {
                         <SelectValue placeholder="All Services" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="catering">Catering</SelectItem>
-                        <SelectItem value="transport">Transport</SelectItem>
-                        <SelectItem value="decorations">Decorations</SelectItem>
-                        <SelectItem value="photography">Photography</SelectItem>
-                        <SelectItem value="event staff">Event Staff</SelectItem>
+                        <SelectItem value="Catering">Catering</SelectItem>
+                        <SelectItem value="Transport">Transport</SelectItem>
+                        <SelectItem value="Decorations">Decorations</SelectItem>
+                        <SelectItem value="Photography">Photography</SelectItem>
+                        <SelectItem value="Event Staff">Event Staff</SelectItem>
+                        <SelectItem value="Invitations">Invitations</SelectItem>
                     </SelectContent>
                 </Select>
             </div>

@@ -1,12 +1,13 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './auth-context';
-import { VenueCardProps } from '@/components/venue-card';
+import type { Listing } from '@/services/listings';
 
 interface FavoritesContextType {
-  favorites: VenueCardProps[];
-  toggleFavorite: (venue: VenueCardProps) => void;
+  favorites: Listing[];
+  toggleFavorite: (venue: Listing) => void;
   isFavorited: (slug: string) => boolean;
 }
 
@@ -14,7 +15,7 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  const [favorites, setFavorites] = useState<VenueCardProps[]>([]);
+  const [favorites, setFavorites] = useState<Listing[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   
   // Derive a key for local storage. Use a default if user is not logged in (for dev).
@@ -42,7 +43,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     }
   }, [favorites, storageKey, isLoaded]);
 
-  const toggleFavorite = (venue: VenueCardProps) => {
+  const toggleFavorite = (venue: Listing) => {
     setFavorites(prevFavorites => {
       const isAlreadyFavorited = prevFavorites.some(fav => fav.slug === venue.slug);
       if (isAlreadyFavorited) {

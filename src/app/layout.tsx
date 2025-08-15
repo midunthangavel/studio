@@ -21,6 +21,7 @@ const playfairDisplay = Playfair_Display({
   variable: '--font-playfair-display',
 });
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,6 +34,8 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="theme-color" content="#1c1917" />
+        <title>FixmyEvent</title>
+        <meta name="description" content="Plan and organize your events with FixmyEvent." />
       </head>
       <body className={cn("font-body antialiased", ptSans.variable, playfairDisplay.variable)}>
         <ThemeProvider

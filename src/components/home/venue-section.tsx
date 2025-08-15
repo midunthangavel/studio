@@ -4,12 +4,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { VenueCard, VenueCardProps } from "@/components/venue-card";
+import { VenueCard } from "@/components/venue-card";
 import { useFavorites } from "@/context/favorites-context";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Heart, Plus } from "lucide-react";
+import type { Listing } from "@/services/listings";
 
-export const VenueSection = ({ title, venues, moreLink }: { title: string, venues: VenueCardProps[], moreLink?: string }) => {
+export const VenueSection = ({ title, venues, moreLink }: { title: string, venues: Listing[], moreLink?: string }) => {
     const { isFavorited, toggleFavorite } = useFavorites();
 
     return (

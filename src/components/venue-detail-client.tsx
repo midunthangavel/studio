@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import type { VenueCardProps } from './venue-card';
+import type { Listing } from '@/services/listings';
 
 const galleryImages = [
     "https://placehold.co/400x300.png",
@@ -36,7 +36,7 @@ const bookedDates = [addDays(new Date(), 5), addDays(new Date(), 6), addDays(new
 const pendingDates = [addDays(new Date(), 10), addDays(new Date(), 11)];
 
 
-export function VenueDetailClient({ venue }: { venue: VenueCardProps & { category: string, amenities: string[], reviews: any[] } }) {
+export function VenueDetailClient({ venue }: { venue: Listing }) {
   const { isFavorited, toggleFavorite } = useFavorites();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -220,7 +220,7 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
 
             <h2 className="text-xl font-bold mb-4">What this place offers</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                {venue.amenities.map(amenity => (
+                {venue.amenities && venue.amenities.map(amenity => (
                     <div key={amenity} className="flex items-center gap-3">
                         <Star className="w-5 h-5 text-primary" />
                         <span>{amenity}</span>

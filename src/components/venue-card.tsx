@@ -3,27 +3,9 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Listing } from "@/services/listings";
 
-export interface VenueCardProps {
-    name: string;
-    slug: string;
-    location: string;
-    rating: number;
-    reviewCount?: number;
-    price: string;
-    priceValue: number;
-    image: string;
-    hint: string;
-    guestFavorite?: boolean;
-    isCard?: boolean;
-    imageClassName?: string;
-    className?: string;
-    actionButton?: React.ReactNode;
-    children?: React.ReactNode;
-    guestCapacity?: number;
-    amenities: string[];
-    reviews: any[];
-}
+export type VenueCardProps = Listing;
 
 export function VenueCard({
   name,
@@ -40,7 +22,7 @@ export function VenueCard({
   className,
   actionButton,
   children
-}: VenueCardProps) {
+}: VenueCardProps & { isCard?: boolean, imageClassName?: string, className?: string, actionButton?: React.ReactNode, children?: React.ReactNode}) {
   const Wrapper = isCard ? Card : 'div';
   return (
     <Wrapper className={cn("overflow-hidden group", className)}>

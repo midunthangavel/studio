@@ -1,16 +1,14 @@
 
-'use client';
-
 import { VenueSection } from "@/components/home/venue-section";
-import { allVenues } from "@/lib/venues";
-import type { VenueCardProps } from "@/components/venue-card";
+import { getLimitedListings } from "@/services/listings";
 
-const popularVenues: VenueCardProps[] = allVenues.slice(0, 4);
-const topPhotographers: VenueCardProps[] = allVenues.filter(v => v.category === 'Photography').slice(0, 4);
-const invitationDesigners: VenueCardProps[] = allVenues.filter(v => v.category === 'Invitations').slice(0, 4);
-const availableNextMonth: VenueCardProps[] = allVenues.slice(5, 8);
+export default async function HomePage() {
+  // Fetch data dynamically from Firestore
+  const popularVenues = await getLimitedListings({ count: 4 });
+  const topPhotographers = await getLimitedListings({ count: 4, category: 'Photography' });
+  const invitationDesigners = await getLimitedListings({ count: 4, category: 'Invitations' });
+  const availableNextMonth = await getLimitedListings({ count: 4 }); // Placeholder logic for now
 
-export default function HomePage() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto py-4">

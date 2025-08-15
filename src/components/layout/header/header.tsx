@@ -10,12 +10,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ThemeToggle } from "./theme-toggle";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState, useRef } from "react";
-import { allVenues } from "@/lib/venues";
-import type { VenueCardProps } from "@/components/venue-card";
+import type { Listing } from '@/services/listings';
 import { NotificationsPopover } from "./notifications-popover";
 import { usePWAInstall } from "@/hooks/use-pwa-install";
+import { getAllListings } from "@/services/listings";
 
-function SearchResults({ results, onResultClick }: { results: (VenueCardProps & { category: string; })[], onResultClick: () => void }) {
+function SearchResults({ results, onResultClick }: { results: Listing[], onResultClick: () => void }) {
     if (results.length === 0) return null;
     return (
         <div className="absolute top-full left-0 w-full bg-background border rounded-lg mt-1 shadow-lg z-50 max-h-80 overflow-y-auto">
@@ -41,18 +41,28 @@ export function Header() {
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
+  const [allListings, setAllListings] = useState<Listing[]>([]);
+  const [searchResults, setSearchResults] = useState<Listing[]>([]);
   const [showResults, setShowResults] = useState(false);
+
+  useEffect(() => {
+    // Fetch all listings once for the search functionality
+    async function loadListings() {
+        const listings = await getAllListings();
+        setAllListings(listings);
+    }
+    loadListings();
+  }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.currentTarget.value;
     setSearchQuery(query);
 
     if (query.trim() !== '') {
-        const results = allVenues.filter(venue => 
-            venue.name.toLowerCase().includes(query.toLowerCase()) ||
-            venue.location.toLowerCase().includes(query.toLowerCase()) ||
-            venue.category.toLowerCase().includes(query.toLowerCase())
+        const results = allListings.filter(listing => 
+            listing.name.toLowerCase().includes(query.toLowerCase()) ||
+            listing.location.toLowerCase().includes(query.toLowerCase()) ||
+            listing.category.toLowerCase().includes(query.toLowerCase())
         );
         setSearchResults(results);
         setShowResults(true);

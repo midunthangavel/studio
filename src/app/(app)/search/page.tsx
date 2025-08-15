@@ -1,9 +1,10 @@
 
 import { Suspense } from 'react';
-import { allVenues } from '@/lib/venues';
 import { SearchPageClient } from './page.client';
-import type { VenueCardProps } from '@/components/venue-card';
+import type { Listing } from '@/services/listings';
 import { Loader } from 'lucide-react';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export interface SearchParams {
   [key: string]: string | string[] | undefined;
@@ -17,51 +18,70 @@ function SearchFallback() {
   )
 }
 
-function performSearch(params: SearchParams): (VenueCardProps & { category: string; })[] {
+async function performSearch(params: SearchParams): Promise<Listing[]> {
   const { q, location, category, minPrice, maxPrice, guestCapacity, amenities, sortBy } = params;
-  
+
   const hasSearched = q || location || category || minPrice || maxPrice || guestCapacity || amenities;
   if (!hasSearched) {
     return [];
   }
-  
-  let results = allVenues.filter(venue => {
-      const queryMatch = !q || (
-          venue.name.toLowerCase().includes(String(q).toLowerCase()) ||
-          venue.hint.toLowerCase().includes(String(q).toLowerCase())
-      );
-      const locationMatch = !location || venue.location.toLowerCase().includes(String(location).toLowerCase());
-      const categoryMatch = !category || venue.category.toLowerCase() === String(category).toLowerCase();
-      const minPriceMatch = !minPrice || venue.priceValue >= Number(minPrice);
-      const maxPriceMatch = !maxPrice || venue.priceValue <= Number(maxPrice);
-      const guestCapacityMatch = !guestCapacity || venue.guestCapacity >= Number(guestCapacity);
-      const amenitiesMatch = !amenities || (Array.isArray(amenities) ? amenities : [amenities]).every(a => venue.amenities.includes(a));
 
+  // A more robust implementation would use a dedicated search service like Algolia or MeiliSearch.
+  // Firestore is not optimized for complex text search or multi-field filtering with inequalities.
+  // This is a simplified search for demonstration purposes.
+  let firestoreQuery = query(collection(db, 'listings'));
 
-      return queryMatch && locationMatch && categoryMatch && minPriceMatch && maxPriceMatch && guestCapacityMatch && amenitiesMatch;
-  });
-
-  switch (sortBy) {
-    case 'price_asc':
-        results.sort((a, b) => a.priceValue - b.priceValue);
-        break;
-    case 'price_desc':
-        results.sort((a, b) => b.priceValue - a.priceValue);
-        break;
-    case 'rating_desc':
-        results.sort((a, b) => b.rating - a.rating);
-        break;
-    default:
-        // default sort or no sort
-        break;
+  if (category) {
+    firestoreQuery = query(firestoreQuery, where('category', '==', String(category)));
+  }
+  if (location) {
+    // Firestore doesn't support case-insensitive or partial text search well.
+    // This is a basic prefix search.
+    firestoreQuery = query(firestoreQuery, where('location', '>=', String(location)), where('location', '<=', String(location) + '\uf8ff'));
+  }
+  if (minPrice) {
+    firestoreQuery = query(firestoreQuery, where('priceValue', '>=', Number(minPrice)));
+  }
+  if (maxPrice) {
+     firestoreQuery = query(firestoreQuery, where('priceValue', '<=', Number(maxPrice)));
+  }
+   if (guestCapacity) {
+    firestoreQuery = query(firestoreQuery, where('guestCapacity', '>=', Number(guestCapacity)));
+  }
+  if (amenities && Array.isArray(amenities) && amenities.length > 0) {
+     firestoreQuery = query(firestoreQuery, where('amenities', 'array-contains-any', amenities));
   }
   
+  // Sorting
+  if (sortBy === 'price_asc') {
+    firestoreQuery = query(firestoreQuery, orderBy('priceValue', 'asc'));
+  } else if (sortBy === 'price_desc') {
+    firestoreQuery = query(firestoreQuery, orderBy('priceValue', 'desc'));
+  } else if (sortBy === 'rating_desc') {
+    firestoreQuery = query(firestoreQuery, orderBy('rating', 'desc'));
+  } else {
+    // Default sort
+    firestoreQuery = query(firestoreQuery, orderBy('rating', 'desc'));
+  }
+
+  const querySnapshot = await getDocs(firestoreQuery);
+  let results = querySnapshot.docs.map(doc => doc.data() as Listing);
+
+  // Manual filtering for keyword search (q) as Firestore doesn't support it well with other filters
+  if (q) {
+    results = results.filter(venue => 
+      venue.name.toLowerCase().includes(String(q).toLowerCase()) ||
+      venue.hint.toLowerCase().includes(String(q).toLowerCase()) ||
+      venue.description.toLowerCase().includes(String(q).toLowerCase())
+    );
+  }
+
   return results;
 }
 
 // This is a Server Component that fetches data and passes it to a Client Component.
-export default function SearchPage({ searchParams }: { searchParams: SearchParams }) {
-  const searchResults = performSearch(searchParams);
+export default async function SearchPage({ searchParams }: { searchParams: SearchParams }) {
+  const searchResults = await performSearch(searchParams);
 
   return (
     <Suspense fallback={<SearchFallback />}>
