@@ -18,7 +18,7 @@ const mockUser = {
   // Add other properties as needed by your components
   emailVerified: true,
   isAnonymous: false,
-  metadata: {},
+  metadata: {} as any,
   providerData: [],
   providerId: 'password',
   tenantId: null,
@@ -53,3 +53,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider value={{ user, loading }}>
       {children}
     </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+}
