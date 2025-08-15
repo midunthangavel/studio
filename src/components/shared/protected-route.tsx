@@ -11,13 +11,11 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // This logic is commented out to allow for development without authentication.
-    // if (!loading && !user) {
-    //   router.push('/login');
-    // }
+    if (!loading && !user) {
+      router.push('/login');
+    }
   }, [user, loading, router]);
 
-  // If we are loading, show a loading screen.
   if (loading) {
      return (
         <div className="flex items-center justify-center h-screen bg-background">
@@ -26,6 +24,9 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     )
   }
   
-  // For development, always show the children.
+  if (!user) {
+    return null;
+  }
+  
   return <>{children}</>;
 }

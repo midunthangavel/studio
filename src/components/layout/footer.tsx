@@ -44,11 +44,6 @@ export function Footer() {
     },
   ];
 
-  // Hide footer on auth pages that we are no longer using
-  if (['/login', '/signup', '/'].includes(pathname)) {
-    return null;
-  }
-
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-40 h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden">
       <div className="grid h-full grid-cols-5 items-center justify-around">

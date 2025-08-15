@@ -5,6 +5,12 @@ import "../globals.css";
 import { Header } from "@/components/layout/header/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'FixmyEvent',
+  description: 'Plan and organize your events with FixmyEvent.',
+};
 
 export default function AppLayout({
   children,
