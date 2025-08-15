@@ -15,8 +15,8 @@ export function AppLogo({ width = 100, height = 25, className }: AppLogoProps) {
       >
         <style>
           {`
-            .venue-text { fill: hsl(var(--primary)); }
-            .voyager-text { fill: hsl(var(--accent)); }
+            .venue-text { fill: hsl(var(--foreground)); }
+            .voyager-text { fill: hsl(var(--primary)); }
           `}
         </style>
         <text

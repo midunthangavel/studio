@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -130,7 +130,7 @@ export default function ChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     scrollToBottom();
   }, [messages, aiTyping]);
 
@@ -274,7 +274,7 @@ export default function ChatPage() {
                     </Button>
                 </div>
             </header>
-            <main className="flex-1 p-4 space-y-4">
+            <main className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messagesLoading ? (
                     <div className='flex justify-center items-center h-full'>
                         <Loader className="w-5 h-5 animate-spin" />
@@ -373,5 +373,3 @@ export default function ChatPage() {
       </div>
   );
 }
-
-    
