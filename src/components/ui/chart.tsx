@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -316,6 +317,22 @@ const ChartLegendContent = React.forwardRef<
 )
 ChartLegendContent.displayName = "ChartLegend"
 
+const ChartLabel = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> &
+    React.ComponentProps<typeof RechartsPrimitive.Label>
+>(({ className, ...props }, ref) => {
+  return (
+    <RechartsPrimitive.Label
+      ref={ref}
+      className={cn("fill-foreground text-sm", className)}
+      {...props}
+    />
+  )
+})
+ChartLabel.displayName = "ChartLabel"
+
+
 // Helper to extract item config from a payload.
 function getPayloadConfigFromPayload(
   config: ChartConfig,
@@ -362,4 +379,5 @@ export {
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
+  ChartLabel
 }

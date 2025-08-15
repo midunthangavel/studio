@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -21,6 +21,8 @@ import { cn } from '@/lib/utils';
 import { addExpensesToBudget } from '@/ai/flows/budget-assistant';
 import type { AddExpensesToBudgetOutput } from '@/ai/flows/budget-assistant.types';
 import { Textarea } from '@/components/ui/textarea';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
+import { Pie, PieChart, Cell } from 'recharts';
 
 const expenseSchema = z.object({
     id: z.string().optional(),
@@ -38,6 +40,44 @@ type BudgetFormValues = z.infer<typeof budgetSchema>;
 
 const expenseCategories = ['Venue', 'Catering', 'Decorations', 'Entertainment', 'Transport', 'Photography', 'Attire', 'Other'];
 
+const chartConfig = {
+  amount: {
+    label: "Amount",
+  },
+  Venue: {
+    label: "Venue",
+    color: "hsl(var(--chart-1))",
+  },
+  Catering: {
+    label: "Catering",
+    color: "hsl(var(--chart-2))",
+  },
+  Decorations: {
+    label: "Decorations",
+    color: "hsl(var(--chart-3))",
+  },
+  Entertainment: {
+    label: "Entertainment",
+    color: "hsl(var(--chart-4))",
+  },
+  Transport: {
+    label: "Transport",
+    color: "hsl(var(--chart-5))",
+  },
+  Photography: {
+    label: "Photography",
+    color: "hsl(var(--chart-1))",
+  },
+  Attire: {
+    label: "Attire",
+    color: "hsl(var(--chart-2))",
+  },
+  Other: {
+    label: "Other",
+    color: "hsl(var(--muted))",
+  },
+} satisfies ChartConfig
+
 export default function BudgetPage() {
     const { user } = useAuth();
     const { toast } = useToast();
@@ -53,7 +93,7 @@ export default function BudgetPage() {
         },
     });
     
-    const { fields, append, remove, update } = useFieldArray({
+    const { fields, append, remove } = useFieldArray({
         control: form.control,
         name: 'expenses',
     });
@@ -63,6 +103,23 @@ export default function BudgetPage() {
     const totalSpent = expenses.reduce((acc, expense) => acc + expense.amount, 0);
     const remaining = totalBudget - totalSpent;
     const spentPercentage = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
+
+    const chartData = useMemo(() => {
+        const categoryTotals = expenses.reduce((acc, expense) => {
+            if (!acc[expense.category]) {
+                acc[expense.category] = 0;
+            }
+            acc[expense.category] += expense.amount;
+            return acc;
+        }, {} as Record<string, number>);
+
+        return Object.entries(categoryTotals).map(([category, amount]) => ({
+            category,
+            amount,
+            fill: chartConfig[category as keyof typeof chartConfig]?.color || chartConfig.Other.color,
+        }));
+    }, [expenses]);
+
 
     useEffect(() => {
         if (!user) return;
@@ -155,24 +212,52 @@ export default function BudgetPage() {
                             />
                         </div>
                     </CardHeader>
-                    <CardContent className="grid grid-cols-2 gap-4">
-                        <Card>
-                            <CardHeader className='p-4'>
-                                <CardTitle className="text-base">Total Spent</CardTitle>
-                                <CardDescription>${totalSpent.toFixed(2)}</CardDescription>
-                            </CardHeader>
-                        </Card>
-                        <Card>
-                            <CardHeader className='p-4'>
-                                <CardTitle className="text-base">Remaining</CardTitle>
-                                <CardDescription 
-                                    className={cn("text-base", remaining < 0 && "text-destructive")}
+                    <CardContent>
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                            <div>
+                                <ChartContainer
+                                    config={chartConfig}
+                                    className="mx-auto aspect-square max-h-[250px]"
                                 >
-                                    ${remaining.toFixed(2)}
-                                </CardDescription>
-                            </CardHeader>
-                        </Card>
-                        <div className="col-span-2">
+                                    <PieChart>
+                                        <ChartTooltip
+                                        cursor={false}
+                                        content={<ChartTooltipContent hideLabel />}
+                                        />
+                                        <Pie
+                                            data={chartData}
+                                            dataKey="amount"
+                                            nameKey="category"
+                                            innerRadius={60}
+                                            strokeWidth={5}
+                                        >
+                                            {chartData.map((entry) => (
+                                                <Cell key={entry.category} fill={entry.fill} />
+                                            ))}
+                                        </Pie>
+                                    </PieChart>
+                                </ChartContainer>
+                            </div>
+                            <div className='space-y-4'>
+                                <Card>
+                                    <CardHeader className='p-4'>
+                                        <CardTitle className="text-base">Total Spent</CardTitle>
+                                        <CardDescription>${totalSpent.toFixed(2)}</CardDescription>
+                                    </CardHeader>
+                                </Card>
+                                <Card>
+                                    <CardHeader className='p-4'>
+                                        <CardTitle className="text-base">Remaining</CardTitle>
+                                        <CardDescription 
+                                            className={cn("text-base font-bold", remaining < 0 && "text-destructive")}
+                                        >
+                                            ${remaining.toFixed(2)}
+                                        </CardDescription>
+                                    </CardHeader>
+                                </Card>
+                            </div>
+                       </div>
+                        <div className="mt-4">
                             <Progress value={spentPercentage} className="w-full h-2" />
                             <p className="text-xs text-muted-foreground mt-2 text-center">{spentPercentage.toFixed(0)}% of budget used</p>
                         </div>
