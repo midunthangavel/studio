@@ -9,7 +9,7 @@ import { AppLogo } from "@/components/shared/app-logo";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ThemeToggle } from "./theme-toggle";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { allVenues } from "@/lib/venues";
 import type { VenueCardProps } from "@/components/venue-card";
 import { NotificationsPopover } from "./notifications-popover";
@@ -38,12 +38,13 @@ export function Header() {
   const pathname = usePathname();
   const isHomePage = pathname === '/home';
   const { canInstall, install } = usePWAInstall();
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<(VenueCardProps & { category: string; })[]>([]);
   const [showResults, setShowResults] = useState(false);
 
-  const handleSearchChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.currentTarget.value;
     setSearchQuery(query);
 
@@ -61,25 +62,26 @@ export function Header() {
     }
   }
   
-  const handleSearchSubmit = (e: React.FormEvent<HTMLInputElement>) => {
-    if ('key' in e && e.key !== 'Enter') return;
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim() !== '') {
         router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
-        setShowResults(false);
+        handleResultClick();
     }
   }
 
 
    const handleResultClick = () => {
     setSearchQuery('');
+    setSearchResults([]);
     setShowResults(false);
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if ((event.target as Element).closest('header')) return;
-      setShowResults(false);
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setShowResults(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -94,16 +96,17 @@ export function Header() {
                 <AppLogo height={20} />
             </Link>
             {!isHomePage && (
-                <div className="relative hidden md:block w-full max-w-xs">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                        placeholder="Search..."
-                        className="pl-9 h-9"
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        onKeyDown={handleSearchSubmit}
-                        onFocus={handleSearchChange}
-                    />
+                <div className="relative hidden md:block w-full max-w-xs" ref={searchContainerRef}>
+                    <form onSubmit={handleSearchSubmit}>
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search..."
+                            className="pl-9 h-9"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            onFocus={() => searchQuery && setShowResults(true)}
+                        />
+                    </form>
                     {showResults && <SearchResults results={searchResults} onResultClick={handleResultClick} />}
                 </div>
             )}
@@ -138,7 +141,7 @@ export function Header() {
       </div>
        {isHomePage && (
          <div className="container mx-auto px-4 pb-4">
-          <form onSubmit={(e) => { e.preventDefault(); handleSearchSubmit(e as any); }} className="relative">
+          <form onSubmit={handleSearchSubmit} className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                   type="search"

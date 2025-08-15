@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
 import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,15 +13,35 @@ import type { Conversation, Message } from '@/ai/flows/chat.types';
 import { chat } from '@/ai/flows/chat-flow';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, doc, addDoc, serverTimestamp, orderBy, limit, setDoc, getDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc, addDoc, serverTimestamp, orderBy, limit, setDoc, getDoc, Timestamp } from 'firebase/firestore';
 
 
 function useConversations(userId: string | null) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const initialAiConvo = useMemo(() => {
+    if (!userId) return null;
+    const initialMessage: Message = { 
+        id: 'initial', 
+        senderId: 'ai-assistant', 
+        text: "Hello! I'm your AI event planner. How can I help you brainstorm for your next event?", 
+        timestamp: Timestamp.now() 
+    };
+    return {
+        id: [userId, 'ai-assistant'].sort().join('_'),
+        participants: {
+            [userId]: { name: 'You', avatar: '' },
+            'ai-assistant': { name: 'AI Planner', avatar: '/logo.png', isAi: true },
+        },
+        messages: [initialMessage],
+        lastMessage: initialMessage,
+    };
+  }, [userId]);
+
+
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !initialAiConvo) {
       setLoading(false);
       return;
     }
@@ -46,21 +66,16 @@ function useConversations(userId: string | null) {
       // Add a default AI conversation if it doesn't exist
       const hasAiConvo = convos.some(c => c.participants['ai-assistant']);
       if (!hasAiConvo) {
-        const aiConvo: Conversation = {
-            id: [userId, 'ai-assistant'].sort().join('_'),
-            participants: {
-              [userId]: { name: 'You', avatar: '' },
-              'ai-assistant': { name: 'AI Planner', avatar: '/logo.png', isAi: true },
-            },
-            messages: [
-              { id: 'initial', senderId: 'ai-assistant', text: "Hello! I'm your AI event planner. How can I help you brainstorm for your next event?", timestamp: new Date() as any },
-            ],
-        };
-        aiConvo.lastMessage = aiConvo.messages[0];
-        convos.unshift(aiConvo);
+        convos.unshift(initialAiConvo as Conversation);
       }
       
-      setConversations(convos.sort((a,b) => (b.lastMessage?.timestamp?.toDate?.() || 0) - (a.lastMessage?.timestamp?.toDate?.() || 0)));
+      convos.sort((a, b) => {
+        const timeA = a.lastMessage?.timestamp?.toDate?.()?.getTime() || 0;
+        const timeB = b.lastMessage?.timestamp?.toDate?.()?.getTime() || 0;
+        return timeB - timeA;
+      });
+
+      setConversations(convos);
       setLoading(false);
     }, (error) => {
       console.error("Error fetching conversations: ", error);
@@ -68,7 +83,7 @@ function useConversations(userId: string | null) {
     });
 
     return () => unsubscribe();
-  }, [userId]);
+  }, [userId, initialAiConvo]);
 
   return { conversations, loading };
 }
@@ -149,7 +164,7 @@ export default function ChatPage() {
     };
     
     // Optimistically update UI
-    const tempMessage: Message = { ...userMessage, id: Date.now().toString(), timestamp: new Date() as any };
+    const tempMessage: Message = { ...userMessage, id: Date.now().toString(), timestamp: Timestamp.now() };
     setMessages(prev => [...prev, tempMessage]);
 
     const messageTimestamp = serverTimestamp();

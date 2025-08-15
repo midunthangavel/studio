@@ -10,7 +10,7 @@ import Image from "next/image";
 import { PageWrapper } from "@/components/shared/page-wrapper";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth-context";
-import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion, serverTimestamp, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion, serverTimestamp, addDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
@@ -65,26 +65,29 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
             // Add review to venue's collection of reviews
             const venueRef = doc(db, "listings", booking.venueId);
              try {
-                // Note: The venue data is mock data, so this will likely fail silently
-                // on the client unless you have a 'listings' collection.
-                await updateDoc(venueRef, {
-                    reviews: arrayUnion(reviewData)
-                }, { merge: true });
+                const venueSnap = await getDoc(venueRef);
+                if (venueSnap.exists()) {
+                    const venueData = venueSnap.data();
+                    await updateDoc(venueRef, {
+                        reviews: arrayUnion(reviewData)
+                    });
+
+                    // Add a notification for the listing owner
+                    if (venueData.ownerId) {
+                         await addDoc(collection(db, 'notifications'), {
+                            userId: venueData.ownerId,
+                            type: 'New Review',
+                            message: `You received a new ${rating}-star review for ${booking.venueName}.`,
+                            timestamp: serverTimestamp(),
+                            read: false,
+                            iconName: 'Review Received'
+                        });
+                    }
+                }
             } catch (e) {
-                console.warn("Could not update venue with new review. This is expected if using mock data.", e)
+                console.warn("Could not update venue with new review.", e)
             }
             
-            // Add a notification for the user who submitted the review
-            await addDoc(collection(db, 'notifications'), {
-                userId: user.uid,
-                type: 'Review Received',
-                message: `Your review for ${booking.venueName} has been submitted. Thank you!`,
-                timestamp: serverTimestamp(),
-                read: false,
-                iconName: 'Review Received'
-            });
-
-
             onReviewSubmit(booking.id, reviewData);
             toast({
                 title: 'Review Submitted',

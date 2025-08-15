@@ -25,6 +25,7 @@ import { useAuth } from '@/context/auth-context';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
+import { format } from 'date-fns';
 
 const accountSettings = [
   { icon: Wallet, text: 'FixmyEvent Wallet', href: '#' },
@@ -98,6 +99,11 @@ const Section = ({
 export default function AccountPage() {
   const { user } = useAuth();
 
+  const memberSince = user?.metadata?.creationTime 
+    ? format(new Date(user.metadata.creationTime), 'MMM yyyy') 
+    : 'a while ago';
+
+
   return (
     <div className="bg-muted/40 pb-20">
       {user ? (
@@ -113,7 +119,7 @@ export default function AccountPage() {
           <div className="relative z-10 h-full flex flex-col justify-end p-4">
               <h2 className="text-xl font-bold">{user.displayName || 'User'}</h2>
               <p className="text-sm">{user.email}</p>
-              <p className='text-xs mt-1'>Member since Jun 2024</p>
+              <p className='text-xs mt-1'>Member since {memberSince}</p>
           </div>
         </div>
       ) : (
