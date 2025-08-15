@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/context/auth-context";
 import { FavoritesProvider } from "@/context/favorites-context";
+import { InstallPWA } from "@/components/shared/install-pwa";
 
 export default function RootLayout({
   children,
@@ -36,6 +37,7 @@ export default function RootLayout({
           <AuthProvider>
             <FavoritesProvider>
               {children}
+              <InstallPWA />
             </FavoritesProvider>
           </AuthProvider>
         </ThemeProvider>

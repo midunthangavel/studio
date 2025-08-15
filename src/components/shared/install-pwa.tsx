@@ -35,7 +35,7 @@ export function InstallPWA() {
                         <p className="text-xs text-muted-foreground">Get the full experience on your device.</p>
                     </div>
                     <Button size="sm" onClick={install}>
-                        <Download className="mr-1.5" />
+                        <Download className="mr-1.5 h-4 w-4" />
                         Install
                     </Button>
                 </div>
