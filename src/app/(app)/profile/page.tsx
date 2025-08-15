@@ -31,6 +31,7 @@ const accountSettings = [
   { icon: MapPin, text: 'Saved Addresses', href: '#' },
   { icon: CreditCard, text: 'Payment Methods', href: '#' },
   { icon: Gift, text: 'My Rewards', href: '#' },
+  { icon: Store, text: 'Add a Listing', href: '/add-listing' },
 ];
 
 const settingsItems = [
@@ -152,5 +153,3 @@ export default function AccountPage() {
     </div>
   );
 }
-
-    
