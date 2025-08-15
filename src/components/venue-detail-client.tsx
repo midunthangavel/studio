@@ -311,5 +311,3 @@ export function VenueDetailClient({ venue }: { venue: VenueCardProps & { categor
     </div>
   );
 }
-
-    

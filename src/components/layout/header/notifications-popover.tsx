@@ -163,5 +163,3 @@ export function NotificationsPopover() {
     </Card>
   );
 }
-
-    
