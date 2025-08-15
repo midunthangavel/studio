@@ -99,11 +99,3 @@ export const listingSchema = z.discriminatedUnion("category", [
     cateringSchema,
     photographySchema,
     transportSchema,
-    decorationsSchema,
-    legalSchema,
-    musicSchema,
-    invitationsSchema,
-    plannerSchema,
-]);
-
-export type ListingFormValues = z.infer<typeof listingSchema>;

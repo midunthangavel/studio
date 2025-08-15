@@ -1,4 +1,3 @@
-
 import { VenueCardProps } from "@/components/venue-card";
 
 export const allVenues: (VenueCardProps & { category: string; priceValue: number; guestCapacity: number, amenities: string[], reviews: any[] })[] = [
