@@ -58,18 +58,12 @@ const chatFlow = ai.defineFlow(
       prompt: input.message,
       tools: [suggestEventIdeasTool, addExpensesToBudgetTool, searchVenuesTool],
       model: 'googleai/gemini-2.0-flash',
+      // Allow the model to generate a response after the tool call.
+      // The model will use the tool output to form its response.
+      output: {
+        format: 'text'
+      }
     });
-
-    const toolRequest = llmResponse.toolRequest();
-
-    if (toolRequest) {
-        const toolResult = await toolRequest.execute();
-        const secondResponse = await ai.generate({
-            prompt: `You are an expert event planner. A user made a request, and you have used a tool to fulfill it. Now, present the result to the user in a friendly and conversational way based on the tool's output. The user's original query was: '${input.message}'. The tool output is: '${toolResult}'.`,
-            model: 'googleai/gemini-2.0-flash',
-        });
-        return secondResponse.text;
-    }
 
     return llmResponse.text;
   }

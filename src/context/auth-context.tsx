@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import type { User } from 'firebase/auth';
 
 interface AuthContextType {
@@ -10,15 +10,17 @@ interface AuthContextType {
 }
 
 // Create a mock user for development
-const mockUser = {
+const createMockUser = () => ({
   uid: 'dev-user-id',
   email: 'dev@example.com',
   displayName: 'Dev User',
   photoURL: 'https://placehold.co/100x100.png',
-  // Add other properties as needed by your components
   emailVerified: true,
   isAnonymous: false,
-  metadata: {} as any,
+  metadata: {
+    creationTime: new Date().toISOString(),
+    lastSignInTime: new Date().toISOString(),
+  },
   providerData: [],
   providerId: 'password',
   tenantId: null,
@@ -36,8 +38,7 @@ const mockUser = {
   reload: async () => {},
   toJSON: () => ({}),
   phoneNumber: null,
-};
-
+});
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -45,12 +46,17 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  // Use useMemo to ensure the mock user object is stable across renders
+  const mockUser = useMemo(() => createMockUser() as User, []);
+  
   // For development, we'll just use the mock user and set loading to false.
-  const [user] = useState<User | null>(mockUser as User);
-  const [loading] = useState(false);
+  const [user, setUser] = useState<User | null>(mockUser);
+  const [loading, setLoading] = useState(false);
+
+  const value = useMemo(() => ({ user, loading }), [user, loading]);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

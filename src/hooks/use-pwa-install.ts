@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -25,6 +26,7 @@ export function usePWAInstall() {
     const dismissed = sessionStorage.getItem(PWA_PROMPT_DISMISSED_KEY);
     if (dismissed) {
       setIsDismissed(true);
+      return;
     }
 
     // Check if the app is already installed
