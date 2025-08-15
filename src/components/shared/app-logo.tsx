@@ -8,27 +8,28 @@ interface AppLogoProps {
 export function AppLogo({ width = 100, height = 25, className }: AppLogoProps) {
   return (
     <div className={className} style={{ width, height }}>
-      <svg
-        viewBox="0 0 170 28"
+       <svg
+        viewBox="0 0 450 60"
         preserveAspectRatio="xMidYMid meet"
         className="w-full h-full"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <style>
           {`
-            .venue-text { fill: hsl(var(--foreground)); }
-            .voyager-text { fill: hsl(var(--primary)); }
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+            .fixmy-text { fill: #D9363E; }
+            .event-text { fill: #F4B400; }
           `}
         </style>
         <text
           x="0"
-          y="22"
-          fontFamily="'Playfair Display', serif"
-          fontSize="24"
+          y="45"
+          fontFamily="'Poppins', sans-serif"
+          fontSize="48"
           fontWeight="bold"
-          className="venue-text"
         >
-          Venue
-          <tspan className="voyager-text">Voyager</tspan>
+          <tspan className="fixmy-text">Fixmy</tspan>
+          <tspan className="event-text">event</tspan>
         </text>
       </svg>
     </div>
