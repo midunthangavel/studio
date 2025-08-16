@@ -87,7 +87,7 @@ export function AvailabilityCalendar({ onUpdate }: AvailabilityCalendarProps) {
                             backgroundColor: 'hsl(var(--primary) / 0.2)',
                         },
                          available: {
-                            backgroundColor: 'hsl(var(--accent-foreground) / 0.1)',
+                            backgroundColor: 'hsl(var(--muted))',
                          }
                     }}
                     disabled={{ before: new Date() }}

@@ -57,6 +57,7 @@ const cateringSchema = baseSchema.extend({
 const photographySchema = baseSchema.extend({
     category: z.literal('Photography'),
     website: z.string().url().optional().or(z.literal('')),
+    pricing: z.coerce.number().positive().optional(),
     photoStyles: z.record(z.boolean()).optional(),
     servicesOffered: z.record(z.boolean()).optional(),
     availability: z.any().optional(),

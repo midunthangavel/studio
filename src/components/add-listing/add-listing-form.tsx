@@ -151,7 +151,7 @@ export function AddListingForm() {
                 description: 'Your service has been successfully listed on the platform.',
             });
             // Redirect to the new My Listings page
-            router.push('/my-listings');
+            router.push('/dashboard');
 
         } catch (error) {
             console.error('Error creating listing:', error);
