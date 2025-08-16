@@ -196,9 +196,11 @@ export default function AccountPage() {
       <LanguageSwitcher />
       
       {profile?.role === 'user_vendor' && <Section title="My Business" items={vendorItems} />}
-      {profile?.role === 'user' && <BecomeVendorSection onBecomeVendor={becomeVendor} />}
       
       <Section title="My Account" items={myAccountItems} />
+
+      {profile?.role === 'user' && <BecomeVendorSection onBecomeVendor={becomeVendor} />}
+      
       <Section title="Settings" items={settingsItems} />
       <Section title="Help & Support" items={helpAndSupportItems} />
 
