@@ -14,6 +14,7 @@ import type { Listing } from '@/services/listings';
 import { NotificationsPopover } from "./notifications-popover";
 import { usePWAInstall } from "@/hooks/use-pwa-install";
 import { getAllListings } from "@/services/listings";
+import { HeaderNavigation } from "./header-navigation";
 
 function SearchResults({ results, onResultClick }: { results: Listing[], onResultClick: () => void }) {
     if (results.length === 0) return null;
@@ -121,6 +122,10 @@ export function Header() {
                 </div>
             )}
          </div>
+
+        <div className="hidden md:flex flex-1 items-center justify-center">
+            <HeaderNavigation />
+        </div>
         
         <div className="flex flex-shrink-0 items-center justify-end space-x-1">
            {canInstall && (
