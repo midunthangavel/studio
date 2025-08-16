@@ -91,7 +91,7 @@ export const Filters = ({ id }: { id?: string }) => {
                         <SelectValue placeholder="All Services" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="">All Services</SelectItem>
+                        <SelectItem value="All">All Services</SelectItem>
                         {categories.map(cat => (
                             <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                         ))}
