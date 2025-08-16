@@ -200,6 +200,7 @@ export default function AccountPage() {
       
       {isVendor && <Section title="My Business" items={vendorItems} />}
       {isUserOnly && <BecomeVendorSection onBecomeVendor={becomeVendor} />}
+      
       <Section title="My Account" items={myAccountItems} />
       <Section title="Settings" items={settingsItems} />
       <Section title="Help & Support" items={helpAndSupportItems} />
