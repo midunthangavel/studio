@@ -55,15 +55,18 @@ export async function getLimitedListings({
   category?: string;
 }): Promise<Listing[]> {
   try {
-    let q = query(collection(db, 'listings'), orderBy('rating', 'desc'), limit(count));
+    let q;
+    const listingsCollection = collection(db, 'listings');
 
     if (category) {
       q = query(
-        collection(db, 'listings'),
+        listingsCollection,
         where('category', '==', category),
         orderBy('rating', 'desc'),
         limit(count)
       );
+    } else {
+      q = query(listingsCollection, orderBy('rating', 'desc'), limit(count));
     }
     
     const snapshot = await getDocs(q);

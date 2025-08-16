@@ -42,9 +42,10 @@ const categories: { value: Category; label: string }[] = [
     { value: 'Music', label: 'Music / DJ' },
     { value: 'Invitations', label: 'Invitations' },
     { value: 'Planner', label: 'Event Planners' },
+    { value: 'Event Staff', label: 'Event Staff' },
 ];
 
-const categoryFormMap: Record<Category, React.ComponentType<any>> = {
+const categoryFormMap: Record<string, React.ComponentType<any>> = {
     Venue: VenueForm,
     Catering: CateringForm,
     Photography: PhotographyForm,
@@ -54,6 +55,7 @@ const categoryFormMap: Record<Category, React.ComponentType<any>> = {
     Music: MusicForm,
     Invitations: InvitationsForm,
     Planner: PlannerForm,
+    'Event Staff': CateringForm, // Placeholder, can be its own form
 };
 
 export function AddListingForm() {
