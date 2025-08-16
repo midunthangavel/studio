@@ -20,6 +20,7 @@ import {
   Globe,
   List,
   Briefcase,
+  LayoutDashboard,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
@@ -35,7 +36,7 @@ const myAccountItems = [
 ];
 
 const vendorItems = [
-  { icon: List, text: 'My Listings', href: '/my-listings' },
+  { icon: LayoutDashboard, text: 'Vendor Dashboard', href: '/dashboard' },
   { icon: Store, text: 'Add a Listing', href: '/add-listing' },
 ];
 
