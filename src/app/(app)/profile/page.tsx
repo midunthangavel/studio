@@ -4,24 +4,18 @@
 import {
   ChevronRight,
   User,
-  CreditCard,
-  MapPin,
-  Languages,
+  Gift,
+  ShieldCheck,
+  Globe,
   Bell,
-  Lock,
-  Edit,
+  Languages,
   HelpCircle,
   FileText,
   LogOut,
   Store,
   Wallet,
-  Gift,
-  ShieldCheck,
-  Globe,
-  List,
-  Briefcase,
-  LayoutDashboard,
   Building,
+  LayoutDashboard,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
@@ -53,7 +47,7 @@ const vendorItems = [
 ];
 
 const settingsItems = [
-  { icon: Edit, text: 'Edit Profile', href: '/profile/edit' },
+  { icon: User, text: 'Edit Profile', href: '/profile/edit' },
   { icon: ShieldCheck, text: 'Security', href: '#' },
   { icon: Bell, text: 'Notification Settings', href: '#' },
   { icon: Globe, text: 'Select Country', href: '#' },
@@ -198,7 +192,7 @@ export default function AccountPage() {
       {profile?.role === 'user_vendor' && <Section title="My Business" items={vendorItems} />}
       
       <Section title="My Account" items={myAccountItems} />
-
+      
       {profile?.role === 'user' && <BecomeVendorSection onBecomeVendor={becomeVendor} />}
       
       <Section title="Settings" items={settingsItems} />

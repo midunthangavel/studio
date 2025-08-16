@@ -27,17 +27,6 @@ export function CateringForm() {
             />
             <FormField
                 control={control}
-                name="ownerName"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Owner Name</FormLabel>
-                        <FormControl><Input placeholder="e.g., John Doe" {...field} /></FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={control}
                 name="email"
                 render={({ field }) => (
                     <FormItem>

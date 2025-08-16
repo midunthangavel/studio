@@ -72,15 +72,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
   
   const becomeVendor = useCallback(async () => {
-    if (!user || !profile) {
+    if (!user) {
       toast({ variant: 'destructive', title: 'Error', description: 'You must be logged in.' });
       return;
     }
-    if (profile.role === 'user') {
+    if (profile?.role === 'user') {
       const userDocRef = doc(db, 'users', user.uid);
       try {
         await updateDoc(userDocRef, { role: 'user_vendor' });
-        setProfile(prev => prev ? { ...prev, role: 'user_vendor' } : null);
+        // The onSnapshot listener will automatically update the profile state.
         toast({ title: 'Congratulations!', description: "You now have access to vendor tools." });
       } catch (error) {
         toast({ variant: 'destructive', title: 'Update Failed', description: 'Could not update your role. Please try again.' });
