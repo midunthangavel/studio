@@ -134,7 +134,7 @@ export default function ChatPage() {
         msgs.push({ id: doc.id, ...doc.data() } as Message);
       });
        // If it's the initial AI message, don't fetch from DB, use the hardcoded one.
-      if (activeConversation.id === [user?.uid, 'ai-assistant'].sort().join('_') && msgs.length === 0) {
+      if (activeConversation.participants['ai-assistant'] && msgs.length === 0) {
         setMessages(activeConversation.messages);
       } else {
         setMessages(msgs);
@@ -146,7 +146,7 @@ export default function ChatPage() {
     });
 
     return () => unsubscribe();
-  }, [activeConversation?.id, activeConversation, user?.uid]);
+  }, [activeConversation]);
 
 
   const scrollToBottom = () => {
@@ -176,22 +176,19 @@ export default function ChatPage() {
     setMessages(prev => [...prev, tempMessage]);
 
     const messageTimestamp = serverTimestamp();
-    await addDoc(messagesRef, { ...userMessage, timestamp: messageTimestamp });
-    
-    // Update last message on conversation
-    const lastMessageData = { text: currentMessageText, timestamp: messageTimestamp };
     
     // Check if conversation exists before trying to update it.
     const convoSnap = await getDoc(conversationRef);
     if(convoSnap.exists()) {
-        await setDoc(conversationRef, { lastMessage: lastMessageData, updatedAt: serverTimestamp() }, { merge: true });
+        await setDoc(conversationRef, { lastMessage: { text: currentMessageText, timestamp: messageTimestamp }, updatedAt: serverTimestamp() }, { merge: true });
     } else {
-        await setDoc(conversationRef, { ...activeConversation, lastMessage: lastMessageData, createdAt: serverTimestamp() });
+        await setDoc(conversationRef, { ...activeConversation, lastMessage: { text: currentMessageText, timestamp: messageTimestamp }, createdAt: serverTimestamp() });
     }
+    await addDoc(messagesRef, { ...userMessage, timestamp: messageTimestamp });
 
 
     const otherParticipant = Object.keys(activeConversation.participants).find(id => id !== user.uid);
-    if (otherParticipant === 'ai-assistant') {
+    if (activeConversation.participants['ai-assistant']) {
         setAiTyping(true);
         try {
             const aiResponse = await chat({ message: currentMessageText });
@@ -201,7 +198,7 @@ export default function ChatPage() {
             };
             const aiTimestamp = serverTimestamp();
             await addDoc(messagesRef, { ...aiMessage, timestamp: aiTimestamp });
-             await setDoc(conversationRef, { lastMessage: {text: aiResponse, timestamp: aiTimestamp}, updatedAt: serverTimestamp() }, { merge: true });
+            await setDoc(conversationRef, { lastMessage: {text: aiResponse, timestamp: aiTimestamp}, updatedAt: serverTimestamp() }, { merge: true });
 
         } catch(e) {
             console.error(e);
@@ -219,6 +216,11 @@ export default function ChatPage() {
   const getOtherParticipant = (convo: Conversation) => {
       if (!user) return null;
       const otherParticipantId = Object.keys(convo.participants).find(id => id !== user.uid);
+      if (!otherParticipantId) {
+        // This case could happen for the AI convo where the user is the only 'real' participant
+        if(convo.participants['ai-assistant']) return convo.participants['ai-assistant'];
+        return null;
+      }
       return otherParticipantId ? convo.participants[otherParticipantId] : null;
   }
 
@@ -336,8 +338,10 @@ export default function ChatPage() {
                                 <AvatarImage src={otherParticipant?.avatar} data-ai-hint="logo" />
                                 <AvatarFallback>{otherParticipant?.name.charAt(0)}</AvatarFallback>
                             </Avatar>
-                            <div className="max-w-xs p-3 rounded-lg bg-background">
-                                <Loader className="h-5 w-5 animate-spin" />
+                            <div className="max-w-xs p-3 rounded-lg bg-background flex items-center justify-center">
+                                <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce delay-0" />
+                                <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce delay-150 mx-1" />
+                                <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce delay-300" />
                             </div>
                         </div>
                     )}
@@ -345,7 +349,7 @@ export default function ChatPage() {
                     </>
                 )}
             </main>
-            <footer className="p-2 border-t bg-background flex-shrink-0 sticky bottom-0 md:bottom-16">
+            <footer className="p-2 border-t bg-background flex-shrink-0 sticky bottom-16 md:bottom-0">
                 <div className="flex w-full items-center space-x-2 bg-muted rounded-full pl-2 pr-1">
                  <Button variant="ghost" size="icon" className="text-muted-foreground">
                     <Smile className="w-5 h-5" />
@@ -376,7 +380,7 @@ export default function ChatPage() {
         <div className={cn("border-r h-full overflow-y-auto", activeConversation ? "hidden md:block" : "block")}>
            <ConversationList />
         </div>
-        <div className={cn("md:col-start-2 h-full overflow-y-auto", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
+        <div className={cn("md:col-start-2 h-full", !activeConversation && "hidden md:flex md:items-center md:justify-center")}>
            {activeConversation ? (
                 <ActiveConversation />
             ) : (

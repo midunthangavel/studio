@@ -32,7 +32,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
     "Review Reminder": <Clock className="w-5 h-5 text-gray-500" />,
     "Booking Update": <Clock className="w-5 h-5 text-yellow-500" />,
     "New Idea!": <Gift className="w-5 h-5 text-pink-500" />,
-    "Review Received": <CheckCircle className="w-5 h-5 text-green-500" />,
+    "New Review": <CheckCircle className="w-5 h-5 text-green-500" />,
     "Default": <Bell className="w-5 h-5 text-gray-500" />,
 }
 
@@ -86,7 +86,7 @@ function useNotifications() {
 
 const NotificationItem = ({ notification }: { notification: Notification }) => (
     <div className="flex items-start gap-3 p-3 hover:bg-muted/50">
-        <div className="bg-primary/10 p-1.5 rounded-full">
+        <div className="bg-primary/10 p-1.5 rounded-full mt-0.5">
             {iconMap[notification.iconName] || iconMap['Default']}
         </div>
         <div className="flex-1">
@@ -122,13 +122,16 @@ export function NotificationsPopover() {
         <Tabs defaultValue="all" className="w-full">
           <TabsList className="grid w-full grid-cols-2 rounded-none border-b h-9">
             <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
-            <TabsTrigger value="unread" className="text-xs">Unread</TabsTrigger>
+            <TabsTrigger value="unread" className="text-xs relative">
+                Unread
+                {hasUnread && <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-primary text-primary-foreground text-[8px]">{unreadNotifications.length}</span>}
+            </TabsTrigger>
           </TabsList>
            <TabsContent value="all" className="max-h-80 overflow-y-auto">
              {loading ? (
                  <div className="flex justify-center items-center p-6"><Loader className="animate-spin" /></div>
              ) : notifications.length > 0 ? (
-                <div className="flex flex-col">
+                <div className="flex flex-col divide-y">
                     {notifications.map((notification) => (
                         <NotificationItem key={notification.id} notification={notification} />
                     ))}
@@ -145,7 +148,7 @@ export function NotificationsPopover() {
              {loading ? (
                 <div className="flex justify-center items-center p-6"><Loader className="animate-spin" /></div>
              ) : unreadNotifications.length > 0 ? (
-                <div className="flex flex-col">
+                <div className="flex flex-col divide-y">
                     {unreadNotifications.map((notification) => (
                         <NotificationItem key={notification.id} notification={notification} />
                     ))}

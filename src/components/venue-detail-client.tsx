@@ -3,10 +3,10 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Star, MapPin, Wifi, ParkingSquare, Utensils, Wind, Calendar as CalendarIcon, Heart, Loader, MessageSquare } from 'lucide-react';
-import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/auth-context';
-import { addDays } from 'date-fns';
+import { addDays, format } from 'date-fns';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,22 +36,27 @@ const bookedDates = [addDays(new Date(), 5), addDays(new Date(), 6), addDays(new
 const pendingDates = [addDays(new Date(), 10), addDays(new Date(), 11)];
 
 
-export function VenueDetailClient({ venue }: { venue: Listing }) {
+export function VenueDetailClient({ venue: initialVenue }: { venue: Listing }) {
   const { isFavorited, toggleFavorite } = useFavorites();
   const { toast } = useToast();
   const { user } = useAuth();
   const router = useRouter();
 
+  const [venue, setVenue] = useState(initialVenue);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [guests, setGuests] = useState(50);
   const [loading, setLoading] = useState(false);
   const [contactLoading, setContactLoading] = useState(false);
-  const [currentReviews, setCurrentReviews] = useState(venue.reviews || []);
 
   useEffect(() => {
-    setCurrentReviews(venue.reviews || [])
-  }, [venue.reviews])
-
+    const venueRef = doc(db, 'listings', initialVenue.slug);
+    const unsubscribe = onSnapshot(venueRef, (doc) => {
+      if (doc.exists()) {
+        setVenue(doc.data() as Listing);
+      }
+    });
+    return () => unsubscribe();
+  }, [initialVenue.slug]);
 
   const favorited = isFavorited(venue.slug);
 
@@ -69,6 +74,7 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
     try {
         await addDoc(collection(db, "bookings"), {
             userId: user.uid,
+            userName: user.displayName || user.email,
             venueId: venue.slug,
             venueName: venue.name,
             venueImage: venue.image,
@@ -76,7 +82,7 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
             venueHint: venue.hint,
             bookingDate: date,
             guestCount: guests,
-            status: 'Confirmed', // Defaulting to confirmed for demo
+            status: 'Pending',
             createdAt: serverTimestamp(),
             review: null,
         });
@@ -109,7 +115,7 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
     }
     setContactLoading(true);
     try {
-        const providerId = `provider_${venue.slug}`; 
+        const providerId = `provider_${venue.ownerId}`; 
         
         const conversationId = [user.uid, providerId].sort().join('_');
         const conversationRef = doc(db, 'conversations', conversationId);
@@ -128,7 +134,6 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
                         avatar: venue.image,
                     }
                 },
-                messages: [],
                 createdAt: serverTimestamp(),
             });
         }
@@ -147,8 +152,8 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
     }
   }
 
-  const averageRating = currentReviews && currentReviews.length > 0
-    ? (currentReviews.reduce((acc, review) => acc + review.rating, 0) / currentReviews.length).toFixed(1)
+  const averageRating = venue.reviews && venue.reviews.length > 0
+    ? (venue.reviews.reduce((acc, review) => acc + review.rating, 0) / venue.reviews.length).toFixed(1)
     : venue.rating.toFixed(1);
 
   return (
@@ -161,7 +166,7 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
                     <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-primary fill-current" />
                         <span className="font-semibold text-foreground">{averageRating}</span>
-                        <span>({currentReviews.length || venue.reviewCount} reviews)</span>
+                        <span>({venue.reviews?.length || venue.reviewCount} reviews)</span>
                     </div>
                     <div className="flex items-center gap-1">
                         <MapPin className="w-4 h-4 text-primary" />
@@ -211,7 +216,7 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
         <div className="lg:col-span-2">
             <h2 className="text-xl font-bold mb-3">About this {venue.category}</h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
-                {venue.name} is a premier provider of {venue.category.toLowerCase()} services, located in the heart of {venue.location}. With a stellar rating of {averageRating} from over {currentReviews.length || venue.reviewCount} clients, we pride ourselves on delivering exceptional experiences. Our space is perfect for weddings, corporate events, and private parties, offering a blend of elegance and modern amenities.
+                {venue.name} is a premier provider of {venue.category.toLowerCase()} services, located in the heart of {venue.location}. With a stellar rating of {averageRating} from over {venue.reviews?.length || venue.reviewCount} clients, we pride ourselves on delivering exceptional experiences. Our space is perfect for weddings, corporate events, and private parties, offering a blend of elegance and modern amenities.
                 <br/><br/>
                 Our dedicated team works tirelessly to ensure every detail is perfect, from the initial planning stages to the final execution. We offer a range of packages to suit different needs and budgets, all designed to make your special day unforgettable.
             </p>
@@ -231,9 +236,9 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
             <Separator className="my-6" />
 
             {/* Reviews Section */}
-            <h2 className="text-xl font-bold mb-4">Reviews ({currentReviews.length})</h2>
+            <h2 className="text-xl font-bold mb-4">Reviews ({venue.reviews?.length || 0})</h2>
             <div className="space-y-6">
-                {currentReviews.map((review, index) => (
+                {venue.reviews && venue.reviews.length > 0 ? venue.reviews.map((review, index) => (
                     <div key={index} className="flex gap-4">
                         <Avatar className='h-9 w-9'>
                             <AvatarImage src={review.avatar} alt={review.authorName} />
@@ -251,7 +256,9 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
                             <p className="text-muted-foreground text-sm">{review.comment}</p>
                         </div>
                     </div>
-                ))}
+                )) : (
+                    <p className='text-sm text-muted-foreground'>No reviews yet. Be the first to share your experience!</p>
+                )}
             </div>
         </div>
 
@@ -284,12 +291,12 @@ export function VenueDetailClient({ venue }: { venue: Listing }) {
                                 modifiersStyles={{
                                     booked: { 
                                         color: 'hsl(var(--destructive-foreground))',
-                                        backgroundColor: 'hsl(var(--destructive-foreground) / 0.2)',
+                                        backgroundColor: 'hsl(var(--destructive) / 0.8)',
                                         textDecoration: 'line-through',
                                         opacity: 0.6,
                                      },
                                     pending: { 
-                                        backgroundColor: 'hsl(var(--primary) / 0.1)',
+                                        backgroundColor: 'hsl(var(--primary) / 0.2)',
                                     }
                                 }}
                             />

@@ -26,7 +26,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
     "Review Reminder": <Clock className="w-5 h-5 text-gray-500" />,
     "Booking Update": <Clock className="w-5 h-5 text-yellow-500" />,
     "New Idea!": <Gift className="w-5 h-5 text-pink-500" />,
-    "Review Received": <CheckCircle className="w-5 h-5 text-green-500" />,
+    "New Review": <CheckCircle className="w-5 h-5 text-green-500" />,
     "Default": <Bell className="w-5 h-5 text-gray-500" />,
 }
 
@@ -111,7 +111,7 @@ export default function NotificationsPage() {
                                     </p>
                                 </div>
                                 {!notification.read && (
-                                    <div className="w-2.5 h-2.5 rounded-full bg-primary mt-1.5"></div>
+                                    <div className="w-2.5 h-2.5 rounded-full bg-primary mt-1.5 self-center"></div>
                                 )}
                             </div>
                         ))}

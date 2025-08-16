@@ -16,6 +16,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Booking {
     id: string;
@@ -53,7 +55,7 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
             rating,
             comment,
             authorName: user.displayName || "Anonymous",
-            authorAvatar: user.photoURL || null,
+            avatar: user.photoURL || `https://avatar.vercel.sh/${user.uid}.png`,
             createdAt: serverTimestamp(),
         }
 
@@ -159,6 +161,7 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
 
 function BookingsPage() {
   const { user } = useAuth();
+  const router = useRouter();
   const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([]);
   const [pastBookings, setPastBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -169,6 +172,28 @@ function BookingsPage() {
             b.id === bookingId ? { ...b, review } : b
         )
     );
+  };
+  
+  const handleContactProvider = async (venue: {slug: string, name: string, image: string}) => {
+    if (!user) {
+        return;
+    }
+    const providerId = `provider_${venue.slug}`;
+    const conversationId = [user.uid, providerId].sort().join('_');
+    const conversationRef = doc(db, 'conversations', conversationId);
+    const conversationSnap = await getDoc(conversationRef);
+    
+    if (!conversationSnap.exists()) {
+        await setDoc(conversationRef, {
+            participants: {
+                [user.uid]: { name: user.displayName || user.email, avatar: user.photoURL || `https://avatar.vercel.sh/${user.uid}.png` },
+                [providerId]: { name: venue.name, avatar: venue.image },
+            },
+            messages: [],
+            createdAt: serverTimestamp(),
+        });
+    }
+    router.push(`/chat?new=${conversationId}`);
   };
 
   useEffect(() => {
@@ -205,7 +230,7 @@ function BookingsPage() {
 
   if (loading) {
     return (
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex items-center justify-center h-[50vh]">
             <Loader className="h-6 w-6 animate-spin" />
         </div>
     )
@@ -215,13 +240,15 @@ function BookingsPage() {
     <Card>
         <div className="grid grid-cols-1 md:grid-cols-3">
             <div className="md:col-span-1">
-                <Image src={booking.venueImage} alt={booking.venueName} width={400} height={200} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+                 <Link href={`/venues/${booking.venueId}`}>
+                    <Image src={booking.venueImage} alt={booking.venueName} width={400} height={200} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+                </Link>
             </div>
             <div className="md:col-span-2">
                 <CardHeader>
                     <div className="flex justify-between items-start">
                         <div>
-                            <CardTitle>{booking.venueName}</CardTitle>
+                             <Link href={`/venues/${booking.venueId}`}><CardTitle>{booking.venueName}</CardTitle></Link>
                             <CardDescription>Booking ID: {booking.id}</CardDescription>
                         </div>
                         <Badge variant={booking.status === 'Confirmed' ? 'default' : 'secondary'}>{booking.status}</Badge>
@@ -237,8 +264,8 @@ function BookingsPage() {
                         {booking.venueLocation}
                     </div>
                     <div className="flex gap-2 pt-1">
-                        <Button size="sm">View Details</Button>
-                        <Button size="sm" variant="outline">Contact Provider</Button>
+                        <Button size="sm" asChild><Link href={`/venues/${booking.venueId}`}>View Details</Link></Button>
+                        <Button size="sm" variant="outline" onClick={() => handleContactProvider({slug: booking.venueId, name: booking.venueName, image: booking.venueImage})}>Contact Provider</Button>
                     </div>
                 </CardContent>
             </div>
@@ -247,16 +274,18 @@ function BookingsPage() {
   )
 
   const PastBookingCard = ({ booking }: { booking: Booking }) => (
-     <Card className="opacity-70">
+     <Card className="opacity-80 hover:opacity-100 transition-opacity">
         <div className="grid grid-cols-1 md:grid-cols-3">
             <div className="md:col-span-1">
-                <Image src={booking.venueImage} alt={booking.venueName} width={400} height={200} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+                <Link href={`/venues/${booking.venueId}`}>
+                    <Image src={booking.venueImage} alt={booking.venueName} width={400} height={200} className="object-cover h-full w-full rounded-t-lg md:rounded-l-lg md:rounded-t-none" data-ai-hint={booking.venueHint} />
+                </Link>
             </div>
             <div className="md:col-span-2">
                 <CardHeader>
                     <div className="flex justify-between items-start">
                         <div>
-                            <CardTitle>{booking.venueName}</CardTitle>
+                           <Link href={`/venues/${booking.venueId}`}><CardTitle>{booking.venueName}</CardTitle></Link>
                             <CardDescription>Booking ID: {booking.id}</CardDescription>
                         </div>
                         <Badge variant="secondary">Completed</Badge>
