@@ -148,9 +148,6 @@ export default function AccountPage() {
   const { user, signOut, profile, becomeVendor } = useAuth();
   const router = useRouter();
 
-  const isVendor = profile?.role === 'vendor' || profile?.role === 'user_vendor';
-  const isUserOnly = profile?.role === 'user';
-
   const memberSince = user?.metadata?.creationTime 
     ? format(new Date(user.metadata.creationTime), 'MMM yyyy') 
     : 'a while ago';
@@ -198,8 +195,8 @@ export default function AccountPage() {
       
       <LanguageSwitcher />
       
-      {isVendor && <Section title="My Business" items={vendorItems} />}
-      {isUserOnly && <BecomeVendorSection onBecomeVendor={becomeVendor} />}
+      {profile?.role === 'user_vendor' && <Section title="My Business" items={vendorItems} />}
+      {profile?.role === 'user' && <BecomeVendorSection onBecomeVendor={becomeVendor} />}
       
       <Section title="My Account" items={myAccountItems} />
       <Section title="Settings" items={settingsItems} />
