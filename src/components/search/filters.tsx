@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Search } from "lucide-react";
 import { Checkbox } from '../ui/checkbox';
+import { categories } from '@/types/listing';
 
 // This could also be fetched from the database in the future
 const allAmenities = ['WiFi', 'Parking', 'In-house Catering', 'AV Equipment', 'Outdoor Space', 'Bridal Suite'];
@@ -18,14 +19,18 @@ export const Filters = ({ id }: { id?: string }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [keyword, setKeyword] = useState('');
-    const [location, setLocation] = useState('');
-    const [category, setCategory] = useState('');
-    const [priceRange, setPriceRange] = useState([0, 30000]);
-    const [guestCapacity, setGuestCapacity] = useState('');
-    const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+    // Initialize state from URL params
+    const [keyword, setKeyword] = useState(searchParams.get('q') || '');
+    const [location, setLocation] = useState(searchParams.get('location') || '');
+    const [category, setCategory] = useState(searchParams.get('category') || '');
+    const [priceRange, setPriceRange] = useState<[number, number]>([
+        Number(searchParams.get('minPrice')) || 0,
+        Number(searchParams.get('maxPrice')) || 30000
+    ]);
+    const [guestCapacity, setGuestCapacity] = useState(searchParams.get('guestCapacity') || '');
+    const [selectedAmenities, setSelectedAmenities] = useState<string[]>(searchParams.getAll('amenities'));
 
-
+    // Effect to update state if URL changes (e.g., browser back/forward)
     useEffect(() => {
         setKeyword(searchParams.get('q') || '');
         setLocation(searchParams.get('location') || '');
@@ -36,7 +41,6 @@ export const Filters = ({ id }: { id?: string }) => {
         ]);
         setGuestCapacity(searchParams.get('guestCapacity') || '');
         setSelectedAmenities(searchParams.getAll('amenities'));
-
     }, [searchParams]);
 
     const handleAmenityChange = (amenity: string) => {
@@ -50,6 +54,8 @@ export const Filters = ({ id }: { id?: string }) => {
     const handleFilterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const params = new URLSearchParams(searchParams.toString());
+        
+        // Update or remove params based on form state
         if (keyword) params.set('q', keyword); else params.delete('q');
         if (location) params.set('location', location); else params.delete('location');
         if (category) params.set('category', category); else params.delete('category');
@@ -57,6 +63,7 @@ export const Filters = ({ id }: { id?: string }) => {
         if (priceRange[1] < 30000) params.set('maxPrice', String(priceRange[1])); else params.delete('maxPrice');
         if (guestCapacity) params.set('guestCapacity', guestCapacity); else params.delete('guestCapacity');
         
+        // Handle array for amenities
         params.delete('amenities');
         selectedAmenities.forEach(a => params.append('amenities', a));
         
@@ -84,12 +91,10 @@ export const Filters = ({ id }: { id?: string }) => {
                         <SelectValue placeholder="All Services" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="Catering">Catering</SelectItem>
-                        <SelectItem value="Transport">Transport</SelectItem>
-                        <SelectItem value="Decorations">Decorations</SelectItem>
-                        <SelectItem value="Photography">Photography</SelectItem>
-                        <SelectItem value="Event Staff">Event Staff</SelectItem>
-                        <SelectItem value="Invitations">Invitations</SelectItem>
+                        <SelectItem value="">All Services</SelectItem>
+                        {categories.map(cat => (
+                            <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
             </div>
@@ -122,7 +127,7 @@ export const Filters = ({ id }: { id?: string }) => {
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
                     <span>${priceRange[0]}</span>
-                    <span>${priceRange[1]}</span>
+                    <span>${priceRange[1] >= 30000 ? '30k+' : `$${priceRange[1]}`}</span>
                 </div>
             </div>
             <Button type="submit" className="w-full">

@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ListFilter, Heart, Search, Building2, Paintbrush, UtensilsCrossed, Camera, Car, FileText, Music, Mail, UserCheck, Map, LayoutGrid } from "lucide-react";
-import { VenueCard, VenueCardProps } from '@/components/venue-card';
+import { VenueCard } from '@/components/venue-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useFavorites } from '@/context/favorites-context';
 import { cn } from '@/lib/utils';

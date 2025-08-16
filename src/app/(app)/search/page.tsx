@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { SearchPageClient } from './page.client';
 import type { Listing } from '@/services/listings';
 import { Loader } from 'lucide-react';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, startAt, endAt } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 export interface SearchParams {
@@ -21,7 +21,7 @@ function SearchFallback() {
 async function performSearch(params: SearchParams): Promise<Listing[]> {
   const { q, location, category, minPrice, maxPrice, guestCapacity, amenities, sortBy } = params;
 
-  const hasSearched = q || location || category || minPrice || maxPrice || guestCapacity || amenities;
+  const hasSearched = q || location || category || minPrice || maxPrice || guestCapacity || (amenities && amenities.length > 0);
   if (!hasSearched) {
     return [];
   }
@@ -31,28 +31,28 @@ async function performSearch(params: SearchParams): Promise<Listing[]> {
   // This is a simplified search for demonstration purposes.
   let firestoreQuery = query(collection(db, 'listings'));
 
-  if (category) {
-    firestoreQuery = query(firestoreQuery, where('category', '==', String(category)));
+  if (category && typeof category === 'string') {
+    firestoreQuery = query(firestoreQuery, where('category', '==', category));
   }
-  if (location) {
-    // Firestore doesn't support case-insensitive or partial text search well.
-    // This is a basic prefix search.
-    firestoreQuery = query(firestoreQuery, where('location', '>=', String(location)), where('location', '<=', String(location) + '\uf8ff'));
+  if (location && typeof location === 'string') {
+    const capitalizedLocation = location.charAt(0).toUpperCase() + location.slice(1);
+    firestoreQuery = query(firestoreQuery, where('location', '>=', capitalizedLocation), where('location', '<=', capitalizedLocation + '\uf8ff'));
   }
-  if (minPrice) {
+  if (minPrice && !isNaN(Number(minPrice))) {
     firestoreQuery = query(firestoreQuery, where('priceValue', '>=', Number(minPrice)));
   }
-  if (maxPrice) {
+  if (maxPrice && !isNaN(Number(maxPrice))) {
      firestoreQuery = query(firestoreQuery, where('priceValue', '<=', Number(maxPrice)));
   }
-   if (guestCapacity) {
+   if (guestCapacity && !isNaN(Number(guestCapacity))) {
     firestoreQuery = query(firestoreQuery, where('guestCapacity', '>=', Number(guestCapacity)));
   }
+  
   if (amenities && Array.isArray(amenities) && amenities.length > 0) {
      firestoreQuery = query(firestoreQuery, where('amenities', 'array-contains-any', amenities));
   }
   
-  // Sorting
+  // Sorting must be the last filter applied to the query
   if (sortBy === 'price_asc') {
     firestoreQuery = query(firestoreQuery, orderBy('priceValue', 'asc'));
   } else if (sortBy === 'price_desc') {
@@ -60,7 +60,7 @@ async function performSearch(params: SearchParams): Promise<Listing[]> {
   } else if (sortBy === 'rating_desc') {
     firestoreQuery = query(firestoreQuery, orderBy('rating', 'desc'));
   } else {
-    // Default sort
+    // Default sort by rating if no other sorting is specified
     firestoreQuery = query(firestoreQuery, orderBy('rating', 'desc'));
   }
 
@@ -68,11 +68,12 @@ async function performSearch(params: SearchParams): Promise<Listing[]> {
   let results = querySnapshot.docs.map(doc => doc.data() as Listing);
 
   // Manual filtering for keyword search (q) as Firestore doesn't support it well with other filters
-  if (q) {
+  if (q && typeof q === 'string') {
+    const lowerCaseQuery = q.toLowerCase();
     results = results.filter(venue => 
-      venue.name.toLowerCase().includes(String(q).toLowerCase()) ||
-      venue.hint.toLowerCase().includes(String(q).toLowerCase()) ||
-      venue.description.toLowerCase().includes(String(q).toLowerCase())
+      venue.name.toLowerCase().includes(lowerCaseQuery) ||
+      (venue.hint && venue.hint.toLowerCase().includes(lowerCaseQuery)) ||
+      venue.description.toLowerCase().includes(lowerCaseQuery)
     );
   }
 
