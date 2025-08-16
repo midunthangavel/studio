@@ -10,7 +10,7 @@ import Image from "next/image";
 import { PageWrapper } from "@/components/shared/page-wrapper";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth-context";
-import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion, serverTimestamp, addDoc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, Timestamp, doc, updateDoc, arrayUnion, serverTimestamp, addDoc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,7 +38,7 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
     const [open, setOpen] = useState(false);
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const { toast } = useToast();
 
     const handleSubmit = async () => {
@@ -90,6 +90,19 @@ function ReviewDialog({ booking, onReviewSubmit }: { booking: Booking, onReviewS
                 console.warn("Could not update venue with new review.", e)
             }
             
+            // Gamification: Add "First Reviewer" badge if it's the user's first review
+            if (profile && (!profile.badges || !profile.badges.includes('First Reviewer'))) {
+                const userProfileRef = doc(db, 'users', user.uid);
+                await updateDoc(userProfileRef, {
+                    badges: arrayUnion('First Reviewer')
+                });
+                toast({
+                    title: 'Badge Unlocked!',
+                    description: 'You earned the "First Reviewer" badge!',
+                });
+            }
+
+
             onReviewSubmit(booking.id, reviewData);
             toast({
                 title: 'Review Submitted',

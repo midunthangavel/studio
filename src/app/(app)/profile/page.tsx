@@ -21,6 +21,7 @@ import {
   List,
   Briefcase,
   LayoutDashboard,
+  Building,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
@@ -29,6 +30,17 @@ import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 const myAccountItems = [
   { icon: Wallet, text: 'FixmyEvent Wallet', href: '#' },
@@ -102,11 +114,42 @@ const Section = ({
   </div>
 );
 
+const BecomeVendorSection = ({ onBecomeVendor }: { onBecomeVendor: () => void }) => (
+    <div className="bg-background p-3">
+        <div className="bg-card border rounded-lg p-4 flex flex-col items-center text-center">
+            <Building className="w-8 h-8 mb-2 text-primary" />
+            <h3 className="font-semibold text-base mb-1">Become a Vendor</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+                List your services on our platform and reach thousands of customers.
+            </p>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm">Get Started</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure you want to become a vendor?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will give you access to the vendor dashboard where you can manage your listings and bookings.
+                    This action cannot be undone through the UI.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={onBecomeVendor}>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+        </div>
+    </div>
+);
+
 export default function AccountPage() {
-  const { user, signOut, profile } = useAuth();
+  const { user, signOut, profile, becomeVendor } = useAuth();
   const router = useRouter();
 
   const isVendor = profile?.role === 'vendor' || profile?.role === 'user_vendor';
+  const isUserOnly = profile?.role === 'user';
 
   const memberSince = user?.metadata?.creationTime 
     ? format(new Date(user.metadata.creationTime), 'MMM yyyy') 
@@ -154,8 +197,9 @@ export default function AccountPage() {
       )}
       
       <LanguageSwitcher />
-
+      
       {isVendor && <Section title="My Business" items={vendorItems} />}
+      {isUserOnly && <BecomeVendorSection onBecomeVendor={becomeVendor} />}
       <Section title="My Account" items={myAccountItems} />
       <Section title="Settings" items={settingsItems} />
       <Section title="Help & Support" items={helpAndSupportItems} />

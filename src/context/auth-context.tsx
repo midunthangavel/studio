@@ -1,18 +1,20 @@
 
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import { onAuthStateChanged, signOut as firebaseSignOut, type User } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { Loader } from 'lucide-react';
 import type { UserProfile as AppUserProfile } from '@/types/user';
+import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   user: User | null;
   profile: AppUserProfile | null;
   loading: boolean;
   signOut: () => void;
+  becomeVendor: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -20,12 +22,14 @@ const AuthContext = createContext<AuthContextType>({
   profile: null,
   loading: true,
   signOut: () => {},
+  becomeVendor: async () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<AppUserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -66,8 +70,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = () => {
     firebaseSignOut(auth);
   };
+  
+  const becomeVendor = useCallback(async () => {
+    if (!user || !profile) {
+      toast({ variant: 'destructive', title: 'Error', description: 'You must be logged in.' });
+      return;
+    }
+    if (profile.role === 'user') {
+      const userDocRef = doc(db, 'users', user.uid);
+      try {
+        await updateDoc(userDocRef, { role: 'user_vendor' });
+        setProfile(prev => prev ? { ...prev, role: 'user_vendor' } : null);
+        toast({ title: 'Congratulations!', description: "You now have access to vendor tools." });
+      } catch (error) {
+        toast({ variant: 'destructive', title: 'Update Failed', description: 'Could not update your role. Please try again.' });
+        console.error("Error updating user role:", error);
+      }
+    }
+  }, [user, profile, toast]);
 
-  const value = useMemo(() => ({ user, profile, loading, signOut }), [user, profile, loading]);
+
+  const value = useMemo(() => ({ user, profile, loading, signOut, becomeVendor }), [user, profile, loading, becomeVendor]);
 
   if (loading) {
     return (

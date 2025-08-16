@@ -23,6 +23,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const ownerIdForSeed = 'oF08A0WlxgM5Y31aBvoOaGYeS4y1';
+const regularUserId = 'aRegularUserUid12345'; // Example UID for a regular user
 
 const allVenuesData = [
     // Data from the original venues.ts file goes here...
@@ -218,30 +219,44 @@ const allVenuesData = [
 ];
 
 const seedUsers = async () => {
-    const userRef = doc(db, 'users', ownerIdForSeed);
-    console.log(`Checking for user: ${ownerIdForSeed}`);
-    
-    // In a real scenario, we wouldn't check if user exists in auth.
-    // This is just to create a corresponding profile doc in Firestore.
-    try {
-        await setDoc(userRef, {
-            id: ownerIdForSeed,
-            email: 'vendor@example.com',
-            role: 'user_vendor',
-            profile: {
-                firstName: 'Test',
-                lastName: 'Vendor',
-                location: { city: "New York", state: "NY", country: "USA" }
-            },
-            vendorProfile: {
-                businessName: 'Test Vendor Inc.',
-                businessType: 'company',
-            }
-        });
-        console.log(`Seeded user profile for ${ownerIdForSeed}`);
-    } catch(e) {
-        console.error(`Could not seed user ${ownerIdForSeed}`, e)
-    }
+    const batch = writeBatch(db);
+
+    // Vendor User
+    const vendorUserRef = doc(db, 'users', ownerIdForSeed);
+    batch.set(vendorUserRef, {
+        id: ownerIdForSeed,
+        email: 'vendor@example.com',
+        role: 'user_vendor',
+        profile: {
+            firstName: 'Test',
+            lastName: 'Vendor',
+            location: { city: "New York", state: "NY", country: "USA" }
+        },
+        vendorProfile: {
+            businessName: 'Test Vendor Inc.',
+            businessType: 'company',
+        },
+        badges: [],
+    });
+    console.log(`Prepared user profile for vendor: ${ownerIdForSeed}`);
+
+    // Regular User
+    const regularUserRef = doc(db, 'users', regularUserId);
+    batch.set(regularUserRef, {
+        id: regularUserId,
+        email: 'user@example.com',
+        role: 'user',
+        profile: {
+            firstName: 'Regular',
+            lastName: 'User',
+            location: { city: "San Francisco", state: "CA", country: "USA" }
+        },
+        badges: [],
+    });
+    console.log(`Prepared user profile for regular user: ${regularUserId}`);
+
+    await batch.commit();
+    console.log("Committed user data to Firestore.");
 }
 
 async function seedDatabase() {
@@ -260,16 +275,16 @@ async function seedDatabase() {
     await seedUsers();
 
     console.log("Seeding listings... This may take a moment.");
-    const batch = writeBatch(db);
+    const listingsBatch = writeBatch(db);
 
     allVenuesData.forEach((venue) => {
         // Use the slug as the document ID for easy retrieval
         const docRef = doc(listingsRef, venue.slug);
-        batch.set(docRef, { ...venue, ownerId: ownerIdForSeed });
+        listingsBatch.set(docRef, { ...venue, ownerId: ownerIdForSeed });
     });
 
     try {
-        await batch.commit();
+        await listingsBatch.commit();
         console.log(`Successfully seeded ${allVenuesData.length} listings.`);
     } catch (error) {
         console.error("Error seeding database: ", error);
