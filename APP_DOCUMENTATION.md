@@ -1,3 +1,4 @@
+# Fixmyevent
 # Fixmyevent: Complete Application Documentation
 
 This document provides a comprehensive, detailed breakdown of the "Fixmyevent" application, covering its architecture, design philosophy, features, and complete user flow.
