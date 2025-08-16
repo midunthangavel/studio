@@ -18,17 +18,17 @@ import { Label } from '@/components/ui/label';
 import { useFavorites } from '@/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import type { Listing } from '@/services/listings';
 
 const galleryImages = [
-    "https://placehold.co/400x300.png",
-    "https://placehold.co/400x300.png",
-    "https://placehold.co/400x300.png",
-    "https://placehold.co/400x300.png",
-    "https://placehold.co/600x400.png",
-    "https://placehold.co/600x400.png"
+    { src: "https://placehold.co/600x400.png", hint: "wedding reception" },
+    { src: "https://placehold.co/600x400.png", hint: "event decorations" },
+    { src: "https://placehold.co/600x400.png", hint: "corporate event" },
+    { src: "https://placehold.co/600x400.png", hint: "party table" },
+    { src: "https://placehold.co/600x400.png", hint: "outdoor venue" },
+    { src: "https://placehold.co/600x400.png", hint: "banquet hall" }
 ];
 
 // Mock booked dates
@@ -59,6 +59,12 @@ export function VenueDetailClient({ venue: initialVenue }: { venue: Listing }) {
   }, [initialVenue.slug]);
 
   const favorited = isFavorited(venue.slug);
+  
+  const averageRating = useMemo(() => {
+    if (!venue.reviews || venue.reviews.length === 0) return venue.rating.toFixed(1);
+    const total = venue.reviews.reduce((acc, review) => acc + review.rating, 0);
+    return (total / venue.reviews.length).toFixed(1);
+  }, [venue.reviews, venue.rating]);
 
   const handleRequestBooking = async () => {
     if (!user) {
@@ -86,6 +92,19 @@ export function VenueDetailClient({ venue: initialVenue }: { venue: Listing }) {
             createdAt: serverTimestamp(),
             review: null,
         });
+        
+        // Also add a notification for the listing owner
+        if (venue.ownerId) {
+             await addDoc(collection(db, 'notifications'), {
+                userId: venue.ownerId,
+                type: 'New Booking Request',
+                message: `${user.displayName || 'A user'} has requested to book ${venue.name}.`,
+                timestamp: serverTimestamp(),
+                read: false,
+                iconName: 'New Idea!' // Placeholder icon
+            });
+        }
+        
         toast({
             title: "Booking Request Sent!",
             description: `Your request to book ${venue.name} has been sent.`,
@@ -134,6 +153,7 @@ export function VenueDetailClient({ venue: initialVenue }: { venue: Listing }) {
                         avatar: venue.image,
                     }
                 },
+                messages: [],
                 createdAt: serverTimestamp(),
             });
         }
@@ -151,10 +171,6 @@ export function VenueDetailClient({ venue: initialVenue }: { venue: Listing }) {
         setContactLoading(false);
     }
   }
-
-  const averageRating = venue.reviews && venue.reviews.length > 0
-    ? (venue.reviews.reduce((acc, review) => acc + review.rating, 0) / venue.reviews.length).toFixed(1)
-    : venue.rating.toFixed(1);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -199,9 +215,9 @@ export function VenueDetailClient({ venue: initialVenue }: { venue: Listing }) {
                 <CarouselItem>
                     <Image src={venue.image} alt={venue.name} width={800} height={500} className="object-cover w-full h-80 rounded-lg" data-ai-hint={venue.hint} />
                 </CarouselItem>
-                    {galleryImages.map((src, index) => (
+                    {galleryImages.map((img, index) => (
                     <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                        <Image src={src} alt={`Venue detail ${index + 1}`} width={400} height={300} className="object-cover w-full h-80 rounded-lg" data-ai-hint="banquet hall" />
+                        <Image src={img.src} alt={`Venue detail ${index + 1}`} width={400} height={300} className="object-cover w-full h-80 rounded-lg" data-ai-hint={img.hint} />
                     </CarouselItem>
                     ))}
             </CarouselContent>
@@ -216,25 +232,26 @@ export function VenueDetailClient({ venue: initialVenue }: { venue: Listing }) {
         <div className="lg:col-span-2">
             <h2 className="text-xl font-bold mb-3">About this {venue.category}</h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
-                {venue.name} is a premier provider of {venue.category.toLowerCase()} services, located in the heart of {venue.location}. With a stellar rating of {averageRating} from over {venue.reviews?.length || venue.reviewCount} clients, we pride ourselves on delivering exceptional experiences. Our space is perfect for weddings, corporate events, and private parties, offering a blend of elegance and modern amenities.
-                <br/><br/>
-                Our dedicated team works tirelessly to ensure every detail is perfect, from the initial planning stages to the final execution. We offer a range of packages to suit different needs and budgets, all designed to make your special day unforgettable.
+                {venue.description}
             </p>
 
             <Separator className="my-6" />
 
-            <h2 className="text-xl font-bold mb-4">What this place offers</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                {venue.amenities && venue.amenities.map(amenity => (
-                    <div key={amenity} className="flex items-center gap-3">
-                        <Star className="w-5 h-5 text-primary" />
-                        <span>{amenity}</span>
-                    </div>
-                ))}
-            </div>
-
-            <Separator className="my-6" />
-
+            {venue.amenities && venue.amenities.length > 0 && (
+                <>
+                <h2 className="text-xl font-bold mb-4">What this place offers</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                    {venue.amenities.map(amenity => (
+                        <div key={amenity} className="flex items-center gap-3">
+                            <Star className="w-5 h-5 text-primary" />
+                            <span>{amenity}</span>
+                        </div>
+                    ))}
+                </div>
+                <Separator className="my-6" />
+                </>
+            )}
+            
             {/* Reviews Section */}
             <h2 className="text-xl font-bold mb-4">Reviews ({venue.reviews?.length || 0})</h2>
             <div className="space-y-6">

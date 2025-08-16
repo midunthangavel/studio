@@ -52,9 +52,16 @@ const MyListingRow = ({ listing, onDelete }: { listing: Listing, onDelete: (id: 
         inactive: 'destructive',
     } as const;
 
+    const { toast } = useToast();
+
     const handleDelete = async () => {
-        await deleteDoc(doc(db, "listings", listing.id));
-        onDelete(listing.id);
+        try {
+            await deleteDoc(doc(db, "listings", listing.id));
+            onDelete(listing.id);
+            toast({ title: 'Listing Deleted', description: 'The listing has been successfully removed.' });
+        } catch (error) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Failed to delete listing.' });
+        }
     }
 
     return (
@@ -270,7 +277,6 @@ export default function VendorDashboardPage() {
 
     const handleListingDelete = (deletedId: string) => {
         setListings(prev => prev.filter(l => l.id !== deletedId));
-        toast({ title: 'Listing Deleted', description: 'The listing has been successfully removed.' });
     }
 
     const totalRevenue = useMemo(() => {
@@ -282,10 +288,10 @@ export default function VendorDashboardPage() {
     }, [listings]);
 
     const averageRating = useMemo(() => {
-        const ratings = listings.map(l => l.rating || 0).filter(r => r > 0);
-        if (ratings.length === 0) return 'N/A';
-        const avg = ratings.reduce((acc, r) => acc + r, 0) / ratings.length;
-        return avg.toFixed(1);
+        const allReviews = listings.flatMap(l => l.reviews || []);
+        if (allReviews.length === 0) return 'N/A';
+        const totalRating = allReviews.reduce((acc, r) => acc + r.rating, 0);
+        return (totalRating / allReviews.length).toFixed(1);
     }, [listings]);
 
 
