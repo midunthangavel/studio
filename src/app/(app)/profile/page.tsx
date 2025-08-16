@@ -19,6 +19,7 @@ import {
   ShieldCheck,
   Globe,
   List,
+  Briefcase,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
@@ -28,11 +29,14 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 
-const accountSettings = [
+const myAccountItems = [
   { icon: Wallet, text: 'FixmyEvent Wallet', href: '#' },
+  { icon: Gift, text: 'My Rewards', href: '#' },
+];
+
+const vendorItems = [
   { icon: List, text: 'My Listings', href: '/my-listings' },
   { icon: Store, text: 'Add a Listing', href: '/add-listing' },
-  { icon: Gift, text: 'My Rewards', href: '#' },
 ];
 
 const settingsItems = [
@@ -43,7 +47,7 @@ const settingsItems = [
   { icon: Languages, text: 'Select Language', href: '#' },
 ];
 
-const helpAndSupport = [
+const helpAndSupportItems = [
     { icon: HelpCircle, text: 'Help & Support', href: '#' },
     { icon: FileText, text: 'Terms & Conditions', href: '#' },
 ]
@@ -98,8 +102,10 @@ const Section = ({
 );
 
 export default function AccountPage() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, profile } = useAuth();
   const router = useRouter();
+
+  const isVendor = profile?.role === 'vendor' || profile?.role === 'user_vendor';
 
   const memberSince = user?.metadata?.creationTime 
     ? format(new Date(user.metadata.creationTime), 'MMM yyyy') 
@@ -148,9 +154,10 @@ export default function AccountPage() {
       
       <LanguageSwitcher />
 
-      <Section title="My Account" items={accountSettings} />
+      {isVendor && <Section title="My Business" items={vendorItems} />}
+      <Section title="My Account" items={myAccountItems} />
       <Section title="Settings" items={settingsItems} />
-      <Section title="Help & Support" items={helpAndSupport} />
+      <Section title="Help & Support" items={helpAndSupportItems} />
 
       <div className="p-3 mt-2">
         <Button

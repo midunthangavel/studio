@@ -1,7 +1,7 @@
 
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
-import { getFirestore, Firestore } from "firebase/firestore";
+import { getFirestore, Firestore, initializeFirestore, memoryLocalCache } from "firebase/firestore";
 
 const firebaseConfig = {
   "projectId": "venuevoyager-kga4a",
@@ -21,6 +21,8 @@ if (!getApps().length) {
 }
 
 const auth: Auth = getAuth(app);
-const db: Firestore = getFirestore(app);
+const db: Firestore = initializeFirestore(app, {
+  localCache: memoryLocalCache(),
+});
 
 export { app, auth, db };

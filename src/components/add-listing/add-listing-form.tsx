@@ -73,6 +73,17 @@ export function AddListingForm() {
             phone: '',
             address: '',
             description: '',
+            // Set sensible defaults for new fields from your schema
+            slug: '',
+            location: '',
+            image: '',
+            hint: '',
+            rating: 0,
+            reviewCount: 0,
+            price: '',
+            priceValue: 0,
+            guestFavorite: false,
+            ownerId: user?.uid,
         },
     });
 
@@ -87,6 +98,17 @@ export function AddListingForm() {
             phone: '',
             address: '',
             description: '',
+             // Also reset the new fields
+            slug: '',
+            location: '',
+            image: '',
+            hint: '',
+            rating: 0,
+            reviewCount: 0,
+            price: '',
+            priceValue: 0,
+            guestFavorite: false,
+            ownerId: user?.uid,
         });
     };
 
@@ -106,19 +128,30 @@ export function AddListingForm() {
             // For now, we'll strip out the `photos` field before saving.
             const { photos, ...listingData } = values;
 
+            // Generate a slug from the name if it's not already set
+            const slug = values.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+
             await addDoc(collection(db, 'listings'), {
                 ...listingData,
-                ownerId: user.uid,
+                slug,
+                ownerId: user.uid, // Ensure ownerId is correctly set
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
+                // Add some default values for required fields not in form yet
+                image: 'https://placehold.co/600x400.png',
+                hint: values.category.toLowerCase(),
+                rating: 0,
+                reviewCount: 0,
+                reviews: [],
+                location: values.address, // Use address as location for now
             });
 
             toast({
                 title: 'Listing Created!',
                 description: 'Your service has been successfully listed on the platform.',
             });
-            // Optionally, redirect to a vendor dashboard page
-            router.push('/profile');
+            // Redirect to the new My Listings page
+            router.push('/my-listings');
 
         } catch (error) {
             console.error('Error creating listing:', error);

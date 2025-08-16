@@ -6,7 +6,7 @@
  * Make sure you have tsx installed globally or as a dev dependency.
  */
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, writeBatch, getDocs, query, limit, doc } from 'firebase/firestore';
+import { getFirestore, collection, writeBatch, getDocs, query, limit, doc, setDoc } from 'firebase/firestore';
 
 // IMPORTANT: Replace with your actual Firebase project configuration
 const firebaseConfig = {
@@ -16,14 +16,13 @@ const firebaseConfig = {
   "authDomain": "venuevoyager-kga4a.firebaseapp.com",
   "messagingSenderId": "70267555311",
   "measurementId": "G-11V622151G",
-  // IMPORTANT: For server-side scripts, you might need a service account.
-  // For this simple script, we assume you're running it in an environment
-  // where you have authenticated with Firebase CLI or have set up application default credentials.
-  // Using API keys in server-side scripts is not recommended.
+  "apiKey": process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+const ownerIdForSeed = 'oF08A0WlxgM5Y31aBvoOaGYeS4y1';
 
 const allVenuesData = [
     // Data from the original venues.ts file goes here...
@@ -218,6 +217,33 @@ const allVenuesData = [
     }
 ];
 
+const seedUsers = async () => {
+    const userRef = doc(db, 'users', ownerIdForSeed);
+    console.log(`Checking for user: ${ownerIdForSeed}`);
+    
+    // In a real scenario, we wouldn't check if user exists in auth.
+    // This is just to create a corresponding profile doc in Firestore.
+    try {
+        await setDoc(userRef, {
+            id: ownerIdForSeed,
+            email: 'vendor@example.com',
+            role: 'user_vendor',
+            profile: {
+                firstName: 'Test',
+                lastName: 'Vendor',
+                location: { city: "New York", state: "NY", country: "USA" }
+            },
+            vendorProfile: {
+                businessName: 'Test Vendor Inc.',
+                businessType: 'company',
+            }
+        });
+        console.log(`Seeded user profile for ${ownerIdForSeed}`);
+    } catch(e) {
+        console.error(`Could not seed user ${ownerIdForSeed}`, e)
+    }
+}
+
 async function seedDatabase() {
     const listingsRef = collection(db, "listings");
     console.log("Checking if database is already seeded...");
@@ -230,13 +256,16 @@ async function seedDatabase() {
         return;
     }
 
-    console.log("Seeding database... This may take a moment.");
+    console.log("Seeding user data...");
+    await seedUsers();
+
+    console.log("Seeding listings... This may take a moment.");
     const batch = writeBatch(db);
 
     allVenuesData.forEach((venue) => {
         // Use the slug as the document ID for easy retrieval
         const docRef = doc(listingsRef, venue.slug);
-        batch.set(docRef, venue);
+        batch.set(docRef, { ...venue, ownerId: ownerIdForSeed });
     });
 
     try {
@@ -251,4 +280,6 @@ seedDatabase().then(() => {
     console.log("Seeding process finished.");
     // Firestore doesn't require a process.exit() like some DB connections.
     // The script will terminate naturally.
+}).catch(e => {
+    console.error("Seeding script failed", e);
 });

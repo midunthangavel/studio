@@ -3,39 +3,71 @@
 
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { onAuthStateChanged, signOut as firebaseSignOut, type User } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { Loader } from 'lucide-react';
+import type { UserProfile as AppUserProfile } from '@/types/user';
 
 interface AuthContextType {
   user: User | null;
+  profile: AppUserProfile | null;
   loading: boolean;
   signOut: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  profile: null,
   loading: true,
   signOut: () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<AppUserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setLoading(false);
+      if (!user) {
+        setProfile(null);
+        setLoading(false);
+      }
     });
 
-    return () => unsubscribe();
+    return () => unsubscribeAuth();
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      const userDocRef = doc(db, 'users', user.uid);
+      const unsubscribeProfile = onSnapshot(userDocRef, (doc) => {
+        if (doc.exists()) {
+          setProfile(doc.data() as AppUserProfile);
+        } else {
+          // Handle case where user exists in Auth but not in Firestore
+          // Could create a default profile here
+          console.warn("User profile not found in Firestore.");
+          setProfile(null);
+        }
+        setLoading(false);
+      }, (error) => {
+        console.error("Error fetching user profile:", error);
+        setProfile(null);
+        setLoading(false);
+      });
+
+      return () => unsubscribeProfile();
+    }
+  }, [user]);
+
+
   const signOut = () => {
-    firebaseSignOut(auth).then(() => setUser(null));
+    firebaseSignOut(auth);
   };
 
-  const value = useMemo(() => ({ user, loading, signOut }), [user, loading]);
+  const value = useMemo(() => ({ user, profile, loading, signOut }), [user, profile, loading]);
 
   if (loading) {
     return (

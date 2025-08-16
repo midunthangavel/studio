@@ -12,18 +12,14 @@ import { Badge } from '@/components/ui/badge';
 import { Edit, Eye, List, Loader, MoreVertical, PlusCircle, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Listing } from '@/types/listing';
 
-interface Listing extends DocumentData {
+interface MyListing extends Listing {
     id: string;
-    name: string;
-    category: string;
-    // We use a placeholder image as the form doesn't handle uploads yet.
-    // In a real app, this would come from the listing data.
-    image?: string; 
     status: 'Published' | 'Pending' | 'Rejected';
 }
 
-const MyListingCard = ({ listing }: { listing: Listing }) => {
+const MyListingCard = ({ listing }: { listing: MyListing }) => {
     const statusVariant = {
         Published: 'default',
         Pending: 'secondary',
@@ -45,9 +41,8 @@ const MyListingCard = ({ listing }: { listing: Listing }) => {
                 </div>
             </CardHeader>
             <CardContent>
-                {/* In a real app, you'd use listing.image here */}
                 <Image
-                    src={listing.image || "https://placehold.co/600x400.png"}
+                    src={listing.image}
                     alt={listing.name}
                     width={400}
                     height={200}
@@ -85,12 +80,12 @@ const EmptyState = () => (
 
 export default function MyListingsPage() {
     const { user } = useAuth();
-    const [listings, setListings] = useState<Listing[]>([]);
+    const [listings, setListings] = useState<MyListing[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchListings() {
-            if (!user) {
+            if (!user?.uid) {
                 setLoading(false);
                 return;
             }
@@ -102,7 +97,7 @@ export default function MyListingsPage() {
                     id: doc.id,
                     status: 'Published', // Mock status
                     ...doc.data()
-                } as Listing));
+                } as MyListing));
                 setListings(fetchedListings);
             } catch (error) {
                 console.error("Error fetching listings: ", error);
