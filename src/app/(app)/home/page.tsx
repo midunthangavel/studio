@@ -1,13 +1,53 @@
 
+'use client';
+
 import { VenueSection } from "@/components/home/venue-section";
 import { getLimitedListings } from "@/services/listings";
+import { useEffect, useState } from "react";
+import type { Listing } from "@/services/listings";
+import { Loader } from "lucide-react";
 
-export default async function HomePage() {
-  // Fetch data dynamically from Firestore
-  const popularVenues = await getLimitedListings({ count: 4 });
-  const topPhotographers = await getLimitedListings({ count: 4, category: 'Photography' });
-  const invitationDesigners = await getLimitedListings({ count: 4, category: 'Invitations' });
-  const availableNextMonth = await getLimitedListings({ count: 4 }); // Placeholder logic for now
+export default function HomePage() {
+  const [popularVenues, setPopularVenues] = useState<Listing[]>([]);
+  const [topPhotographers, setTopPhotographers] = useState<Listing[]>([]);
+  const [invitationDesigners, setInvitationDesigners] = useState<Listing[]>([]);
+  const [availableNextMonth, setAvailableNextMonth] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [
+          popularVenuesData,
+          topPhotographersData,
+          invitationDesignersData,
+          availableNextMonthData,
+        ] = await Promise.all([
+          getLimitedListings({ count: 4 }),
+          getLimitedListings({ count: 4, category: 'Photography' }),
+          getLimitedListings({ count: 4, category: 'Invitations' }),
+          getLimitedListings({ count: 4 }), // Placeholder logic
+        ]);
+        setPopularVenues(popularVenuesData);
+        setTopPhotographers(topPhotographersData);
+        setInvitationDesigners(invitationDesignersData);
+        setAvailableNextMonth(availableNextMonthData);
+      } catch (error) {
+        console.error("Failed to fetch homepage data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+        <div className="flex items-center justify-center h-[50vh]">
+            <Loader className="h-8 w-8 animate-spin" />
+        </div>
+    )
+  }
 
   return (
     <div className="flex flex-col h-full">
