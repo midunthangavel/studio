@@ -240,3 +240,33 @@ graph TD
 *   **Profile Page (`/profile`)**:
     *   **Content:** Displays user information (name, email, member since). Below are sections with links to "My Account" (My Listings, Add a Listing) and "Settings" (Edit Profile). Includes a prominent "Log Out" button.
     *   **Function:** The user's central control panel for all account-related activities.
+
+### 5. Future Enhancements & Roadmap
+
+The application now has a robust and feature-complete foundation. The following sections outline the vision for future development, building upon the current platform to introduce advanced capabilities, enterprise features, and deeper user engagement.
+
+#### Advanced Vendor Tools
+*   **Deep Analytics Dashboard:** Implement detailed charts and reports for listing performance, view counts, inquiry conversion rates, revenue tracking over time, and customer demographics.
+*   **Marketing & SEO Suite:** Provide vendors with tools to manage their listing's SEO, create promotional packages, and run targeted ad campaigns within the platform.
+*   **Automation Engine:**
+    *   **Smart Replies:** Use AI to suggest or automatically send responses to common user inquiries.
+    *   **Dynamic Pricing:** Leverage AI to recommend pricing adjustments based on demand, seasonality, and local events.
+
+#### Advanced Gamification & Community Features
+*   **Points & Rewards System:** Build out a full-fledged gamification engine where users and vendors earn points for activities like booking, leaving reviews, or completing their profiles.
+*   **Leaderboards:** Create leaderboards to showcase top-rated vendors or most active users, fostering healthy competition and engagement.
+*   **Social Networking:** Implement vendor-to-vendor collaboration features, allowing them to form partnerships. Build user-focused community forums for sharing ideas and advice.
+
+#### Full Monetization Engine
+*   **Payment Gateway Integration:** Integrate with a payment processor like Stripe to handle all financial transactions securely.
+*   **Vendor Subscriptions:** Implement tiered subscription plans for vendors (e.g., Basic, Premium, Pro) that unlock different levels of features and visibility.
+*   **Transaction Fees & Commissions:** Set up a system to take a commission on successful bookings facilitated through the platform.
+*   **Advanced Financial Tools:** Offer features like installment plans for users to pay for large event expenses over time and integrated insurance options for event cancellation.
+
+#### Enterprise & Internationalization
+*   **Multi-Language & Currency Support:** Architect the platform to support a global audience, allowing users and vendors to interact in their native language and currency.
+*   **White-Label Solutions:** Develop an enterprise version of the platform that can be licensed and customized by large event planning companies or hotel chains.
+*   **Top-Tier Security:**
+    *   **Multi-Factor Authentication (MFA):** Add an extra layer of security for user and vendor accounts.
+    *   **Biometric Login:** Allow users to log in using fingerprint or facial recognition on supported devices.
+    *   **Blockchain for Contracts:** Explore using blockchain technology to create secure, verifiable digital contracts between users and vendors.
