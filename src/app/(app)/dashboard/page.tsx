@@ -4,10 +4,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '@/context/auth-context';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, DocumentData, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, DocumentData, doc, updateDoc, addDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { PageWrapper } from '@/components/shared/page-wrapper';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Edit, Eye, List, Loader, MoreVertical, PlusCircle, Trash2, DollarSign, BarChart2, Star, Check, X } from 'lucide-react';
 import Image from 'next/image';
@@ -19,6 +19,19 @@ import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
 
 interface Booking extends DocumentData {
     id: string;
@@ -32,12 +45,17 @@ interface Booking extends DocumentData {
     userId: string;
 }
 
-const MyListingRow = ({ listing }: { listing: Listing }) => {
+const MyListingRow = ({ listing, onDelete }: { listing: Listing, onDelete: (id: string) => void }) => {
     const statusVariant = {
         active: 'default',
         pending: 'secondary',
         inactive: 'destructive',
     } as const;
+
+    const handleDelete = async () => {
+        await deleteDoc(doc(db, "listings", listing.id));
+        onDelete(listing.id);
+    }
 
     return (
         <TableRow>
@@ -52,7 +70,7 @@ const MyListingRow = ({ listing }: { listing: Listing }) => {
                         data-ai-hint="business office"
                     />
                     <div>
-                         <div className="font-medium">{listing.name}</div>
+                         <Link href={`/venues/${listing.slug}`} className="font-medium hover:underline">{listing.name}</Link>
                          <div className="text-muted-foreground text-xs">{listing.category}</div>
                     </div>
                 </div>
@@ -65,7 +83,36 @@ const MyListingRow = ({ listing }: { listing: Listing }) => {
             <TableCell className="text-center">{listing.analytics?.inquiryCount || 0}</TableCell>
              <TableCell className="text-center">{listing.analytics?.bookingCount || 0}</TableCell>
             <TableCell className="text-right">
-                <Button variant="ghost" size="icon"><MoreVertical className="h-4 w-4" /></Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon"><MoreVertical className="h-4 w-4" /></Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align='end'>
+                        <DropdownMenuItem asChild><Link href={`/venues/${listing.slug}`}><Eye className='mr-2 h-4 w-4'/>View Listing</Link></DropdownMenuItem>
+                        <DropdownMenuItem><Edit className='mr-2 h-4 w-4'/>Edit Listing</DropdownMenuItem>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                 <DropdownMenuItem onSelect={(e) => e.preventDefault()} className='text-destructive focus:text-destructive'>
+                                    <Trash2 className='mr-2 h-4 w-4'/>Delete Listing
+                                </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete your
+                                    listing and remove your data from our servers.
+                                </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                       
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </TableCell>
         </TableRow>
     );
@@ -152,10 +199,11 @@ export default function VendorDashboardPage() {
     const [loading, setLoading] = useState(true);
 
      useEffect(() => {
-        if (profile && profile.role !== 'vendor' && profile.role !== 'user_vendor') {
+        if (!loading && profile && profile.role !== 'vendor' && profile.role !== 'user_vendor') {
+            toast({ variant: 'destructive', title: 'Access Denied', description: 'You do not have permission to view this page.' });
             router.push('/profile');
         }
-    }, [profile, router]);
+    }, [profile, loading, router, toast]);
 
     useEffect(() => {
         async function fetchDashboardData() {
@@ -190,6 +238,8 @@ export default function VendorDashboardPage() {
 
         if (user && profile) {
             fetchDashboardData();
+        } else if (!user) {
+            setLoading(false);
         }
     }, [user, profile, toast]);
 
@@ -218,8 +268,12 @@ export default function VendorDashboardPage() {
         }
     }
 
+    const handleListingDelete = (deletedId: string) => {
+        setListings(prev => prev.filter(l => l.id !== deletedId));
+        toast({ title: 'Listing Deleted', description: 'The listing has been successfully removed.' });
+    }
+
     const totalRevenue = useMemo(() => {
-        // This is a mock calculation. In a real app, you'd pull this from booking data.
         return listings.reduce((acc, l) => acc + (l.priceValue || 0) * (l.analytics?.bookingCount || 0), 0);
     }, [listings]);
 
@@ -290,7 +344,7 @@ export default function VendorDashboardPage() {
                             <TableBody>
                                 {listings.length > 0 ? (
                                     listings.map(listing => (
-                                        <MyListingRow key={listing.id} listing={listing} />
+                                        <MyListingRow key={listing.id} listing={listing} onDelete={handleListingDelete} />
                                     ))
                                 ) : (
                                     <TableRow>
@@ -312,5 +366,3 @@ export default function VendorDashboardPage() {
         </ProtectedRoute>
     );
 }
-
-    
